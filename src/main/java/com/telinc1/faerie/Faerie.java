@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2018 Telinc1
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.telinc1.faerie;
+
+import com.telinc1.faerie.gui.main.FaerieWindow;
+
+import javax.swing.*;
+import java.util.ResourceBundle;
+
+/**
+ * This is the main class of Faerie, responsible for opening the main program
+ * window and reading command line arguments (if any).
+ *
+ * @author Telinc1
+ * @since 1.0.0
+ */
+public class Faerie {
+    /**
+     * The resource bundle for the language strings of the core application.
+     */
+    public static ResourceBundle locale = ResourceBundle.getBundle("com.telinc1.faerie.locale.Core");
+
+    /**
+     * Creates and starts Faerie by opening the main window.
+     *
+     * @param args the command line arguments given to the application
+     */
+    public static void main(String[] args){
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    null,
+                    String.format(Faerie.locale.getString("launch.lookandfeel.message"), e.toString()),
+                    Faerie.locale.getString("launch.lookandfeel.title"),
+                    JOptionPane.ERROR_MESSAGE
+            );
+            System.exit(1);
+        }
+
+        FaerieWindow window = new FaerieWindow();
+        window.setVisible(true);
+    }
+}
