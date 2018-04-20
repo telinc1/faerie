@@ -26,7 +26,6 @@ import com.telinc1.faerie.gui.main.FaerieWindow;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import java.util.ResourceBundle;
 
 /**
  * This is the main class of Faerie, responsible for opening the main program
@@ -36,11 +35,6 @@ import java.util.ResourceBundle;
  * @since 1.0.0
  */
 public class Faerie {
-    /**
-     * The resource bundle for the language strings of the core application.
-     */
-    public static ResourceBundle locale = ResourceBundle.getBundle("com.telinc1.faerie.locale.Core");
-
     /**
      * The command line arguments given to the application.
      */
@@ -69,13 +63,13 @@ public class Faerie {
             Thread.setDefaultUncaughtExceptionHandler(this.exceptionHandler);
         }catch(SecurityException exception){
             exception.printStackTrace();
-            this.getExceptionHandler().warn("launch.handler");
+            this.getExceptionHandler().warn("core", "launch.handler");
         }
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }catch(ReflectiveOperationException | UnsupportedLookAndFeelException exception){
-            this.getExceptionHandler().error("launch.lookandfeel");
+            this.getExceptionHandler().error("core", "launch.lookAndFeel", exception);
         }
 
         this.window = new FaerieWindow();

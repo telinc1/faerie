@@ -22,7 +22,7 @@
 
 package com.telinc1.faerie.gui.main.menu;
 
-import com.telinc1.faerie.gui.main.FaerieWindow;
+import com.telinc1.faerie.Resources;
 
 import javax.swing.JMenu;
 
@@ -47,7 +47,7 @@ public class FaerieFileMenu extends JMenu {
      * @param parent the menu bar which this menu will belong to
      */
     FaerieFileMenu(FaerieMenuBar parent){
-        super(FaerieWindow.locale.getString("menu.file"));
+        super(Resources.getString("main", "menu.file"));
         this.parent = parent;
 
         this.getMenuBar().add(this);

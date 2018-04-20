@@ -46,48 +46,31 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
+     * Creates a string representation of an exception's trace log.
+     *
+     * @param throwable the exception to get the stack trace of
+     * @return the formatted stack trace
+     */
+    public static String getStackTrace(Throwable throwable){
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        throwable.printStackTrace(printWriter);
+
+        return stringWriter.toString();
+    }
+
+    /**
      * Shows a warning dialog.
      *
-     * @param message the key for the title and content from the core bundle
+     * @param source the bundle to look in
+     * @param subkey the base key to look for
+     * @param arguments the arguments to format the message with
      */
-    public void warn(String message){
-        JOptionPane.showMessageDialog(
-            this.application.getWindow(),
-            Faerie.locale.getString("error." + message + ".content"),
-            Faerie.locale.getString("error." + message + ".title"),
-            JOptionPane.WARNING_MESSAGE
-        );
-    }
+    public void warn(String source, String subkey, Object... arguments){
+        String title = Resources.getString(source, "error." + subkey + ".title", arguments);
+        String content = Resources.getString(source, "error." + subkey + ".content", arguments);
 
-    /**
-     * Shows an error dialog and exits the application with error code 1.
-     *
-     * @param message the key for the title and content from the core bundle
-     */
-    public void error(String message){
-        this.error(message, 1);
-    }
-
-    /**
-     * Shows an error dialog and exits the application.
-     *
-     * @param message the key for the title and content from the core bundle
-     * @param code the exit code for {@link System#exit(int)}
-     */
-    public void error(String message, int code){
-        JOptionPane.showMessageDialog(
-            this.application.getWindow(),
-            Faerie.locale.getString("error." + message + ".content"),
-            Faerie.locale.getString("error." + message + ".title"),
-            JOptionPane.ERROR_MESSAGE
-        );
-
-        System.exit(code);
-    }
-
-    @Override
-    public void uncaughtException(Thread thread, Throwable throwable){
-        this.exception(throwable);
+        JOptionPane.showMessageDialog(this.application.getWindow(), content, title, JOptionPane.WARNING_MESSAGE);
     }
 
     /**
@@ -98,18 +81,27 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
      */
     public void exception(Throwable throwable){
         throwable.printStackTrace();
+        this.error("core", "exception", throwable);
+    }
 
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        throwable.printStackTrace(printWriter);
+    /**
+     * Shows an error dialog and exits the application with error code 1.
+     *
+     * @param source the bundle to look in
+     * @param subkey the base key to look for
+     * @param arguments the arguments to format the message with
+     */
+    public void error(String source, String subkey, Object... arguments){
+        String title = Resources.getString(source, "error." + subkey + ".title", arguments);
+        String content = Resources.getString(source, "error." + subkey + ".content", arguments);
 
-        JOptionPane.showMessageDialog(
-            this.application.getWindow(),
-            String.format(Faerie.locale.getString("error.exception.content"), stringWriter.toString()),
-            Faerie.locale.getString("error.exception.title"),
-            JOptionPane.ERROR_MESSAGE
-        );
-
+        JOptionPane.showMessageDialog(this.application.getWindow(), content, title, JOptionPane.ERROR_MESSAGE);
         System.exit(1);
+    }
+
+    @Override
+    public void uncaughtException(Thread thread, Throwable throwable){
+        throwable.printStackTrace();
+        this.error("core", "threadedException", "thread", thread.getName(), throwable);
     }
 }

@@ -21,7 +21,10 @@
   -->
 
 <root>
-    <item name='java.util.ResourceBundle'>
+    <item name='com.telinc1.faerie.Resources'>
         <annotation name='org.jetbrains.annotations.NonNls'/>
+        <annotation name='java.lang.SuppressWarnings'>
+            <val val="&quot;StringConcatenation&quot;"/>
+        </annotation>
     </item>
 </root>

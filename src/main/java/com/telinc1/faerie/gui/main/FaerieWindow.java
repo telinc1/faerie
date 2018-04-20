@@ -24,9 +24,14 @@ package com.telinc1.faerie.gui.main;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.gui.main.menu.FaerieMenuBar;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.WindowConstants;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.util.ResourceBundle;
@@ -38,11 +43,6 @@ import java.util.ResourceBundle;
  * @since 1.0.0
  */
 public class FaerieWindow extends JFrame {
-    /**
-     * The resource bundle for the language strings of the main Faerie window.
-     */
-    public static ResourceBundle locale = ResourceBundle.getBundle("com.telinc1.faerie.locale.Main");
-
     /**
      * The menu bar which the window displays.
      */
@@ -76,22 +76,6 @@ public class FaerieWindow extends JFrame {
     }
 
     /**
-     * Construct an application window, including all of its inner components.
-     * <p>
-     * The title and sizes are automatically set.
-     * <p>
-     * Note that the window is not opened.
-     */
-    public FaerieWindow(){
-        super(locale.getString("title"));
-        this.setSize(700, 500);
-        this.setContentPane(this.contentPanel);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        this.menuBar = new FaerieMenuBar(this);
-    }
-
-    /**
      * Returns the menu bar for the application window.
      *
      * @return an instance of {@link FaerieMenuBar} which represents the
@@ -99,6 +83,22 @@ public class FaerieWindow extends JFrame {
      */
     public FaerieMenuBar getMenu(){
         return this.menuBar;
+    }
+
+    /**
+     * Construct an application window, including all of its inner components.
+     * <p>
+     * The title and sizes are automatically set.
+     * <p>
+     * Note that the window is not opened.
+     */
+    public FaerieWindow(){
+        super(Resources.getString("main", "title"));
+        this.setSize(700, 500);
+        this.setContentPane(this.contentPanel);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        this.menuBar = new FaerieMenuBar(this);
     }
 
     /**
