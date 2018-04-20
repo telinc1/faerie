@@ -24,7 +24,8 @@ package com.telinc1.faerie;
 
 import com.telinc1.faerie.gui.main.FaerieWindow;
 
-import javax.swing.*;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import java.util.ResourceBundle;
 
 /**
@@ -41,25 +42,70 @@ public class Faerie {
     public static ResourceBundle locale = ResourceBundle.getBundle("com.telinc1.faerie.locale.Core");
 
     /**
+     * The command line arguments given to the application.
+     */
+    private final String[] args;
+
+    /**
+     * The handler for unhandled exceptions.
+     */
+    private ExceptionHandler exceptionHandler;
+
+    /**
+     * The main program window.
+     */
+    private FaerieWindow window;
+
+    /**
+     * Construct and initialize Faerie.
+     *
+     * @param args the command line arguments given to the application
+     */
+    private Faerie(String[] args){
+        this.args = args;
+        this.exceptionHandler = new ExceptionHandler(this);
+
+        try {
+            Thread.setDefaultUncaughtExceptionHandler(this.exceptionHandler);
+        }catch(SecurityException exception){
+            exception.printStackTrace();
+            this.getExceptionHandler().warn("launch.handler");
+        }
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }catch(ReflectiveOperationException | UnsupportedLookAndFeelException exception){
+            this.getExceptionHandler().error("launch.lookandfeel");
+        }
+
+        this.window = new FaerieWindow();
+        this.window.setVisible(true);
+    }
+
+    /**
+     * Returns the used exception handler.
+     */
+    public ExceptionHandler getExceptionHandler(){
+        return this.exceptionHandler;
+    }
+
+    /**
      * Creates and starts Faerie by opening the main window.
      *
      * @param args the command line arguments given to the application
      */
     public static void main(String[] args){
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e){
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(
-                    null,
-                    String.format(Faerie.locale.getString("launch.lookandfeel.message"), e.toString()),
-                    Faerie.locale.getString("launch.lookandfeel.title"),
-                    JOptionPane.ERROR_MESSAGE
-            );
-            System.exit(1);
-        }
+        Faerie faerie = new Faerie(args);
+    }
 
-        FaerieWindow window = new FaerieWindow();
-        window.setVisible(true);
+    /**
+     * Returns the main program window.
+     * <p>
+     * Note that this can be null if the application hasn't fully initialized.
+     *
+     * @return the main {@link FaerieWindow} of the application
+     */
+    public FaerieWindow getWindow(){
+        return this.window;
     }
 }

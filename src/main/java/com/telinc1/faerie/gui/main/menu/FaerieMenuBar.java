@@ -24,7 +24,7 @@ package com.telinc1.faerie.gui.main.menu;
 
 import com.telinc1.faerie.gui.main.FaerieWindow;
 
-import javax.swing.*;
+import javax.swing.JMenuBar;
 
 /**
  * The menu bar for the main Faerie application window.
@@ -56,7 +56,7 @@ public class FaerieMenuBar extends JMenuBar {
 
         this.fileMenu = new FaerieFileMenu(this);
 
-        this.getParent().setJMenuBar(this);
+        this.getWindow().setJMenuBar(this);
     }
 
     /**
@@ -64,8 +64,7 @@ public class FaerieMenuBar extends JMenuBar {
      *
      * @return an instance of the {@link FaerieWindow} which owns the menu bar
      */
-    @Override
-    public FaerieWindow getParent(){
+    public FaerieWindow getWindow(){
         return this.parent;
     }
 }

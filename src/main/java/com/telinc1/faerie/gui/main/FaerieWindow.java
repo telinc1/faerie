@@ -27,7 +27,8 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.telinc1.faerie.gui.main.menu.FaerieMenuBar;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Insets;
 import java.util.ResourceBundle;
 
 /**
