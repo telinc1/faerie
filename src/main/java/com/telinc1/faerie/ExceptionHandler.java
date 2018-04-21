@@ -29,6 +29,9 @@ import java.io.StringWriter;
 /**
  * The unhandled exception handler which cleanly exists when an exception
  * is thrown.
+ *
+ * @author Telinc1
+ * @since 1.0.0
  */
 public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
     /**

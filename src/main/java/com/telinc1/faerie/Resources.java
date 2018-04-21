@@ -32,6 +32,9 @@ import java.util.ResourceBundle;
 
 /**
  * Handles loading and formatting string-based resource bundles.
+ *
+ * @author Telinc1
+ * @since 1.0.0
  */
 public class Resources {
     private static Map<String, ResourceBundle> bundles = new HashMap<>();
