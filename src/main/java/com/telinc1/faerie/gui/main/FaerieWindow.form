@@ -1,31 +1,764 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.telinc1.faerie.gui.main.FaerieWindow">
-  <grid id="27dc6" binding="contentPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="contentPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="479" height="372"/>
+      <xy x="20" y="20" width="815" height="896"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
+      <grid id="20d6b" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="true"/>
+          <focusable value="true"/>
+          <opaque value="true"/>
+          <visible value="true"/>
+        </properties>
+        <border type="etched" title="Sprite Selection"/>
+        <children>
+          <component id="8175" class="javax.swing.JComboBox" binding="comboBox3" default-binding="true">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+        </children>
+      </grid>
       <tabbedpane id="4e479" binding="tabbedPane">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="200" height="200"/>
           </grid>
         </constraints>
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="98a15" binding="spritePanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
+          <scrollpane id="98351">
             <constraints>
               <tabbedpane title-resource-bundle="com/telinc1/faerie/locale/Main" title-key="content.sprite"/>
             </constraints>
             <properties/>
             <border type="none"/>
-            <children/>
-          </grid>
+            <children>
+              <grid id="98a15" binding="spritePanel" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <grid id="e6fc6" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="etched" title="$1656"/>
+                    <children>
+                      <component id="36746" class="javax.swing.JCheckBox" binding="canBeJumpedOnCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Can be jumped on"/>
+                        </properties>
+                      </component>
+                      <component id="7c2b1" class="javax.swing.JCheckBox" binding="diesWhenJumpedOnCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Dies when jumped on"/>
+                        </properties>
+                      </component>
+                      <component id="7252f" class="javax.swing.JCheckBox" binding="hopInKickShellsCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Hop in/Kick shells"/>
+                        </properties>
+                      </component>
+                      <component id="f13ee" class="javax.swing.JCheckBox" binding="disappearInACloudCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Disappear in a cloud of smoke"/>
+                        </properties>
+                      </component>
+                      <component id="c6eeb" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <labelFor value="340ed"/>
+                          <text value="Object Clipping:"/>
+                        </properties>
+                      </component>
+                      <component id="340ed" class="javax.swing.JComboBox" binding="objectClippingComboBox" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <model>
+                            <item value="00"/>
+                            <item value="01"/>
+                            <item value="02"/>
+                            <item value="03"/>
+                            <item value="04"/>
+                            <item value="05"/>
+                            <item value="06"/>
+                            <item value="07"/>
+                            <item value="08"/>
+                            <item value="09"/>
+                            <item value="0A"/>
+                            <item value="0B"/>
+                            <item value="0C"/>
+                            <item value="0D"/>
+                            <item value="0E"/>
+                            <item value="0F"/>
+                          </model>
+                        </properties>
+                      </component>
+                      <grid id="25d7d" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="etched" title="Visualized Clipping"/>
+                        <children>
+                          <component id="79971" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="4" hsize-policy="4" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <focusable value="false"/>
+                              <icon value="com/telinc1/faerie/icons/object/00.png"/>
+                              <iconTextGap value="0"/>
+                              <labelFor value="98351"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                    </children>
+                  </grid>
+                  <grid id="bcdf8" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="etched" title="$1662"/>
+                    <children>
+                      <component id="4f4d0" class="javax.swing.JCheckBox" binding="useShellAsDeathCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Use shell as death frame"/>
+                        </properties>
+                      </component>
+                      <component id="a433d" class="javax.swing.JCheckBox" binding="fallsStraightDownWhenCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Falls straight down when killed"/>
+                        </properties>
+                      </component>
+                      <component id="dc300" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <labelFor value="a8f2a"/>
+                          <text value="Sprite Clipping:"/>
+                        </properties>
+                      </component>
+                      <component id="a8f2a" class="javax.swing.JComboBox" binding="spriteClippingComboBox" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <model>
+                            <item value="00"/>
+                            <item value="01"/>
+                            <item value="02"/>
+                            <item value="03"/>
+                            <item value="04"/>
+                            <item value="05"/>
+                            <item value="06"/>
+                            <item value="07"/>
+                            <item value="08"/>
+                            <item value="09"/>
+                            <item value="0A"/>
+                            <item value="0B"/>
+                            <item value="0C"/>
+                            <item value="0D"/>
+                            <item value="0E"/>
+                            <item value="0F"/>
+                            <item value="10"/>
+                            <item value="11"/>
+                            <item value="12"/>
+                            <item value="13"/>
+                            <item value="14"/>
+                            <item value="15"/>
+                            <item value="16"/>
+                            <item value="17"/>
+                            <item value="18"/>
+                            <item value="19"/>
+                            <item value="1A"/>
+                            <item value="1B"/>
+                            <item value="1C"/>
+                            <item value="1D"/>
+                            <item value="1E"/>
+                            <item value="1F"/>
+                            <item value="20"/>
+                            <item value="21"/>
+                            <item value="22"/>
+                            <item value="23"/>
+                            <item value="24"/>
+                            <item value="25"/>
+                            <item value="26"/>
+                            <item value="27"/>
+                            <item value="28"/>
+                            <item value="29"/>
+                            <item value="2A"/>
+                            <item value="2B"/>
+                            <item value="2C"/>
+                            <item value="2D"/>
+                            <item value="2E"/>
+                            <item value="2F"/>
+                            <item value="30"/>
+                            <item value="31"/>
+                            <item value="32"/>
+                            <item value="33"/>
+                            <item value="34"/>
+                            <item value="35"/>
+                            <item value="36"/>
+                            <item value="37"/>
+                            <item value="38"/>
+                            <item value="39"/>
+                            <item value="3A"/>
+                            <item value="3B"/>
+                            <item value="3C"/>
+                            <item value="3D"/>
+                            <item value="3E"/>
+                            <item value="3F"/>
+                          </model>
+                        </properties>
+                      </component>
+                      <grid id="58d30" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="etched" title="Visualized Clipping"/>
+                        <children>
+                          <component id="da9a" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="4" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <focusCycleRoot value="false"/>
+                              <focusable value="false"/>
+                              <icon value="com/telinc1/faerie/icons/sprite/00.png"/>
+                              <iconTextGap value="0"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                    </children>
+                  </grid>
+                  <grid id="c9614" layout-manager="GridLayoutManager" row-count="6" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="etched" title="$166E"/>
+                    <children>
+                      <component id="bebb4" class="javax.swing.JCheckBox" binding="useSecondGraphicsPageCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Use second graphics page"/>
+                        </properties>
+                      </component>
+                      <component id="6536c" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <labelFor value="172bf"/>
+                          <text value="Palette:"/>
+                        </properties>
+                      </component>
+                      <component id="172bf" class="javax.swing.JComboBox" binding="paletteComboBox" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="2" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <model>
+                            <item value="8"/>
+                            <item value="9"/>
+                            <item value="A"/>
+                            <item value="B"/>
+                            <item value="C"/>
+                            <item value="D"/>
+                            <item value="E"/>
+                            <item value="F"/>
+                          </model>
+                        </properties>
+                      </component>
+                      <component id="79258" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <icon value="com/telinc1/faerie/icons/palette.png"/>
+                          <iconTextGap value="0"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="3aa94" class="javax.swing.JCheckBox" binding="disableFireballKillingCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Disable fireball killing"/>
+                        </properties>
+                      </component>
+                      <component id="e10df" class="javax.swing.JCheckBox" binding="disableCapeKillingCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Disable cape killing"/>
+                        </properties>
+                      </component>
+                      <component id="8c3a4" class="javax.swing.JCheckBox" binding="disableWaterSplashCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Disable water splash"/>
+                        </properties>
+                      </component>
+                      <component id="94ccf" class="javax.swing.JCheckBox" binding="donTInteractWithCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Don't interact with secondary layers"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="5d6cc" layout-manager="GridLayoutManager" row-count="8" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="etched" title="$167A"/>
+                    <children>
+                      <component id="22aaa" class="javax.swing.JCheckBox" binding="executeWhileBeingKilledCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Execute while being killed"/>
+                        </properties>
+                      </component>
+                      <component id="aeb42" class="javax.swing.JCheckBox" binding="invincibleToPlayerCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Invincible to player"/>
+                        </properties>
+                      </component>
+                      <component id="f2e57" class="javax.swing.JCheckBox" binding="executeIfOffscreenCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Execute if offscreen"/>
+                        </properties>
+                      </component>
+                      <component id="736a5" class="javax.swing.JCheckBox" binding="donTChangeIntoCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Don't change into a shell when stunned"/>
+                        </properties>
+                      </component>
+                      <component id="890c0" class="javax.swing.JCheckBox" binding="canTBeKickedCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Can't be kicked like a shell"/>
+                        </properties>
+                      </component>
+                      <component id="a34bc" class="javax.swing.JCheckBox" binding="processPlayerInteractionEveryCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Process player interaction every frame"/>
+                        </properties>
+                      </component>
+                      <component id="3736a" class="javax.swing.JCheckBox" binding="givesPowerupWhenEatenCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Gives powerup when eaten by Yoshi (dangerous)"/>
+                        </properties>
+                      </component>
+                      <component id="698c" class="javax.swing.JCheckBox" binding="donTUseDefaultCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Don't use default player interaction"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="ca0d0" layout-manager="GridLayoutManager" row-count="8" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="etched" title="$1686"/>
+                    <children>
+                      <component id="573ee" class="javax.swing.JCheckBox" binding="inedibleCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Inedible"/>
+                        </properties>
+                      </component>
+                      <component id="f1445" class="javax.swing.JCheckBox" binding="stayInYoshiSCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Stay in Yoshi's mouth"/>
+                        </properties>
+                      </component>
+                      <component id="e8ee9" class="javax.swing.JCheckBox" binding="weirdGroundBehaviorCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Weird ground behavior"/>
+                        </properties>
+                      </component>
+                      <component id="22cad" class="javax.swing.JCheckBox" binding="donTInteractWithCheckBox1" default-binding="true">
+                        <constraints>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Don't interact with other sprites"/>
+                        </properties>
+                      </component>
+                      <component id="b8a3c" class="javax.swing.JCheckBox" binding="donTChangeDirectionCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Don't change direction when touched"/>
+                        </properties>
+                      </component>
+                      <component id="3f457" class="javax.swing.JCheckBox" binding="donTTurnIntoCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Don't turn into a coin when goal passed"/>
+                        </properties>
+                      </component>
+                      <component id="73636" class="javax.swing.JCheckBox" binding="spawnsANewSpriteCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Spawns a new sprite when stunned"/>
+                        </properties>
+                      </component>
+                      <component id="af450" class="javax.swing.JCheckBox" binding="donTInteractWithCheckBox2" default-binding="true">
+                        <constraints>
+                          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Don't interact with objects"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="fe1c0" layout-manager="GridLayoutManager" row-count="8" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="etched" title="$190F"/>
+                    <children>
+                      <component id="8a192" class="javax.swing.JCheckBox" binding="makePlatformPassableFromCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Make platform passable from below"/>
+                        </properties>
+                      </component>
+                      <component id="edaf3" class="javax.swing.JCheckBox" binding="donTEraseWhenCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Don't erase when goal passed"/>
+                        </properties>
+                      </component>
+                      <component id="7e6f" class="javax.swing.JCheckBox" binding="canTBeKilledCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Can't be killed by sliding"/>
+                        </properties>
+                      </component>
+                      <component id="d7f5f" class="javax.swing.JCheckBox" binding="takes5FireballsToCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Takes 5 fireballs to kill"/>
+                        </properties>
+                      </component>
+                      <component id="52342" class="javax.swing.JCheckBox" binding="canBeJumpedOnCheckBox2" default-binding="true">
+                        <constraints>
+                          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Can be jumped on with upward Y speed"/>
+                        </properties>
+                      </component>
+                      <component id="90e8f" class="javax.swing.JCheckBox" binding="deathFrame2TilesCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Death frame 2 tiles high"/>
+                        </properties>
+                      </component>
+                      <component id="af38d" class="javax.swing.JCheckBox" binding="donTTurnIntoCheckBox1" default-binding="true">
+                        <constraints>
+                          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Don't turn into a coin with silver P-Switch"/>
+                        </properties>
+                      </component>
+                      <component id="3d454" class="javax.swing.JCheckBox" binding="donTGetStuckCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Don't get stuck in walls (carryable sprites)"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="84891" layout-manager="GridLayoutManager" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="1" hsize-policy="1" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="etched" title="Insertion Settings"/>
+                    <children>
+                      <component id="86f1e" class="javax.swing.JComboBox" binding="comboBox4" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <model>
+                            <item value="Tweak"/>
+                            <item value="Custom"/>
+                          </model>
+                        </properties>
+                      </component>
+                      <component id="b8ddb" class="javax.swing.JComboBox" binding="comboBox5" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <model>
+                            <item value="Vanilla"/>
+                            <item value="Regular"/>
+                            <item value="Shooter"/>
+                            <item value="Generator"/>
+                            <item value="Initializer"/>
+                            <item value="Scroller"/>
+                          </model>
+                        </properties>
+                      </component>
+                      <component id="39f67" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <labelFor value="fc815"/>
+                          <text value="ASM Files:"/>
+                        </properties>
+                      </component>
+                      <component id="fc815" class="javax.swing.JTextField" binding="ASMFilesTextField" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                        </constraints>
+                        <properties>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="a1e8c" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="c5e15" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <labelFor value="ca03b"/>
+                          <text value="Acts Like:"/>
+                        </properties>
+                      </component>
+                      <component id="ca03b" class="javax.swing.JTextField" binding="actsLikeTextField" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="ed63b" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="1" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="etched" title="Additional Data"/>
+                    <children>
+                      <component id="bade" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <labelFor value="da76d"/>
+                          <text value="Property Bytes:"/>
+                        </properties>
+                      </component>
+                      <component id="da76d" class="javax.swing.JTextField" binding="propertyBytesTextField" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="645f3" class="javax.swing.JTextField" binding="textField5" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="4e1ef" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <labelFor value="c1650"/>
+                          <text value="Status Override:"/>
+                        </properties>
+                      </component>
+                      <component id="c1650" class="javax.swing.JComboBox" binding="statusOverrideComboBox" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <model>
+                            <item value="Handle stunned"/>
+                            <item value="Handle all"/>
+                            <item value="Override all"/>
+                          </model>
+                        </properties>
+                      </component>
+                      <component id="13eae" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <labelFor value="80ed4"/>
+                          <text value="Unique Byte:"/>
+                        </properties>
+                      </component>
+                      <component id="80ed4" class="javax.swing.JTextField" binding="uniqueByteTextField" default-binding="true">
+                        <constraints>
+                          <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="4f77c" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <labelFor value="69f0"/>
+                          <text value="Extra Byte Amount:"/>
+                        </properties>
+                      </component>
+                      <component id="69f0" class="javax.swing.JTextField" binding="extraByteAmountTextField" default-binding="true">
+                        <constraints>
+                          <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                        </constraints>
+                        <properties/>
+                      </component>
+                    </children>
+                  </grid>
+                </children>
+              </grid>
+            </children>
+          </scrollpane>
           <grid id="cafd7" binding="displayPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
