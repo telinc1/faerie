@@ -248,7 +248,7 @@ public class SpriteBehavior {
     public boolean escapeWalls;
 
     /**
-     * Packs all six Tweaker bytes into an array of integers.
+     * Packs all six behavior bytes into an array of integers.
      *
      * @return the packed array in the order $1656, $1662, $166E, $167A, $1686, $190F
      */
@@ -293,5 +293,61 @@ public class SpriteBehavior {
                 | (this.ignoreGoal ? 0x40 : 0x0)
                 | (this.platformPassableFromBelow ? 0x80 : 0x0)
         };
+    }
+
+    /**
+     * Unpacks an array of bytes into the behavior's properties.
+     *
+     * @param settings the six bytes to unpack
+     * @throws IllegalArgumentException if the given array has less than 6 elements
+     */
+    public void unpack(int[] settings) throws IllegalArgumentException{
+        if(settings.length < 6){
+            throw new IllegalArgumentException("The packed settings array must have 6 integers.");
+        }
+
+        this.objectClipping = (byte)(settings[0] & 0xF);
+        this.canBeJumpedOn = (settings[0] & 0x10) != 0x0;
+        this.diesWhenJumpedOn = (settings[0] & 0x20) != 0x0;
+        this.hopInShells = (settings[0] & 0x40) != 0x0;
+        this.disappearInSmoke = (settings[0] & 0x80) != 0x0;
+
+        this.spriteClipping = (byte)(settings[1] & 0x3F);
+        this.useShellAsDeathFrame = (settings[1] & 0x40) != 0x0;
+        this.fallsStraightDownWhenKilled = (settings[1] & 0x80) != 0x0;
+
+        this.useSecondGraphicsPage = (settings[2] & 0x1) != 0x0;
+        this.palette = (byte)((settings[2] >> 0x1) & 0b111);
+        this.disableFireballKilling = (settings[2] & 0x10) != 0x0;
+        this.disableCapeKilling = (settings[2] & 0x20) != 0x0;
+        this.disableWaterSplash = (settings[2] & 0x40) != 0x0;
+        this.disableSecondaryInteraction = (settings[2] & 0x80) != 0x0;
+
+        this.processIfDead = (settings[3] & 0x1) != 0x0;
+        this.invincibleToPlayer = (settings[3] & 0x2) != 0x0;
+        this.processWhileOffscreen = (settings[3] & 0x4) != 0x0;
+        this.skipShellIfStunned = (settings[3] & 0x8) != 0x0;
+        this.disableKicking = (settings[3] & 0x10) != 0x0;
+        this.processInteractionEveryFrame = (settings[3] & 0x20) != 0x0;
+        this.isPowerup = (settings[3] & 0x40) != 0x0;
+        this.disableDefaultInteraction = (settings[3] & 0x80) != 0x0;
+
+        this.disableObjectInteraction = (settings[4] & 0x1) != 0x0;
+        this.spawnsNewSprite = (settings[4] & 0x2) != 0x0;
+        this.disappearWhenGoalPassed = (settings[4] & 0x4) != 0x0;
+        this.preserveDirection = (settings[4] & 0x8) != 0x0;
+        this.disableSpriteInteraction = (settings[4] & 0x10) != 0x0;
+        this.weirdGroundBehavior = (settings[4] & 0x20) != 0x0;
+        this.stayInMouth = (settings[4] & 0x40) != 0x0;
+        this.inedible = (settings[4] & 0x80) != 0x0;
+
+        this.escapeWalls = (settings[5] & 0x1) != 0x0;
+        this.immuneToSilverPOW = (settings[5] & 0x2) != 0x0;
+        this.tallDeathFrame = (settings[5] & 0x4) != 0x0;
+        this.canBeJumpedOnFromBelow = (settings[5] & 0x8) != 0x0;
+        this.needsFiveFireballs = (settings[5] & 0x10) != 0x0;
+        this.disableSlideKill = (settings[5] & 0x20) != 0x0;
+        this.ignoreGoal = (settings[5] & 0x40) != 0x0;
+        this.platformPassableFromBelow = (settings[5] & 0x80) != 0x0;
     }
 }

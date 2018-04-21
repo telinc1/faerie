@@ -84,6 +84,9 @@ public class Resources {
 
                 variable = (String) element;
                 strings.add(arguments[++i]);
+            }else if(element instanceof Integer){
+                variable = "integer";
+                strings.add(element.toString());
             }else if(element instanceof Exception){
                 variable = "exception";
                 strings.add(ExceptionHandler.getStackTrace((Throwable) element));

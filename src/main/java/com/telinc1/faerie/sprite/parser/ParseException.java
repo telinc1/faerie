@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2018 Telinc1
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.telinc1.faerie.sprite.parser;
+
+import com.telinc1.faerie.Resources;
+
+/**
+ * Signals that the configuration file for a sprite was malformed or had
+ * invalid data.
+ *
+ * @author Telinc1
+ * @since 1.0.0
+ */
+public class ParseException extends Exception {
+    /**
+     * Constructs a {@code ParseException} with an optional cause.
+     * <p>
+     * The messaged will be taken from the "parse" resource bundle.
+     *
+     * @param key the key for the exception message from "parse"
+     * @param cause the cause of the exception
+     * @param arguments the arguments for the message
+     */
+    public ParseException(String key, Throwable cause, Object... arguments){
+        super(Resources.getString("parse", key, arguments), cause);
+    }
+}
