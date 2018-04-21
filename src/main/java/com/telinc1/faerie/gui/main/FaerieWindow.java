@@ -26,6 +26,8 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.gui.main.menu.FaerieMenuBar;
+import com.telinc1.faerie.sprite.EnumSpriteSubType;
+import com.telinc1.faerie.sprite.EnumSpriteType;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -42,8 +44,14 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * The main Faerie editor window.
@@ -76,55 +84,64 @@ public class FaerieWindow extends JFrame {
      * The main tab which houses the display information for the sprite.
      */
     private JPanel displayPanel;
+
+    private JComboBox spriteSelectionComboBox;
+
+    private JComboBox typeComboBox;
+    private JComboBox subtypeComboBox;
+    private JTextField actsLikeTextField;
+    private JTextField firstASMTextField;
+    private JTextField secondASMTextField;
+
+    private JComboBox objectClippingComboBox;
     private JCheckBox canBeJumpedOnCheckBox;
     private JCheckBox diesWhenJumpedOnCheckBox;
-    private JCheckBox hopInKickShellsCheckBox;
-    private JCheckBox disappearInACloudCheckBox;
-    private JCheckBox useShellAsDeathCheckBox;
-    private JCheckBox fallsStraightDownWhenCheckBox;
+    private JCheckBox hopInShellsCheckBox;
+    private JCheckBox disappearInSmokeCheckBox;
+
+    private JComboBox spriteClippingComboBox;
+    private JCheckBox shellsAsDeathFrameCheckBox;
+    private JCheckBox fallWhenKilledCheckBox;
+
     private JCheckBox useSecondGraphicsPageCheckBox;
     private JComboBox paletteComboBox;
     private JCheckBox disableFireballKillingCheckBox;
     private JCheckBox disableCapeKillingCheckBox;
     private JCheckBox disableWaterSplashCheckBox;
-    private JCheckBox donTInteractWithCheckBox;
-    private JCheckBox executeWhileBeingKilledCheckBox;
+    private JCheckBox disableSecondaryInteractionCheckBox;
+
+    private JCheckBox processIfDeadCheckBox;
     private JCheckBox invincibleToPlayerCheckBox;
-    private JCheckBox executeIfOffscreenCheckBox;
-    private JCheckBox donTChangeIntoCheckBox;
-    private JCheckBox canTBeKickedCheckBox;
-    private JCheckBox processPlayerInteractionEveryCheckBox;
-    private JCheckBox givesPowerupWhenEatenCheckBox;
-    private JCheckBox donTUseDefaultCheckBox;
-    private JComboBox objectClippingComboBox;
-    private JComboBox spriteClippingComboBox;
+    private JCheckBox processWhileOffscreenCheckBox;
+    private JCheckBox skipShellIfStunnedCheckBox;
+    private JCheckBox disableKickingCheckBox;
+    private JCheckBox processPlayerInteractionEveryFrameCheckBox;
+    private JCheckBox isPowerupCheckbox;
+    private JCheckBox disableDefaultInteractionCheckBox;
+
     private JCheckBox inedibleCheckBox;
-    private JCheckBox stayInYoshiSCheckBox;
+    private JCheckBox stayInMouthCheckBox;
     private JCheckBox weirdGroundBehaviorCheckBox;
-    private JCheckBox donTInteractWithCheckBox1;
-    private JCheckBox donTChangeDirectionCheckBox;
-    private JCheckBox donTTurnIntoCheckBox;
+    private JCheckBox disableSpriteInteractionCheckBox;
+    private JCheckBox preserveDirectionCheckBox;
+    private JCheckBox disappearWhenGoalPassedCheckBox;
     private JCheckBox spawnsANewSpriteCheckBox;
-    private JCheckBox donTInteractWithCheckBox2;
-    private JCheckBox makePlatformPassableFromCheckBox;
-    private JCheckBox donTEraseWhenCheckBox;
-    private JCheckBox canTBeKilledCheckBox;
-    private JCheckBox takes5FireballsToCheckBox;
-    private JCheckBox canBeJumpedOnCheckBox2;
-    private JCheckBox deathFrame2TilesCheckBox;
-    private JCheckBox donTTurnIntoCheckBox1;
-    private JCheckBox donTGetStuckCheckBox;
-    private JComboBox comboBox3;
-    private JComboBox comboBox4;
-    private JComboBox comboBox5;
-    private JTextField actsLikeTextField;
-    private JTextField ASMFilesTextField;
-    private JTextField propertyBytesTextField;
-    private JTextField textField5;
+    private JCheckBox disableObjectInteractionCheckBox;
+
+    private JCheckBox platformPassableFromBelowCheckBox;
+    private JCheckBox ignoreGoalCheckBox;
+    private JCheckBox disableSlideKillingCheckBox;
+    private JCheckBox needsFiveFireballsCheckBox;
+    private JCheckBox canBeJumpedOnFromBelowCheckBox;
+    private JCheckBox tallDeathFrameCheckbox;
+    private JCheckBox immuneToSilverPOWCheckBox;
+    private JCheckBox escapeWallsCheckBox;
+
+    private JTextField firstPropertyTextField;
+    private JTextField secondPropertyTextField;
     private JComboBox statusOverrideComboBox;
     private JTextField uniqueByteTextField;
     private JTextField extraByteAmountTextField;
-    private JTextField textField3;
 
     /**
      * Returns the menu bar for the application window.
@@ -145,6 +162,7 @@ public class FaerieWindow extends JFrame {
      */
     public FaerieWindow(){
         super(Resources.getString("main", "title"));
+        this.$$$setupUI$$$();
         this.setSize(760, 550);
         this.setContentPane(this.contentPanel);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -156,13 +174,6 @@ public class FaerieWindow extends JFrame {
         this.menuBar = new FaerieMenuBar(this);
     }
 
-    {
-// GUI initializer generated by IntelliJ IDEA GUI Designer
-// >>> IMPORTANT!! <<<
-// DO NOT EDIT OR ADD ANY CODE HERE!
-        this.$$$setupUI$$$();
-    }
-
     /**
      * Method generated by IntelliJ IDEA GUI Designer
      * >>> IMPORTANT!! <<<
@@ -171,6 +182,7 @@ public class FaerieWindow extends JFrame {
      * @noinspection ALL
      */
     private void $$$setupUI$$$(){
+        createUIComponents();
         contentPanel = new JPanel();
         contentPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         final JPanel panel1 = new JPanel();
@@ -181,17 +193,18 @@ public class FaerieWindow extends JFrame {
         panel1.setVisible(true);
         contentPanel.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, 1, 1, null, null, null, 0, false));
         panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Sprite Selection"));
-        comboBox3 = new JComboBox();
-        panel1.add(comboBox3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(spriteSelectionComboBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         tabbedPane = new JTabbedPane();
         contentPanel.add(tabbedPane, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         final JScrollPane scrollPane1 = new JScrollPane();
+        scrollPane1.setEnabled(true);
         tabbedPane.addTab(ResourceBundle.getBundle("com/telinc1/faerie/locale/Main").getString("content.sprite"), scrollPane1);
         spritePanel = new JPanel();
         spritePanel.setLayout(new GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
         scrollPane1.setViewportView(spritePanel);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(6, 2, new Insets(0, 0, 0, 0), -1, 0));
+        panel2.setEnabled(true);
         spritePanel.add(panel2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         panel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "$1656"));
         canBeJumpedOnCheckBox = new JCheckBox();
@@ -200,12 +213,12 @@ public class FaerieWindow extends JFrame {
         diesWhenJumpedOnCheckBox = new JCheckBox();
         diesWhenJumpedOnCheckBox.setText("Dies when jumped on");
         panel2.add(diesWhenJumpedOnCheckBox, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
-        hopInKickShellsCheckBox = new JCheckBox();
-        hopInKickShellsCheckBox.setText("Hop in/Kick shells");
-        panel2.add(hopInKickShellsCheckBox, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
-        disappearInACloudCheckBox = new JCheckBox();
-        disappearInACloudCheckBox.setText("Disappear in a cloud of smoke");
-        panel2.add(disappearInACloudCheckBox, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
+        hopInShellsCheckBox = new JCheckBox();
+        hopInShellsCheckBox.setText("Hop in/Kick shells");
+        panel2.add(hopInShellsCheckBox, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
+        disappearInSmokeCheckBox = new JCheckBox();
+        disappearInSmokeCheckBox.setText("Disappear in a cloud of smoke");
+        panel2.add(disappearInSmokeCheckBox, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
         label1.setText("Object Clipping:");
         panel2.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -243,12 +256,12 @@ public class FaerieWindow extends JFrame {
         panel4.setLayout(new GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, 0));
         spritePanel.add(panel4, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         panel4.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "$1662"));
-        useShellAsDeathCheckBox = new JCheckBox();
-        useShellAsDeathCheckBox.setText("Use shell as death frame");
-        panel4.add(useShellAsDeathCheckBox, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
-        fallsStraightDownWhenCheckBox = new JCheckBox();
-        fallsStraightDownWhenCheckBox.setText("Falls straight down when killed");
-        panel4.add(fallsStraightDownWhenCheckBox, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
+        shellsAsDeathFrameCheckBox = new JCheckBox();
+        shellsAsDeathFrameCheckBox.setText("Use shell as death frame");
+        panel4.add(shellsAsDeathFrameCheckBox, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
+        fallWhenKilledCheckBox = new JCheckBox();
+        fallWhenKilledCheckBox.setText("Falls straight down when killed");
+        panel4.add(fallWhenKilledCheckBox, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         final JLabel label3 = new JLabel();
         label3.setText("Sprite Clipping:");
         panel4.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -367,37 +380,37 @@ public class FaerieWindow extends JFrame {
         disableWaterSplashCheckBox = new JCheckBox();
         disableWaterSplashCheckBox.setText("Disable water splash");
         panel6.add(disableWaterSplashCheckBox, new GridConstraints(4, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donTInteractWithCheckBox = new JCheckBox();
-        donTInteractWithCheckBox.setText("Don't interact with secondary layers");
-        panel6.add(donTInteractWithCheckBox, new GridConstraints(5, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        disableSecondaryInteractionCheckBox = new JCheckBox();
+        disableSecondaryInteractionCheckBox.setText("Don't interact with secondary layers");
+        panel6.add(disableSecondaryInteractionCheckBox, new GridConstraints(5, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel7 = new JPanel();
         panel7.setLayout(new GridLayoutManager(8, 1, new Insets(0, 0, 0, 0), -1, 0));
         spritePanel.add(panel7, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         panel7.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "$167A"));
-        executeWhileBeingKilledCheckBox = new JCheckBox();
-        executeWhileBeingKilledCheckBox.setText("Execute while being killed");
-        panel7.add(executeWhileBeingKilledCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        processIfDeadCheckBox = new JCheckBox();
+        processIfDeadCheckBox.setText("Execute while being killed");
+        panel7.add(processIfDeadCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         invincibleToPlayerCheckBox = new JCheckBox();
         invincibleToPlayerCheckBox.setText("Invincible to player");
         panel7.add(invincibleToPlayerCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        executeIfOffscreenCheckBox = new JCheckBox();
-        executeIfOffscreenCheckBox.setText("Execute if offscreen");
-        panel7.add(executeIfOffscreenCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donTChangeIntoCheckBox = new JCheckBox();
-        donTChangeIntoCheckBox.setText("Don't change into a shell when stunned");
-        panel7.add(donTChangeIntoCheckBox, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        canTBeKickedCheckBox = new JCheckBox();
-        canTBeKickedCheckBox.setText("Can't be kicked like a shell");
-        panel7.add(canTBeKickedCheckBox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        processPlayerInteractionEveryCheckBox = new JCheckBox();
-        processPlayerInteractionEveryCheckBox.setText("Process player interaction every frame");
-        panel7.add(processPlayerInteractionEveryCheckBox, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        givesPowerupWhenEatenCheckBox = new JCheckBox();
-        givesPowerupWhenEatenCheckBox.setText("Gives powerup when eaten by Yoshi (dangerous)");
-        panel7.add(givesPowerupWhenEatenCheckBox, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donTUseDefaultCheckBox = new JCheckBox();
-        donTUseDefaultCheckBox.setText("Don't use default player interaction");
-        panel7.add(donTUseDefaultCheckBox, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        processWhileOffscreenCheckBox = new JCheckBox();
+        processWhileOffscreenCheckBox.setText("Execute if offscreen");
+        panel7.add(processWhileOffscreenCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        skipShellIfStunnedCheckBox = new JCheckBox();
+        skipShellIfStunnedCheckBox.setText("Don't change into a shell when stunned");
+        panel7.add(skipShellIfStunnedCheckBox, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        disableKickingCheckBox = new JCheckBox();
+        disableKickingCheckBox.setText("Can't be kicked like a shell");
+        panel7.add(disableKickingCheckBox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        processPlayerInteractionEveryFrameCheckBox = new JCheckBox();
+        processPlayerInteractionEveryFrameCheckBox.setText("Process player interaction every frame");
+        panel7.add(processPlayerInteractionEveryFrameCheckBox, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        isPowerupCheckbox = new JCheckBox();
+        isPowerupCheckbox.setText("Gives powerup when eaten by Yoshi (dangerous)");
+        panel7.add(isPowerupCheckbox, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        disableDefaultInteractionCheckBox = new JCheckBox();
+        disableDefaultInteractionCheckBox.setText("Don't use default player interaction");
+        panel7.add(disableDefaultInteractionCheckBox, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel8 = new JPanel();
         panel8.setLayout(new GridLayoutManager(8, 1, new Insets(0, 0, 0, 0), -1, 0));
         spritePanel.add(panel8, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
@@ -405,83 +418,69 @@ public class FaerieWindow extends JFrame {
         inedibleCheckBox = new JCheckBox();
         inedibleCheckBox.setText("Inedible");
         panel8.add(inedibleCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        stayInYoshiSCheckBox = new JCheckBox();
-        stayInYoshiSCheckBox.setText("Stay in Yoshi's mouth");
-        panel8.add(stayInYoshiSCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        stayInMouthCheckBox = new JCheckBox();
+        stayInMouthCheckBox.setText("Stay in Yoshi's mouth");
+        panel8.add(stayInMouthCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         weirdGroundBehaviorCheckBox = new JCheckBox();
         weirdGroundBehaviorCheckBox.setText("Weird ground behavior");
         panel8.add(weirdGroundBehaviorCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donTInteractWithCheckBox1 = new JCheckBox();
-        donTInteractWithCheckBox1.setText("Don't interact with other sprites");
-        panel8.add(donTInteractWithCheckBox1, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donTChangeDirectionCheckBox = new JCheckBox();
-        donTChangeDirectionCheckBox.setText("Don't change direction when touched");
-        panel8.add(donTChangeDirectionCheckBox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donTTurnIntoCheckBox = new JCheckBox();
-        donTTurnIntoCheckBox.setText("Don't turn into a coin when goal passed");
-        panel8.add(donTTurnIntoCheckBox, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        disableSpriteInteractionCheckBox = new JCheckBox();
+        disableSpriteInteractionCheckBox.setText("Don't interact with other sprites");
+        panel8.add(disableSpriteInteractionCheckBox, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        preserveDirectionCheckBox = new JCheckBox();
+        preserveDirectionCheckBox.setText("Don't change direction when touched");
+        panel8.add(preserveDirectionCheckBox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        disappearWhenGoalPassedCheckBox = new JCheckBox();
+        disappearWhenGoalPassedCheckBox.setText("Don't turn into a coin when goal passed");
+        panel8.add(disappearWhenGoalPassedCheckBox, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         spawnsANewSpriteCheckBox = new JCheckBox();
         spawnsANewSpriteCheckBox.setText("Spawns a new sprite when stunned");
         panel8.add(spawnsANewSpriteCheckBox, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donTInteractWithCheckBox2 = new JCheckBox();
-        donTInteractWithCheckBox2.setText("Don't interact with objects");
-        panel8.add(donTInteractWithCheckBox2, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        disableObjectInteractionCheckBox = new JCheckBox();
+        disableObjectInteractionCheckBox.setText("Don't interact with objects");
+        panel8.add(disableObjectInteractionCheckBox, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel9 = new JPanel();
         panel9.setLayout(new GridLayoutManager(8, 1, new Insets(0, 0, 0, 0), -1, 0));
         spritePanel.add(panel9, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         panel9.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "$190F"));
-        makePlatformPassableFromCheckBox = new JCheckBox();
-        makePlatformPassableFromCheckBox.setText("Make platform passable from below");
-        panel9.add(makePlatformPassableFromCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donTEraseWhenCheckBox = new JCheckBox();
-        donTEraseWhenCheckBox.setText("Don't erase when goal passed");
-        panel9.add(donTEraseWhenCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        canTBeKilledCheckBox = new JCheckBox();
-        canTBeKilledCheckBox.setText("Can't be killed by sliding");
-        panel9.add(canTBeKilledCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        takes5FireballsToCheckBox = new JCheckBox();
-        takes5FireballsToCheckBox.setText("Takes 5 fireballs to kill");
-        panel9.add(takes5FireballsToCheckBox, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        canBeJumpedOnCheckBox2 = new JCheckBox();
-        canBeJumpedOnCheckBox2.setText("Can be jumped on with upward Y speed");
-        panel9.add(canBeJumpedOnCheckBox2, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        deathFrame2TilesCheckBox = new JCheckBox();
-        deathFrame2TilesCheckBox.setText("Death frame 2 tiles high");
-        panel9.add(deathFrame2TilesCheckBox, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donTTurnIntoCheckBox1 = new JCheckBox();
-        donTTurnIntoCheckBox1.setText("Don't turn into a coin with silver P-Switch");
-        panel9.add(donTTurnIntoCheckBox1, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donTGetStuckCheckBox = new JCheckBox();
-        donTGetStuckCheckBox.setText("Don't get stuck in walls (carryable sprites)");
-        panel9.add(donTGetStuckCheckBox, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        platformPassableFromBelowCheckBox = new JCheckBox();
+        platformPassableFromBelowCheckBox.setText("Make platform passable from below");
+        panel9.add(platformPassableFromBelowCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        ignoreGoalCheckBox = new JCheckBox();
+        ignoreGoalCheckBox.setText("Don't erase when goal passed");
+        panel9.add(ignoreGoalCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        disableSlideKillingCheckBox = new JCheckBox();
+        disableSlideKillingCheckBox.setText("Can't be killed by sliding");
+        panel9.add(disableSlideKillingCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        needsFiveFireballsCheckBox = new JCheckBox();
+        needsFiveFireballsCheckBox.setText("Takes 5 fireballs to kill");
+        panel9.add(needsFiveFireballsCheckBox, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        canBeJumpedOnFromBelowCheckBox = new JCheckBox();
+        canBeJumpedOnFromBelowCheckBox.setText("Can be jumped on with upward Y speed");
+        panel9.add(canBeJumpedOnFromBelowCheckBox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        tallDeathFrameCheckbox = new JCheckBox();
+        tallDeathFrameCheckbox.setText("Death frame 2 tiles high");
+        panel9.add(tallDeathFrameCheckbox, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        immuneToSilverPOWCheckBox = new JCheckBox();
+        immuneToSilverPOWCheckBox.setText("Don't turn into a coin with silver P-Switch");
+        panel9.add(immuneToSilverPOWCheckBox, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        escapeWallsCheckBox = new JCheckBox();
+        escapeWallsCheckBox.setText("Don't get stuck in walls (carryable sprites)");
+        panel9.add(escapeWallsCheckBox, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel10 = new JPanel();
         panel10.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
         spritePanel.add(panel10, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, 1, 1, null, null, null, 0, false));
         panel10.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Insertion Settings"));
-        comboBox4 = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel4 = new DefaultComboBoxModel();
-        defaultComboBoxModel4.addElement("Tweak");
-        defaultComboBoxModel4.addElement("Custom");
-        comboBox4.setModel(defaultComboBoxModel4);
-        panel10.add(comboBox4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        comboBox5 = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel5 = new DefaultComboBoxModel();
-        defaultComboBoxModel5.addElement("Vanilla");
-        defaultComboBoxModel5.addElement("Regular");
-        defaultComboBoxModel5.addElement("Shooter");
-        defaultComboBoxModel5.addElement("Generator");
-        defaultComboBoxModel5.addElement("Initializer");
-        defaultComboBoxModel5.addElement("Scroller");
-        comboBox5.setModel(defaultComboBoxModel5);
-        panel10.add(comboBox5, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel10.add(typeComboBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel10.add(subtypeComboBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label7 = new JLabel();
         label7.setText("ASM Files:");
         panel10.add(label7, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        ASMFilesTextField = new JTextField();
-        ASMFilesTextField.setText("");
-        panel10.add(ASMFilesTextField, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        textField3 = new JTextField();
-        panel10.add(textField3, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        firstASMTextField = new JTextField();
+        firstASMTextField.setText("");
+        panel10.add(firstASMTextField, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        secondASMTextField = new JTextField();
+        panel10.add(secondASMTextField, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label8 = new JLabel();
         label8.setText("Acts Like:");
         panel10.add(label8, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -494,19 +493,19 @@ public class FaerieWindow extends JFrame {
         final JLabel label9 = new JLabel();
         label9.setText("Property Bytes:");
         panel11.add(label9, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        propertyBytesTextField = new JTextField();
-        panel11.add(propertyBytesTextField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        textField5 = new JTextField();
-        panel11.add(textField5, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        firstPropertyTextField = new JTextField();
+        panel11.add(firstPropertyTextField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        secondPropertyTextField = new JTextField();
+        panel11.add(secondPropertyTextField, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label10 = new JLabel();
         label10.setText("Status Override:");
         panel11.add(label10, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         statusOverrideComboBox = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel6 = new DefaultComboBoxModel();
-        defaultComboBoxModel6.addElement("Handle stunned");
-        defaultComboBoxModel6.addElement("Handle all");
-        defaultComboBoxModel6.addElement("Override all");
-        statusOverrideComboBox.setModel(defaultComboBoxModel6);
+        final DefaultComboBoxModel defaultComboBoxModel4 = new DefaultComboBoxModel();
+        defaultComboBoxModel4.addElement("Handle stunned");
+        defaultComboBoxModel4.addElement("Handle all");
+        defaultComboBoxModel4.addElement("Override all");
+        statusOverrideComboBox.setModel(defaultComboBoxModel4);
         panel11.add(statusOverrideComboBox, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label11 = new JLabel();
         label11.setText("Unique Byte:");
@@ -525,12 +524,42 @@ public class FaerieWindow extends JFrame {
         label2.setLabelFor(scrollPane1);
         label3.setLabelFor(spriteClippingComboBox);
         label5.setLabelFor(paletteComboBox);
-        label7.setLabelFor(ASMFilesTextField);
+        label7.setLabelFor(firstASMTextField);
         label8.setLabelFor(actsLikeTextField);
-        label9.setLabelFor(propertyBytesTextField);
+        label9.setLabelFor(firstPropertyTextField);
         label10.setLabelFor(statusOverrideComboBox);
         label11.setLabelFor(uniqueByteTextField);
         label12.setLabelFor(extraByteAmountTextField);
+    }
+
+    private void createUIComponents(){
+        // Create sprite selection combobox.
+        try {
+            URL listURL = this.getClass().getResource("/com/telinc1/faerie/sprites/list.txt");
+            File listFile = new File(listURL.getFile());
+            List<String> sprites = Files.readAllLines(listFile.toPath());
+
+            this.spriteSelectionComboBox = new JComboBox<>(sprites.toArray());
+        }catch(IOException exception){
+            throw new RuntimeException(exception);
+        }
+
+
+        // Create type combobox.
+        this.typeComboBox = new JComboBox<>(Arrays
+            .stream(EnumSpriteType.values())
+            .map(element -> element.toString().charAt(0) + element.toString().substring(1).toLowerCase())
+            .collect(Collectors.toList())
+            .toArray()
+        );
+
+        // Create subtype combobox.
+        this.subtypeComboBox = new JComboBox<>(Arrays
+            .stream(EnumSpriteSubType.values())
+            .map(element -> element.toString().charAt(0) + element.toString().substring(1).toLowerCase())
+            .collect(Collectors.toList())
+            .toArray()
+        );
     }
 
     /** @noinspection ALL */

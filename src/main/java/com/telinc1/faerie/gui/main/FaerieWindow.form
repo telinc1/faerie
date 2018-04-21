@@ -21,7 +21,7 @@
         </properties>
         <border type="etched" title="Sprite Selection"/>
         <children>
-          <component id="8175" class="javax.swing.JComboBox" binding="comboBox3" default-binding="true">
+          <component id="8175" class="javax.swing.JComboBox" binding="spriteSelectionComboBox" custom-create="true">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -42,7 +42,9 @@
             <constraints>
               <tabbedpane title-resource-bundle="com/telinc1/faerie/locale/Main" title-key="content.sprite"/>
             </constraints>
-            <properties/>
+            <properties>
+              <enabled value="true"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="98a15" binding="spritePanel" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -56,7 +58,9 @@
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <enabled value="true"/>
+                    </properties>
                     <border type="etched" title="$1656"/>
                     <children>
                       <component id="36746" class="javax.swing.JCheckBox" binding="canBeJumpedOnCheckBox" default-binding="true">
@@ -75,7 +79,7 @@
                           <text value="Dies when jumped on"/>
                         </properties>
                       </component>
-                      <component id="7252f" class="javax.swing.JCheckBox" binding="hopInKickShellsCheckBox" default-binding="true">
+                      <component id="7252f" class="javax.swing.JCheckBox" binding="hopInShellsCheckBox" default-binding="true">
                         <constraints>
                           <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -83,7 +87,7 @@
                           <text value="Hop in/Kick shells"/>
                         </properties>
                       </component>
-                      <component id="f13ee" class="javax.swing.JCheckBox" binding="disappearInACloudCheckBox" default-binding="true">
+                      <component id="f13ee" class="javax.swing.JCheckBox" binding="disappearInSmokeCheckBox" default-binding="true">
                         <constraints>
                           <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -157,7 +161,7 @@
                     <properties/>
                     <border type="etched" title="$1662"/>
                     <children>
-                      <component id="4f4d0" class="javax.swing.JCheckBox" binding="useShellAsDeathCheckBox" default-binding="true">
+                      <component id="4f4d0" class="javax.swing.JCheckBox" binding="shellsAsDeathFrameCheckBox" default-binding="true">
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -165,7 +169,7 @@
                           <text value="Use shell as death frame"/>
                         </properties>
                       </component>
-                      <component id="a433d" class="javax.swing.JCheckBox" binding="fallsStraightDownWhenCheckBox" default-binding="true">
+                      <component id="a433d" class="javax.swing.JCheckBox" binding="fallWhenKilledCheckBox">
                         <constraints>
                           <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -355,7 +359,7 @@
                           <text value="Disable water splash"/>
                         </properties>
                       </component>
-                      <component id="94ccf" class="javax.swing.JCheckBox" binding="donTInteractWithCheckBox" default-binding="true">
+                      <component id="94ccf" class="javax.swing.JCheckBox" binding="disableSecondaryInteractionCheckBox">
                         <constraints>
                           <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -373,7 +377,7 @@
                     <properties/>
                     <border type="etched" title="$167A"/>
                     <children>
-                      <component id="22aaa" class="javax.swing.JCheckBox" binding="executeWhileBeingKilledCheckBox" default-binding="true">
+                      <component id="22aaa" class="javax.swing.JCheckBox" binding="processIfDeadCheckBox" default-binding="true">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -389,7 +393,7 @@
                           <text value="Invincible to player"/>
                         </properties>
                       </component>
-                      <component id="f2e57" class="javax.swing.JCheckBox" binding="executeIfOffscreenCheckBox" default-binding="true">
+                      <component id="f2e57" class="javax.swing.JCheckBox" binding="processWhileOffscreenCheckBox" default-binding="true">
                         <constraints>
                           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -397,7 +401,7 @@
                           <text value="Execute if offscreen"/>
                         </properties>
                       </component>
-                      <component id="736a5" class="javax.swing.JCheckBox" binding="donTChangeIntoCheckBox" default-binding="true">
+                      <component id="736a5" class="javax.swing.JCheckBox" binding="skipShellIfStunnedCheckBox" default-binding="true">
                         <constraints>
                           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -405,7 +409,7 @@
                           <text value="Don't change into a shell when stunned"/>
                         </properties>
                       </component>
-                      <component id="890c0" class="javax.swing.JCheckBox" binding="canTBeKickedCheckBox" default-binding="true">
+                      <component id="890c0" class="javax.swing.JCheckBox" binding="disableKickingCheckBox" default-binding="true">
                         <constraints>
                           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -413,7 +417,7 @@
                           <text value="Can't be kicked like a shell"/>
                         </properties>
                       </component>
-                      <component id="a34bc" class="javax.swing.JCheckBox" binding="processPlayerInteractionEveryCheckBox" default-binding="true">
+                      <component id="a34bc" class="javax.swing.JCheckBox" binding="processPlayerInteractionEveryFrameCheckBox">
                         <constraints>
                           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -421,7 +425,7 @@
                           <text value="Process player interaction every frame"/>
                         </properties>
                       </component>
-                      <component id="3736a" class="javax.swing.JCheckBox" binding="givesPowerupWhenEatenCheckBox" default-binding="true">
+                      <component id="3736a" class="javax.swing.JCheckBox" binding="isPowerupCheckbox" default-binding="true">
                         <constraints>
                           <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -429,7 +433,7 @@
                           <text value="Gives powerup when eaten by Yoshi (dangerous)"/>
                         </properties>
                       </component>
-                      <component id="698c" class="javax.swing.JCheckBox" binding="donTUseDefaultCheckBox" default-binding="true">
+                      <component id="698c" class="javax.swing.JCheckBox" binding="disableDefaultInteractionCheckBox" default-binding="true">
                         <constraints>
                           <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -455,7 +459,7 @@
                           <text value="Inedible"/>
                         </properties>
                       </component>
-                      <component id="f1445" class="javax.swing.JCheckBox" binding="stayInYoshiSCheckBox" default-binding="true">
+                      <component id="f1445" class="javax.swing.JCheckBox" binding="stayInMouthCheckBox" default-binding="true">
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -471,7 +475,7 @@
                           <text value="Weird ground behavior"/>
                         </properties>
                       </component>
-                      <component id="22cad" class="javax.swing.JCheckBox" binding="donTInteractWithCheckBox1" default-binding="true">
+                      <component id="22cad" class="javax.swing.JCheckBox" binding="disableSpriteInteractionCheckBox" default-binding="true">
                         <constraints>
                           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -479,7 +483,7 @@
                           <text value="Don't interact with other sprites"/>
                         </properties>
                       </component>
-                      <component id="b8a3c" class="javax.swing.JCheckBox" binding="donTChangeDirectionCheckBox" default-binding="true">
+                      <component id="b8a3c" class="javax.swing.JCheckBox" binding="preserveDirectionCheckBox" default-binding="true">
                         <constraints>
                           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -487,7 +491,7 @@
                           <text value="Don't change direction when touched"/>
                         </properties>
                       </component>
-                      <component id="3f457" class="javax.swing.JCheckBox" binding="donTTurnIntoCheckBox" default-binding="true">
+                      <component id="3f457" class="javax.swing.JCheckBox" binding="disappearWhenGoalPassedCheckBox" default-binding="true">
                         <constraints>
                           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -503,7 +507,7 @@
                           <text value="Spawns a new sprite when stunned"/>
                         </properties>
                       </component>
-                      <component id="af450" class="javax.swing.JCheckBox" binding="donTInteractWithCheckBox2" default-binding="true">
+                      <component id="af450" class="javax.swing.JCheckBox" binding="disableObjectInteractionCheckBox" default-binding="true">
                         <constraints>
                           <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -521,7 +525,7 @@
                     <properties/>
                     <border type="etched" title="$190F"/>
                     <children>
-                      <component id="8a192" class="javax.swing.JCheckBox" binding="makePlatformPassableFromCheckBox" default-binding="true">
+                      <component id="8a192" class="javax.swing.JCheckBox" binding="platformPassableFromBelowCheckBox" default-binding="true">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -529,7 +533,7 @@
                           <text value="Make platform passable from below"/>
                         </properties>
                       </component>
-                      <component id="edaf3" class="javax.swing.JCheckBox" binding="donTEraseWhenCheckBox" default-binding="true">
+                      <component id="edaf3" class="javax.swing.JCheckBox" binding="ignoreGoalCheckBox" default-binding="true">
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -537,7 +541,7 @@
                           <text value="Don't erase when goal passed"/>
                         </properties>
                       </component>
-                      <component id="7e6f" class="javax.swing.JCheckBox" binding="canTBeKilledCheckBox" default-binding="true">
+                      <component id="7e6f" class="javax.swing.JCheckBox" binding="disableSlideKillingCheckBox" default-binding="true">
                         <constraints>
                           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -545,7 +549,7 @@
                           <text value="Can't be killed by sliding"/>
                         </properties>
                       </component>
-                      <component id="d7f5f" class="javax.swing.JCheckBox" binding="takes5FireballsToCheckBox" default-binding="true">
+                      <component id="d7f5f" class="javax.swing.JCheckBox" binding="needsFiveFireballsCheckBox" default-binding="true">
                         <constraints>
                           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -553,7 +557,7 @@
                           <text value="Takes 5 fireballs to kill"/>
                         </properties>
                       </component>
-                      <component id="52342" class="javax.swing.JCheckBox" binding="canBeJumpedOnCheckBox2" default-binding="true">
+                      <component id="52342" class="javax.swing.JCheckBox" binding="canBeJumpedOnFromBelowCheckBox" default-binding="true">
                         <constraints>
                           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -561,7 +565,7 @@
                           <text value="Can be jumped on with upward Y speed"/>
                         </properties>
                       </component>
-                      <component id="90e8f" class="javax.swing.JCheckBox" binding="deathFrame2TilesCheckBox" default-binding="true">
+                      <component id="90e8f" class="javax.swing.JCheckBox" binding="tallDeathFrameCheckbox" default-binding="true">
                         <constraints>
                           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -569,7 +573,7 @@
                           <text value="Death frame 2 tiles high"/>
                         </properties>
                       </component>
-                      <component id="af38d" class="javax.swing.JCheckBox" binding="donTTurnIntoCheckBox1" default-binding="true">
+                      <component id="af38d" class="javax.swing.JCheckBox" binding="immuneToSilverPOWCheckBox" default-binding="true">
                         <constraints>
                           <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -577,7 +581,7 @@
                           <text value="Don't turn into a coin with silver P-Switch"/>
                         </properties>
                       </component>
-                      <component id="3d454" class="javax.swing.JCheckBox" binding="donTGetStuckCheckBox" default-binding="true">
+                      <component id="3d454" class="javax.swing.JCheckBox" binding="escapeWallsCheckBox" default-binding="true">
                         <constraints>
                           <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -595,31 +599,17 @@
                     <properties/>
                     <border type="etched" title="Insertion Settings"/>
                     <children>
-                      <component id="86f1e" class="javax.swing.JComboBox" binding="comboBox4" default-binding="true">
+                      <component id="86f1e" class="javax.swing.JComboBox" binding="typeComboBox" custom-create="true">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <model>
-                            <item value="Tweak"/>
-                            <item value="Custom"/>
-                          </model>
-                        </properties>
+                        <properties/>
                       </component>
-                      <component id="b8ddb" class="javax.swing.JComboBox" binding="comboBox5" default-binding="true">
+                      <component id="b8ddb" class="javax.swing.JComboBox" binding="subtypeComboBox" custom-create="true">
                         <constraints>
                           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <model>
-                            <item value="Vanilla"/>
-                            <item value="Regular"/>
-                            <item value="Shooter"/>
-                            <item value="Generator"/>
-                            <item value="Initializer"/>
-                            <item value="Scroller"/>
-                          </model>
-                        </properties>
+                        <properties/>
                       </component>
                       <component id="39f67" class="javax.swing.JLabel">
                         <constraints>
@@ -630,7 +620,7 @@
                           <text value="ASM Files:"/>
                         </properties>
                       </component>
-                      <component id="fc815" class="javax.swing.JTextField" binding="ASMFilesTextField" default-binding="true">
+                      <component id="fc815" class="javax.swing.JTextField" binding="firstASMTextField">
                         <constraints>
                           <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
@@ -640,7 +630,7 @@
                           <text value=""/>
                         </properties>
                       </component>
-                      <component id="a1e8c" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+                      <component id="a1e8c" class="javax.swing.JTextField" binding="secondASMTextField">
                         <constraints>
                           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
@@ -682,7 +672,7 @@
                           <text value="Property Bytes:"/>
                         </properties>
                       </component>
-                      <component id="da76d" class="javax.swing.JTextField" binding="propertyBytesTextField" default-binding="true">
+                      <component id="da76d" class="javax.swing.JTextField" binding="firstPropertyTextField">
                         <constraints>
                           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
@@ -690,7 +680,7 @@
                         </constraints>
                         <properties/>
                       </component>
-                      <component id="645f3" class="javax.swing.JTextField" binding="textField5" default-binding="true">
+                      <component id="645f3" class="javax.swing.JTextField" binding="secondPropertyTextField">
                         <constraints>
                           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
