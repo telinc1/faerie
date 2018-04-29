@@ -72,7 +72,7 @@ public class SpriteBehavior {
      * Bit 7 of $1662, whether the sprite will fall down the screen when the
      * player kills it by jumping on it.
      */
-    public boolean fallsStraightDownWhenKilled;
+    public boolean fallsWhenKilled;
 
     /**
      * Bit 0 of $166E, the bit stored to bit 0 of the YXPPCCCT properties
@@ -187,13 +187,13 @@ public class SpriteBehavior {
      * Bit 5 of $1686, whether the sprite will disappear instead of turning
      * into a coin when the player passes the goal.
      */
-    public boolean disappearWhenGoalPassed;
+    public boolean disappearOnGoal;
 
     /**
      * Bit 6 of $1686, whether the sprite will spawn another sprite after its
      * stun timer runs out in its carryable state.
      */
-    public boolean spawnsNewSprite;
+    public boolean spawnsSpriteWhenStunned;
 
     /**
      * Bit 7 of $1686, whether the sprite will interact with objects (blocks).
@@ -215,13 +215,13 @@ public class SpriteBehavior {
      * Bit 2 of $190F, whether the sprite can be killed by sliding into it
      * (using the default interaction).
      */
-    public boolean disableSlideKill;
+    public boolean disableSlideKilling;
 
     /**
      * Bit 3 of $190F, whether the sprite will need 1 or 5 fireballs in order
      * to be killed.
      */
-    public boolean needsFiveFireballs;
+    public boolean takesFiveFireballs;
 
     /**
      * Bit 4 of $190F, whether the player can jump on this sprite with upward
@@ -239,7 +239,7 @@ public class SpriteBehavior {
      * Bit 6 of $190F, whether the sprite will turn into a coin when a silver
      * P-Switch is pressed.
      */
-    public boolean immuneToSilverPOW;
+    public boolean ignoreSilverPSwitch;
 
     /**
      * Bits 7 of $190F, whether the sprite will push itself out of a wall when
@@ -261,7 +261,7 @@ public class SpriteBehavior {
                 | (this.disappearInSmoke ? 0x80 : 0x0),
             (this.spriteClipping & 0x3F)
                 | (this.useShellAsDeathFrame ? 0x40 : 0x0)
-                | (this.fallsStraightDownWhenKilled ? 0x80 : 0x0),
+                | (this.fallsWhenKilled ? 0x80 : 0x0),
             (this.useSecondGraphicsPage ? 0x1 : 0x0)
                 | (this.palette & 0x7 << 0x1)
                 | (this.disableFireballKilling ? 0x10 : 0x0)
@@ -277,19 +277,19 @@ public class SpriteBehavior {
                 | (this.isPowerup ? 0x40 : 0x0)
                 | (this.disableDefaultInteraction ? 0x80 : 0x0),
             (this.disableObjectInteraction ? 0x1 : 0x0)
-                | (this.spawnsNewSprite ? 0x2 : 0x0)
-                | (this.disappearWhenGoalPassed ? 0x4 : 0x0)
+                | (this.spawnsSpriteWhenStunned ? 0x2 : 0x0)
+                | (this.disappearOnGoal ? 0x4 : 0x0)
                 | (this.preserveDirection ? 0x8 : 0x0)
                 | (this.disableSpriteInteraction ? 0x10 : 0x0)
                 | (this.weirdGroundBehavior ? 0x20 : 0x0)
                 | (this.stayInMouth ? 0x40 : 0x0)
                 | (this.inedible ? 0x80 : 0x0),
             (this.escapeWalls ? 0x1 : 0x0)
-                | (this.immuneToSilverPOW ? 0x2 : 0x0)
+                | (this.ignoreSilverPSwitch ? 0x2 : 0x0)
                 | (this.tallDeathFrame ? 0x4 : 0x0)
                 | (this.canBeJumpedOnFromBelow ? 0x8 : 0x0)
-                | (this.needsFiveFireballs ? 0x10 : 0x0)
-                | (this.disableSlideKill ? 0x20 : 0x0)
+                | (this.takesFiveFireballs ? 0x10 : 0x0)
+                | (this.disableSlideKilling ? 0x20 : 0x0)
                 | (this.ignoreGoal ? 0x40 : 0x0)
                 | (this.platformPassableFromBelow ? 0x80 : 0x0)
         };
@@ -314,7 +314,7 @@ public class SpriteBehavior {
 
         this.spriteClipping = (byte)(settings[1] & 0x3F);
         this.useShellAsDeathFrame = (settings[1] & 0x40) != 0x0;
-        this.fallsStraightDownWhenKilled = (settings[1] & 0x80) != 0x0;
+        this.fallsWhenKilled = (settings[1] & 0x80) != 0x0;
 
         this.useSecondGraphicsPage = (settings[2] & 0x1) != 0x0;
         this.palette = (byte)((settings[2] >> 0x1) & 0b111);
@@ -333,8 +333,8 @@ public class SpriteBehavior {
         this.disableDefaultInteraction = (settings[3] & 0x80) != 0x0;
 
         this.disableObjectInteraction = (settings[4] & 0x1) != 0x0;
-        this.spawnsNewSprite = (settings[4] & 0x2) != 0x0;
-        this.disappearWhenGoalPassed = (settings[4] & 0x4) != 0x0;
+        this.spawnsSpriteWhenStunned = (settings[4] & 0x2) != 0x0;
+        this.disappearOnGoal = (settings[4] & 0x4) != 0x0;
         this.preserveDirection = (settings[4] & 0x8) != 0x0;
         this.disableSpriteInteraction = (settings[4] & 0x10) != 0x0;
         this.weirdGroundBehavior = (settings[4] & 0x20) != 0x0;
@@ -342,11 +342,11 @@ public class SpriteBehavior {
         this.inedible = (settings[4] & 0x80) != 0x0;
 
         this.escapeWalls = (settings[5] & 0x1) != 0x0;
-        this.immuneToSilverPOW = (settings[5] & 0x2) != 0x0;
+        this.ignoreSilverPSwitch = (settings[5] & 0x2) != 0x0;
         this.tallDeathFrame = (settings[5] & 0x4) != 0x0;
         this.canBeJumpedOnFromBelow = (settings[5] & 0x8) != 0x0;
-        this.needsFiveFireballs = (settings[5] & 0x10) != 0x0;
-        this.disableSlideKill = (settings[5] & 0x20) != 0x0;
+        this.takesFiveFireballs = (settings[5] & 0x10) != 0x0;
+        this.disableSlideKilling = (settings[5] & 0x20) != 0x0;
         this.ignoreGoal = (settings[5] & 0x40) != 0x0;
         this.platformPassableFromBelow = (settings[5] & 0x80) != 0x0;
     }
