@@ -25,6 +25,7 @@ package com.telinc1.faerie.gui.main;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.telinc1.faerie.Resources;
+import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.DecimalFormatter;
 import com.telinc1.faerie.gui.HexadecimalFormatter;
 import com.telinc1.faerie.gui.JScaledImage;
@@ -92,6 +93,11 @@ public class FaerieWindow extends JFrame {
      */
     private JPanel displayPanel;
 
+    /**
+     * The currently loaded palette.
+     */
+    private Palette palette;
+
     private JComboBox spriteSelectionComboBox;
 
     private JComboBox typeComboBox;
@@ -154,16 +160,6 @@ public class FaerieWindow extends JFrame {
     private JScaledImage paletteImage;
 
     /**
-     * Returns the menu bar for the application window.
-     *
-     * @return an instance of {@link FaerieMenuBar} which represents the
-     * menu bar
-     */
-    public FaerieMenuBar getMenu(){
-        return this.menuBar;
-    }
-
-    /**
      * Construct an application window, including all of its inner components.
      * <p>
      * The title and sizes are automatically set.
@@ -189,6 +185,15 @@ public class FaerieWindow extends JFrame {
         this.setIconImage(icon.getImage());
 
         this.menuBar = new FaerieMenuBar(this);
+
+        this.palette = new Palette();
+
+        try {
+            URL palette = this.getClass().getResource("/com/telinc1/faerie/binary/generic.mw3");
+            this.getPalette().loadMW3File(new File(palette.getPath()));
+        }catch(IOException exception){
+            exception.printStackTrace();
+        }
     }
 
     /**
@@ -216,7 +221,7 @@ public class FaerieWindow extends JFrame {
             if(type == JComboBox.class || type == JTextField.class || type == JFormattedTextField.class || type == JCheckBox.class){
                 try {
                     JComponent component = (JComponent)field.get(this);
-                    // component.setEnabled(false);
+                    component.setEnabled(false);
                 }catch(IllegalAccessException e){
                     e.printStackTrace();
                 }
@@ -225,10 +230,30 @@ public class FaerieWindow extends JFrame {
     }
 
     /**
+     * Returns the color palette used by the window.
+     *
+     * @return the SNES {@link Palette} used by the window
+     */
+    public Palette getPalette(){
+        return this.palette;
+    }
+
+    /**
+     * Returns the menu bar for the application window.
+     *
+     * @return an instance of {@link FaerieMenuBar} which represents the
+     * menu bar
+     */
+    public FaerieMenuBar getMenu(){
+        return this.menuBar;
+    }
+
+    /**
      * Creates the UI components which need specific constructor parameters.
      */
     private void createUIComponents(){
         // Create sprite selection combobox.
+        // XXX: temporary placeholder, will be replaced by the yet unwritten Repository system later
         try {
             URL listURL = this.getClass().getResource("/com/telinc1/faerie/sprites/list.txt");
             File listFile = new File(listURL.getFile());
@@ -240,6 +265,7 @@ public class FaerieWindow extends JFrame {
         }
 
         // Create type combobox.
+        // XXX: should these be localized
         this.typeComboBox = new JComboBox<>(Arrays
             .stream(EnumSpriteType.values())
             .map(EnumSpriteType::readable)
@@ -247,6 +273,7 @@ public class FaerieWindow extends JFrame {
         );
 
         // Create subtype combobox.
+        // TODO: yeah, better localize them
         this.subtypeComboBox = new JComboBox<>(Arrays
             .stream(EnumSpriteSubType.values())
             .map(EnumSpriteSubType::readable)
