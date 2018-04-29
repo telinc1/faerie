@@ -24,7 +24,7 @@ package com.telinc1.faerie.sprite.parser;
 
 import com.telinc1.faerie.sprite.Sprite;
 
-import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * Parses a sprite configuration file into an actual sprite.
@@ -36,14 +36,14 @@ public abstract class Parser {
     /**
      * The input to the parser.
      */
-    private InputStream input;
+    private Reader input;
 
     /**
      * Constructs a parser.
      *
      * @param input the input file
      */
-    public Parser(InputStream input){
+    public Parser(Reader input){
         this.input = input;
     }
 
@@ -52,7 +52,7 @@ public abstract class Parser {
      *
      * @return the input to the parser
      */
-    public InputStream getInput(){
+    public Reader getInput(){
         return this.input;
     }
 

@@ -31,7 +31,7 @@ import com.telinc1.faerie.sprite.display.LabelDisplayData;
 import com.telinc1.faerie.sprite.display.SpriteTile;
 import com.telinc1.faerie.sprite.display.TileDisplayData;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -49,7 +49,7 @@ public class CFGParser extends Parser {
      *
      * @param input the input file
      */
-    public CFGParser(InputStream input){
+    public CFGParser(Reader input){
         super(input);
     }
 
