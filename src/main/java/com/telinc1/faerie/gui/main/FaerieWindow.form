@@ -137,17 +137,13 @@
                         <properties/>
                         <border type="etched" title="Visualized Clipping"/>
                         <children>
-                          <component id="79971" class="javax.swing.JLabel">
+                          <component id="e8a9d" class="com.telinc1.faerie.gui.JScaledImage" binding="objectClippingImage" custom-create="true">
                             <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="4" hsize-policy="4" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="0" indent="0" use-parent-layout="false">
+                                <minimum-size width="84" height="84"/>
+                              </grid>
                             </constraints>
-                            <properties>
-                              <focusable value="false"/>
-                              <icon value="com/telinc1/faerie/icons/object/00.png"/>
-                              <iconTextGap value="0"/>
-                              <labelFor value="98351"/>
-                              <text value=""/>
-                            </properties>
+                            <properties/>
                           </component>
                         </children>
                       </grid>
@@ -267,17 +263,13 @@
                         <properties/>
                         <border type="etched" title="Visualized Clipping"/>
                         <children>
-                          <component id="da9a" class="javax.swing.JLabel">
+                          <component id="9a119" class="com.telinc1.faerie.gui.JScaledImage" binding="spriteClippingImage" custom-create="true" default-binding="true">
                             <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="4" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                                <minimum-size width="84" height="84"/>
+                              </grid>
                             </constraints>
-                            <properties>
-                              <focusCycleRoot value="false"/>
-                              <focusable value="false"/>
-                              <icon value="com/telinc1/faerie/icons/sprite/00.png"/>
-                              <iconTextGap value="0"/>
-                              <text value=""/>
-                            </properties>
+                            <properties/>
                           </component>
                         </children>
                       </grid>

@@ -25,6 +25,7 @@ package com.telinc1.faerie.gui.main;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.telinc1.faerie.Resources;
+import com.telinc1.faerie.gui.JScaledImage;
 import com.telinc1.faerie.gui.main.menu.FaerieMenuBar;
 import com.telinc1.faerie.sprite.EnumSpriteSubType;
 import com.telinc1.faerie.sprite.EnumSpriteType;
@@ -41,6 +42,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -48,6 +50,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
@@ -142,6 +145,8 @@ public class FaerieWindow extends JFrame {
     private JComboBox statusOverrideComboBox;
     private JTextField uniqueByteTextField;
     private JTextField extraByteAmountTextField;
+    private JScaledImage objectClippingImage;
+    private JScaledImage spriteClippingImage;
 
     /**
      * Returns the menu bar for the application window.
@@ -198,33 +203,6 @@ public class FaerieWindow extends JFrame {
                 }
             }
         }
-    }
-
-    private void createUIComponents(){
-        // Create sprite selection combobox.
-        try {
-            URL listURL = this.getClass().getResource("/com/telinc1/faerie/sprites/list.txt");
-            File listFile = new File(listURL.getFile());
-            List<String> sprites = Files.readAllLines(listFile.toPath());
-
-            this.spriteSelectionComboBox = new JComboBox<>(sprites.toArray());
-        }catch(IOException exception){
-            throw new RuntimeException(exception);
-        }
-
-        // Create type combobox.
-        this.typeComboBox = new JComboBox<>(Arrays
-            .stream(EnumSpriteType.values())
-            .map(element -> element.readable())
-            .toArray()
-        );
-
-        // Create subtype combobox.
-        this.subtypeComboBox = new JComboBox<>(Arrays
-            .stream(EnumSpriteSubType.values())
-            .map(element -> element.readable())
-            .toArray()
-        );
     }
 
     /**
@@ -299,12 +277,7 @@ public class FaerieWindow extends JFrame {
         panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel2.add(panel3, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Visualized Clipping"));
-        final JLabel label2 = new JLabel();
-        label2.setFocusable(false);
-        label2.setIcon(new ImageIcon(getClass().getResource("/com/telinc1/faerie/icons/object/00.png")));
-        label2.setIconTextGap(0);
-        label2.setText("");
-        panel3.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel3.add(objectClippingImage, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(84, 84), null, null, 0, false));
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, 0));
         spritePanel.add(panel4, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
@@ -315,9 +288,9 @@ public class FaerieWindow extends JFrame {
         fallWhenKilledCheckBox = new JCheckBox();
         fallWhenKilledCheckBox.setText("Falls straight down when killed");
         panel4.add(fallWhenKilledCheckBox, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
-        final JLabel label3 = new JLabel();
-        label3.setText("Sprite Clipping:");
-        panel4.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label2 = new JLabel();
+        label2.setText("Sprite Clipping:");
+        panel4.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         spriteClippingComboBox = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
         defaultComboBoxModel2.addElement("00");
@@ -390,13 +363,7 @@ public class FaerieWindow extends JFrame {
         panel5.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel4.add(panel5, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Visualized Clipping"));
-        final JLabel label4 = new JLabel();
-        label4.setFocusCycleRoot(false);
-        label4.setFocusable(false);
-        label4.setIcon(new ImageIcon(getClass().getResource("/com/telinc1/faerie/icons/sprite/00.png")));
-        label4.setIconTextGap(0);
-        label4.setText("");
-        panel5.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel5.add(spriteClippingImage, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(84, 84), null, null, 0, false));
         final JPanel panel6 = new JPanel();
         panel6.setLayout(new GridLayoutManager(6, 3, new Insets(0, 0, 0, 0), -1, 0));
         spritePanel.add(panel6, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
@@ -404,9 +371,9 @@ public class FaerieWindow extends JFrame {
         useSecondGraphicsPageCheckBox = new JCheckBox();
         useSecondGraphicsPageCheckBox.setText("Use second graphics page");
         panel6.add(useSecondGraphicsPageCheckBox, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label5 = new JLabel();
-        label5.setText("Palette:");
-        panel6.add(label5, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label3 = new JLabel();
+        label3.setText("Palette:");
+        panel6.add(label3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         paletteComboBox = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel3 = new DefaultComboBoxModel();
         defaultComboBoxModel3.addElement("8");
@@ -419,11 +386,11 @@ public class FaerieWindow extends JFrame {
         defaultComboBoxModel3.addElement("F");
         paletteComboBox.setModel(defaultComboBoxModel3);
         panel6.add(paletteComboBox, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 2, false));
-        final JLabel label6 = new JLabel();
-        label6.setIcon(new ImageIcon(getClass().getResource("/com/telinc1/faerie/icons/palette.png")));
-        label6.setIconTextGap(0);
-        label6.setText("");
-        panel6.add(label6, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label4 = new JLabel();
+        label4.setIcon(new ImageIcon(getClass().getResource("/com/telinc1/faerie/icons/palette.png")));
+        label4.setIconTextGap(0);
+        label4.setText("");
+        panel6.add(label4, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         disableFireballKillingCheckBox = new JCheckBox();
         disableFireballKillingCheckBox.setText("Disable fireball killing");
         panel6.add(disableFireballKillingCheckBox, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -526,33 +493,33 @@ public class FaerieWindow extends JFrame {
         panel10.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Insertion Settings"));
         panel10.add(typeComboBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panel10.add(subtypeComboBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label7 = new JLabel();
-        label7.setText("ASM Files:");
-        panel10.add(label7, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label5 = new JLabel();
+        label5.setText("ASM Files:");
+        panel10.add(label5, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         firstASMTextField = new JTextField();
         firstASMTextField.setText("");
         panel10.add(firstASMTextField, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         secondASMTextField = new JTextField();
         panel10.add(secondASMTextField, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label8 = new JLabel();
-        label8.setText("Acts Like:");
-        panel10.add(label8, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label6 = new JLabel();
+        label6.setText("Acts Like:");
+        panel10.add(label6, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         actsLikeTextField = new JTextField();
         panel10.add(actsLikeTextField, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel11 = new JPanel();
         panel11.setLayout(new GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
         spritePanel.add(panel11, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         panel11.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Additional Data"));
-        final JLabel label9 = new JLabel();
-        label9.setText("Property Bytes:");
-        panel11.add(label9, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label7 = new JLabel();
+        label7.setText("Property Bytes:");
+        panel11.add(label7, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         firstPropertyTextField = new JTextField();
         panel11.add(firstPropertyTextField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         secondPropertyTextField = new JTextField();
         panel11.add(secondPropertyTextField, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label10 = new JLabel();
-        label10.setText("Status Override:");
-        panel11.add(label10, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label8 = new JLabel();
+        label8.setText("Status Override:");
+        panel11.add(label8, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         statusOverrideComboBox = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel4 = new DefaultComboBoxModel();
         defaultComboBoxModel4.addElement("Handle stunned");
@@ -560,29 +527,79 @@ public class FaerieWindow extends JFrame {
         defaultComboBoxModel4.addElement("Override all");
         statusOverrideComboBox.setModel(defaultComboBoxModel4);
         panel11.add(statusOverrideComboBox, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label11 = new JLabel();
-        label11.setText("Unique Byte:");
-        panel11.add(label11, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label9 = new JLabel();
+        label9.setText("Unique Byte:");
+        panel11.add(label9, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         uniqueByteTextField = new JTextField();
         panel11.add(uniqueByteTextField, new GridConstraints(2, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label12 = new JLabel();
-        label12.setText("Extra Byte Amount:");
-        panel11.add(label12, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label10 = new JLabel();
+        label10.setText("Extra Byte Amount:");
+        panel11.add(label10, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         extraByteAmountTextField = new JTextField();
         panel11.add(extraByteAmountTextField, new GridConstraints(3, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         displayPanel = new JPanel();
         displayPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane.addTab(ResourceBundle.getBundle("com/telinc1/faerie/locale/Main").getString("content.display"), displayPanel);
         label1.setLabelFor(objectClippingComboBox);
-        label2.setLabelFor(scrollPane1);
-        label3.setLabelFor(spriteClippingComboBox);
-        label5.setLabelFor(paletteComboBox);
-        label7.setLabelFor(firstASMTextField);
-        label8.setLabelFor(actsLikeTextField);
-        label9.setLabelFor(firstPropertyTextField);
-        label10.setLabelFor(statusOverrideComboBox);
-        label11.setLabelFor(uniqueByteTextField);
-        label12.setLabelFor(extraByteAmountTextField);
+        label2.setLabelFor(spriteClippingComboBox);
+        label3.setLabelFor(paletteComboBox);
+        label5.setLabelFor(firstASMTextField);
+        label6.setLabelFor(actsLikeTextField);
+        label7.setLabelFor(firstPropertyTextField);
+        label8.setLabelFor(statusOverrideComboBox);
+        label9.setLabelFor(uniqueByteTextField);
+        label10.setLabelFor(extraByteAmountTextField);
+    }
+
+    private void createUIComponents(){
+        // Create sprite selection combobox.
+        try {
+            URL listURL = this.getClass().getResource("/com/telinc1/faerie/sprites/list.txt");
+            File listFile = new File(listURL.getFile());
+            List<String> sprites = Files.readAllLines(listFile.toPath(), StandardCharsets.UTF_8);
+
+            this.spriteSelectionComboBox = new JComboBox<>(sprites.toArray());
+        }catch(IOException exception){
+            throw new RuntimeException(exception);
+        }
+
+        // Create type combobox.
+        this.typeComboBox = new JComboBox<>(Arrays
+            .stream(EnumSpriteType.values())
+            .map(EnumSpriteType::readable)
+            .toArray()
+        );
+
+        // Create subtype combobox.
+        this.subtypeComboBox = new JComboBox<>(Arrays
+            .stream(EnumSpriteSubType.values())
+            .map(EnumSpriteSubType::readable)
+            .toArray()
+        );
+
+        // Create object clipping image.
+        try {
+            this.objectClippingImage = new JScaledImage(84, 84);
+            this.objectClippingImage.setHorizontalAlignment(SwingConstants.CENTER);
+            this.objectClippingImage.setVerticalAlignment(SwingConstants.TOP);
+            this.objectClippingImage.setFocusable(false);
+
+            this.objectClippingImage.loadImage("object/00.png");
+        }catch(IOException exception){
+            throw new RuntimeException(exception);
+        }
+
+        // Create sprite clipping image.
+        try {
+            this.spriteClippingImage = new JScaledImage(84, 84);
+            this.spriteClippingImage.setHorizontalAlignment(SwingConstants.CENTER);
+            this.spriteClippingImage.setVerticalAlignment(SwingConstants.TOP);
+            this.spriteClippingImage.setFocusable(false);
+
+            this.spriteClippingImage.loadImage("sprite/00.png");
+        }catch(IOException exception){
+            throw new RuntimeException(exception);
+        }
     }
 
     /** @noinspection ALL */
