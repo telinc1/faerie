@@ -18,67 +18,67 @@
 11 Buzzy Beetle
 12 Unused
 13 Spiny
-14 Falling Spiny
+14 Spiny falling
 15 Fish, horizontal
 16 Fish, vertical
 17 Fish, created from generator
 18 Surface jumping fish
-19 Display level message #1
-1A Classic Pirhana Plant
-1B Bouncing Football
+19 Display text from level Message Box #1
+1A Classic Piranha Plant
+1B Bouncing football in place
 1C Bullet Bill
-1D Hopping Flame
+1D Hopping flame
 1E Lakitu
 1F Magikoopa
-20 Magikoopa's magic, stationary
+20 Magikoopa's magic
 21 Moving coin
 22 Green vertical net Koopa
-23 Red fast vertical net Koopa
+23 Red vertical net Koopa
 24 Green horizontal net Koopa
-25 Red fast horizontal net Koopa
+25 Red horizontal net Koopa
 26 Thwomp
 27 Thwimp
 28 Big Boo
 29 Koopa Kid
-2A Upside-down Piranha Plant
+2A Upside down Piranha Plant
 2B Sumo Brother's fire lightning
-2C Yoshi Egg
-2D Green Baby Yoshi
+2C Yoshi egg
+2D Baby green Yoshi
 2E Spike Top
-2F Springboard
+2F Portable spring board
 30 Dry Bones, throws bones
 31 Bony Beetle
 32 Dry Bones, stay on ledge
-33 Fireball, vertical
-34 Boss fireball, stationary
+33 Fireball
+34 Boss fireball
 35 Green Yoshi
-36 Unused (crash!)
+36 Unused
 37 Boo
 38 Eerie
 39 Eerie, wave motion
-3A Urchin, fixed vertical/horizontal
-3B Urchin, wall detect v/h
-3C Urchin, wall follow clockwise/counter
+3A Urchin, fixed
+3B Urchin, wall detect
+3C Urchin, wall follow
 3D Rip Van Fish
-3E P-Switch, blue/silver
+3E POW
 3F Para-Goomba
 40 Para-Bomb
 41 Dolphin, horizontal
-42 Dolphin 2, horizontal
+42 Dolphin2, horizontal
 43 Dolphin, vertical
 44 Torpedo Ted
-45 Directional coins, no time limit
+45 Directional coins
 46 Diggin' Chuck
-47 Swimming/Jumping fish, doesn't need water
+47 Swimming/Jumping fish
 48 Diggin' Chuck's rock
 49 Growing/shrinking pipe end
 4A Goal Point Question Sphere
-4B Pipe-dwelling Lakitu
-4C Exploding Block, fish/goomba/Koopa/Koopa with shell
+4B Pipe dwelling Lakitu
+4C Exploding Block
 4D Ground dwelling Monty Mole
 4E Ledge dwelling Monty Mole
-4F Jumping Pirhana Plant
-50 Jumping Pirhana Plant, spit fire
+4F Jumping Piranha Plant
+50 Jumping Piranha Plant, spit fire
 51 Ninji
 52 Moving ledge hole in ghost house
 53 Throw block sprite
@@ -99,10 +99,10 @@
 62 Brown platform, line-guided
 63 Checker/brown platform, line-guided
 64 Rope mechanism, line-guided
-65 Chainsaw, line-guided, right/left
-66 Upside down chainsaw, line-guided, null/left
-67 Grinder, line-guided, right/left
-68 Fuzz Ball, line-guided, right/left
+65 Chainsaw, line-guided
+66 Upside down chainsaw, line-guided
+67 Grinder, line-guided
+68 Fuzz ball, line-guided
 69 Unused
 6A Coin game cloud
 6B Spring board, left wall
@@ -111,42 +111,42 @@
 6E Dino Rhino
 6F Dino Torch
 70 Pokey
-71 Super Koopa, red cape, swoop
-72 Super Koopa, yellow cape, swoop
-73 Super Koopa, feather/yellow cape
+71 Super Koopa, red cape
+72 Super Koopa, yellow cape
+73 Super Koopa, feather
 74 Mushroom
 75 Flower
 76 Star
 77 Feather
-78 1-Up Mushroom
+78 1-Up
 79 Growing Vine
-7A Firework, makes Mario temporarily invisible
-7B Standard Goal Point
+7A Firework
+7B Goal Point
 7C Princess Peach
 7D Balloon
-7E Flying Red coin, worth 5 coins
-7F Flying Yellow 1-UP
+7E Flying Red coin
+7F Flying yellow 1-Up
 80 Key
-81 Changing item from a translucent block
+81 Changing item from translucent block
 82 Bonus game sprite
-83 Left flying question block, coin/flower/feather/1-UP
-84 Flying question block, coin/flower/feather/1-UP
-85 Unused
+83 Left flying question block
+84 Flying question block
+85 Unused (Pretty sure)
 86 Wiggler
-87 Lakitu's cloud, no time limit
+87 Lakitu's cloud
 88 Unused (Winged cage sprite)
-89 Layer 3 smash (set FG/BG=1, use low tides)
-8A Bird from Yoshi's house, max of 4
+89 Layer 3 smash
+8A Bird from Yoshi's house
 8B Puff of smoke from Yoshi's house
 8C Fireplace smoke/exit from side screen
 8D Ghost house exit sign and door
 8E Invisible "Warp Hole" blocks
-8F Scale platforms, long/short between
+8F Scale platforms
 90 Large green gas bubble
 91 Chargin' Chuck
-92 Splitin' Chuck
+92 Splittin' Chuck
 93 Bouncin' Chuck
-94 Whistlin' Chuck, fish/Koopa
+94 Whistlin' Chuck
 95 Clapin' Chuck
 96 Unused (Chargin' Chuck clone)
 97 Puntin' Chuck
@@ -155,17 +155,17 @@
 9A Sumo Brother
 9B Hammer Brother
 9C Flying blocks for Hammer Brother
-9D Bubble with Goomba/bomb/fish/mushroom
-9E Ball and Chain, clockwise/counter
+9D Bubble with sprite
+9E Ball and Chain
 9F Banzai Bill
-A0 Bowser
-A1 Big Steely
-A2 Mechakoopa
+A0 Activates Bowser scene
+A1 Bowser's bowling ball
+A2 MechaKoopa
 A3 Grey platform on chain
 A4 Floating Spike ball
 A5 Fuzzball/Sparky, ground-guided
 A6 HotHead, ground-guided
-A7 Iggy's Ball
+A7 Iggy's ball
 A8 Blargg
 A9 Reznor
 AA Fishbone
@@ -177,27 +177,27 @@ AF Boo Block
 B0 Reflecting stream of Boo Buddies
 B1 Creating/Eating block
 B2 Falling Spike
-B3 Bowser Statue Fireball
+B3 Bowser statue fireball
 B4 Grinder, non-line-guided
 B5 Sinking fireball used in boss battles
 B6 Reflecting fireball
 B7 Carrot Top lift, upper right
 B8 Carrot Top lift, upper left
 B9 Info Box
-BA Timed Lift
-BB Grey moving castle block, horizontal
-BC Bowser Statue
-BD Sliding Beach Koopa
-BE Swooper Bat
+BA Timed lift
+BB Grey moving castle block
+BC Bowser statue
+BD Sliding Koopa without a shell
+BE Swooper bat
 BF Mega Mole
-C0 Grey platform on lava, sinks
+C0 Grey platform on lava
 C1 Flying grey turnblocks
-C2 Blurp Fish
+C2 Blurp fish
 C3 Porcu-Puffer fish
 C4 Grey platform that falls
 C5 Big Boo Boss
-C6 Dark room with spotlight ("disco ball")
-C7 Invisible Mushroom
+C6 Dark room with spot light
+C7 Invisible mushroom
 C8 Light switch block for dark room
 C9 Bullet Bill shooter
 CA Torpedo Launcher
@@ -221,25 +221,36 @@ DB Red Koopa shell
 DC Blue Koopa shell
 DD Yellow Koopa shell
 DE Group of 5 eeries, wave motion
-DF Green shell, won't use Special World color
-E0 3 platforms on chains, clockwise/counter (X&1)
+DF Green bouncing Koopa shell
+E0 3 platforms on chains
 E1 Ghost ceiling
-E2 Boo Buddies, counter-clockwise
+E2 Boo Buddies, counter clockwise
 E3 Boo Buddies, clockwise
-E4 Swooper death bat ceiling
-E5 Reappearing ghosts, generator 2
-E6 Candle flames in background
-E7 ...
-E8 Auto-Scroll 1 (set layer2+FG scroll to none)
-E9 Layer 2 Smash 1
-EA Layer 2 Scroll 1 (set BG init pos=0 if Y=0)
-EB ...
-EC ...
-ED Layer 2 Falls (set layer2 scroll to none)
-EF Layer 2 Scroll S (set layer2 H-scroll to none)
-F0 ...
-F1 ...
+E4 Swooper bat ceiling
+E5 Reappearing ghost, generator 2
+E6 Candle flame background
+E7 Auto-Scroll, Unused?
+E8 Auto-Scroll
+E9 Layer 2 Smash
+EA Layer 2 Scroll
+EB Unused
+EC Unused
+ED Layer 2 Falls
+EE Unused
+EF Layer 2 Scroll
+F0 Unused
+F1 Unused
 F2 Layer 2 On/Off Switch controlled
-F3 Auto-Scroll level (Y position controls speed)
-F4 Fast BG scroll (use sprite C1 to activate)
-F5 Layer 2 sink when touched, short range
+F3 Auto-Scroll level
+F4 Fast BG scroll
+F5 Layer 2 sink/rise
+F6 Unused, fatal error
+F7 Unused, fatal error
+F8 Unused, fatal error
+F9 Unused, fatal error
+FA Unused, fatal error
+FB Unused, fatal error
+FC Unused, fatal error
+FD Unused, fatal error
+FE Unused, fatal error
+FF Unused, fatal error
