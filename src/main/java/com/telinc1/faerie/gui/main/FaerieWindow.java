@@ -163,15 +163,46 @@ public class FaerieWindow extends JFrame {
     public FaerieWindow(){
         super(Resources.getString("main", "title"));
         this.$$$setupUI$$$();
-        this.setSize(760, 550);
+        this.setSize(760, 600);
         this.setContentPane(this.contentPanel);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setMinimumSize(new Dimension(760, 600));
 
         URL iconURL = this.getClass().getResource("/com/telinc1/faerie/icons/application.png");
         ImageIcon icon = new ImageIcon(iconURL);
         this.setIconImage(icon.getImage());
 
         this.menuBar = new FaerieMenuBar(this);
+    }
+
+    private void createUIComponents(){
+        // Create sprite selection combobox.
+        try {
+            URL listURL = this.getClass().getResource("/com/telinc1/faerie/sprites/list.txt");
+            File listFile = new File(listURL.getFile());
+            List<String> sprites = Files.readAllLines(listFile.toPath());
+
+            this.spriteSelectionComboBox = new JComboBox<>(sprites.toArray());
+        }catch(IOException exception){
+            throw new RuntimeException(exception);
+        }
+
+
+        // Create type combobox.
+        this.typeComboBox = new JComboBox<>(Arrays
+            .stream(EnumSpriteType.values())
+            .map(element -> element.toString().charAt(0) + element.toString().substring(1).toLowerCase())
+            .collect(Collectors.toList())
+            .toArray()
+        );
+
+        // Create subtype combobox.
+        this.subtypeComboBox = new JComboBox<>(Arrays
+            .stream(EnumSpriteSubType.values())
+            .map(element -> element.toString().charAt(0) + element.toString().substring(1).toLowerCase())
+            .collect(Collectors.toList())
+            .toArray()
+        );
     }
 
     /**
@@ -530,36 +561,6 @@ public class FaerieWindow extends JFrame {
         label10.setLabelFor(statusOverrideComboBox);
         label11.setLabelFor(uniqueByteTextField);
         label12.setLabelFor(extraByteAmountTextField);
-    }
-
-    private void createUIComponents(){
-        // Create sprite selection combobox.
-        try {
-            URL listURL = this.getClass().getResource("/com/telinc1/faerie/sprites/list.txt");
-            File listFile = new File(listURL.getFile());
-            List<String> sprites = Files.readAllLines(listFile.toPath());
-
-            this.spriteSelectionComboBox = new JComboBox<>(sprites.toArray());
-        }catch(IOException exception){
-            throw new RuntimeException(exception);
-        }
-
-
-        // Create type combobox.
-        this.typeComboBox = new JComboBox<>(Arrays
-            .stream(EnumSpriteType.values())
-            .map(element -> element.toString().charAt(0) + element.toString().substring(1).toLowerCase())
-            .collect(Collectors.toList())
-            .toArray()
-        );
-
-        // Create subtype combobox.
-        this.subtypeComboBox = new JComboBox<>(Arrays
-            .stream(EnumSpriteSubType.values())
-            .map(element -> element.toString().charAt(0) + element.toString().substring(1).toLowerCase())
-            .collect(Collectors.toList())
-            .toArray()
-        );
     }
 
     /** @noinspection ALL */
