@@ -608,11 +608,11 @@
                           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
-                          <labelFor value="fc815"/>
+                          <labelFor value="79288"/>
                           <text resource-bundle="com/telinc1/faerie/locale/Main" key="sprite.insertion.asm"/>
                         </properties>
                       </component>
-                      <component id="fc815" class="javax.swing.JTextField" binding="firstASMTextField">
+                      <component id="79288" class="javax.swing.JTextField" binding="firstASMTextField">
                         <constraints>
                           <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
@@ -622,7 +622,7 @@
                           <text value=""/>
                         </properties>
                       </component>
-                      <component id="a1e8c" class="javax.swing.JTextField" binding="secondASMTextField">
+                      <component id="f973" class="javax.swing.JTextField" binding="secondASMTextField">
                         <constraints>
                           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
@@ -635,13 +635,13 @@
                           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
-                          <labelFor value="ca03b"/>
+                          <labelFor value="85c5a"/>
                           <text resource-bundle="com/telinc1/faerie/locale/Main" key="sprite.insertion.actsLike"/>
                         </properties>
                       </component>
-                      <component id="ca03b" class="javax.swing.JTextField" binding="actsLikeTextField" default-binding="true">
+                      <component id="85c5a" class="javax.swing.JFormattedTextField" binding="actsLikeTextField">
                         <constraints>
-                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties/>
                       </component>
@@ -660,11 +660,11 @@
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
-                          <labelFor value="da76d"/>
+                          <labelFor value="d3206"/>
                           <text resource-bundle="com/telinc1/faerie/locale/Main" key="sprite.data.propertyBytes"/>
                         </properties>
                       </component>
-                      <component id="da76d" class="javax.swing.JTextField" binding="firstPropertyTextField">
+                      <component id="d3206" class="javax.swing.JFormattedTextField" binding="firstPropertyTextField">
                         <constraints>
                           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
@@ -672,7 +672,7 @@
                         </constraints>
                         <properties/>
                       </component>
-                      <component id="645f3" class="javax.swing.JTextField" binding="secondPropertyTextField">
+                      <component id="2eb8" class="javax.swing.JFormattedTextField" binding="secondPropertyTextField">
                         <constraints>
                           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
@@ -706,11 +706,11 @@
                           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
-                          <labelFor value="80ed4"/>
+                          <labelFor value="eb616"/>
                           <text resource-bundle="com/telinc1/faerie/locale/Main" key="sprite.data.uniqueByte"/>
                         </properties>
                       </component>
-                      <component id="80ed4" class="javax.swing.JTextField" binding="uniqueByteTextField" default-binding="true">
+                      <component id="eb616" class="javax.swing.JFormattedTextField" binding="uniqueByteTextField" default-binding="true">
                         <constraints>
                           <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
@@ -723,11 +723,11 @@
                           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
-                          <labelFor value="69f0"/>
+                          <labelFor value="644c7"/>
                           <text resource-bundle="com/telinc1/faerie/locale/Main" key="sprite.data.extraBytes"/>
                         </properties>
                       </component>
-                      <component id="69f0" class="javax.swing.JTextField" binding="extraByteAmountTextField" default-binding="true">
+                      <component id="644c7" class="javax.swing.JFormattedTextField" binding="extraByteAmountTextField" default-binding="true">
                         <constraints>
                           <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="5" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
