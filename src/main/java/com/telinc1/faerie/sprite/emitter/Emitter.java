@@ -20,47 +20,48 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.telinc1.faerie.sprite.parser;
+package com.telinc1.faerie.sprite.emitter;
 
 import com.telinc1.faerie.sprite.Sprite;
 
-import java.io.Reader;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
- * Parses a sprite configuration file into an actual sprite.
+ * Writes a sprite to a configuration file.
  *
  * @author Telinc1
  * @since 1.0.0
  */
-public abstract class Parser {
+public abstract class Emitter {
     /**
-     * The input to the parser.
+     * The sprite which this emitter will write.
      */
-    private Reader input;
+    private Sprite sprite;
 
     /**
-     * Constructs a parser.
+     * Constructs an emitter for the given sprite.
      *
-     * @param input the input to the parser
+     * @param sprite the sprite to write
      */
-    public Parser(Reader input){
-        this.input = input;
+    public Emitter(Sprite sprite){
+        this.sprite = sprite;
     }
 
     /**
-     * Returns the input to the parser.
+     * Returns the sprite which this emitter will write.
      *
-     * @return the input to the parser
+     * @return the sprite which this emitter will write
      */
-    public Reader getInput(){
-        return this.input;
+    public Sprite getSprite(){
+        return this.sprite;
     }
 
     /**
-     * Parses the input into a complete sprite.
+     * Writes the emitter's sprite to the given destination.
      *
-     * @return the parsed sprite
-     * @throws ParseException if the data is malformed in any way
+     * @param writer the {@link Writer} to emit the sprite to
+     * @throws IOException if an error happens during writing
      */
-    public abstract Sprite parse() throws ParseException;
+    public abstract void emit(Writer writer) throws IOException;
 }
