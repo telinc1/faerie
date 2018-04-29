@@ -211,4 +211,13 @@ public enum EnumSpriteSubType {
     public boolean usesSecondASM(){
         return this.usesSecondASM;
     }
+
+    /**
+     * Returns the name of the subtype as a human-readable string.
+     *
+     * @return the subtype's lower-case name with only the first letter capitalized
+     */
+    public String readable(){
+        return this.toString().charAt(0) + this.toString().substring(1).toLowerCase();
+    }
 }

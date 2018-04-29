@@ -77,4 +77,13 @@ public enum EnumSpriteType {
     public int asInteger(){
         return this.type;
     }
+
+    /**
+     * Returns the name of the type as a human-readable string.
+     *
+     * @return the type's lower-case name with only the first letter capitalized
+     */
+    public String readable(){
+        return this.toString().charAt(0) + this.toString().substring(1).toLowerCase();
+    }
 }

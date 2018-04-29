@@ -46,12 +46,12 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  * The main Faerie editor window.
@@ -163,16 +163,41 @@ public class FaerieWindow extends JFrame {
     public FaerieWindow(){
         super(Resources.getString("main", "title"));
         this.$$$setupUI$$$();
-        this.setSize(760, 600);
         this.setContentPane(this.contentPanel);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.disableAllInput();
+
+        this.setSize(760, 600);
         this.setMinimumSize(new Dimension(760, 600));
+
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         URL iconURL = this.getClass().getResource("/com/telinc1/faerie/icons/application.png");
         ImageIcon icon = new ImageIcon(iconURL);
         this.setIconImage(icon.getImage());
 
         this.menuBar = new FaerieMenuBar(this);
+    }
+
+    /**
+     * Disables all user input elements.
+     * <p>
+     * This includes text fields, checkboxes, and combo boxes.
+     */
+    private void disableAllInput(){
+        Field[] fields = this.getClass().getDeclaredFields();
+
+        for(Field field : fields){
+            Class<?> type = field.getType();
+
+            if(type == JComboBox.class || type == JTextField.class || type == JCheckBox.class){
+                try {
+                    JComponent component = (JComponent)field.get(this);
+                    component.setEnabled(false);
+                }catch(IllegalAccessException e){
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void createUIComponents(){
@@ -187,20 +212,17 @@ public class FaerieWindow extends JFrame {
             throw new RuntimeException(exception);
         }
 
-
         // Create type combobox.
         this.typeComboBox = new JComboBox<>(Arrays
             .stream(EnumSpriteType.values())
-            .map(element -> element.toString().charAt(0) + element.toString().substring(1).toLowerCase())
-            .collect(Collectors.toList())
+            .map(element -> element.readable())
             .toArray()
         );
 
         // Create subtype combobox.
         this.subtypeComboBox = new JComboBox<>(Arrays
             .stream(EnumSpriteSubType.values())
-            .map(element -> element.toString().charAt(0) + element.toString().substring(1).toLowerCase())
-            .collect(Collectors.toList())
+            .map(element -> element.readable())
             .toArray()
         );
     }
