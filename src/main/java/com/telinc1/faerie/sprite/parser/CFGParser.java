@@ -45,17 +45,12 @@ import java.util.Scanner;
  */
 public class CFGParser extends Parser {
     /**
-     * The input to the parser.
-     */
-    private InputStream input;
-
-    /**
      * Constructs a CFG file parser.
      *
      * @param input the input file
      */
     public CFGParser(InputStream input){
-        this.input = input;
+        super(input);
     }
 
     @Override
@@ -74,15 +69,6 @@ public class CFGParser extends Parser {
         }
 
         return sprite;
-    }
-
-    /**
-     * Returns the input to the parser.
-     *
-     * @return the input to the parser
-     */
-    public InputStream getInput(){
-        return this.input;
     }
 
     /**
