@@ -137,7 +137,7 @@ public class JPaletteView extends JComponent {
      *
      * @param width the new width of a cell
      * @return the component, for chaining
-     * @thorws IllegalArgumentException if the width is non-positive
+     * @throws IllegalArgumentException if the width is non-positive
      */
     public JPaletteView setCellWidth(int width){
         if(width <= 0){

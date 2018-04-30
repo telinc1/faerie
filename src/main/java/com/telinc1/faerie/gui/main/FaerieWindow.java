@@ -62,10 +62,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -110,16 +107,16 @@ public class FaerieWindow extends JFrame {
      */
     private Provider provider;
 
-    private JComboBox spriteSelectionComboBox;
+    private JComboBox<String> spriteSelectionComboBox;
 
-    private JComboBox typeComboBox;
-    private JComboBox subtypeComboBox;
+    private JComboBox<Object> typeComboBox;
+    private JComboBox<Object> subtypeComboBox;
     private JFormattedTextField actsLikeTextField;
     private JTextField firstASMTextField;
     private JTextField secondASMTextField;
 
     @Configures(EnumProperty.BEHAVIOR)
-    private JComboBox objectClippingComboBox;
+    private JComboBox<String> objectClippingComboBox;
     @Configures(EnumProperty.BEHAVIOR)
     private JCheckBox canBeJumpedOnCheckBox;
     @Configures(EnumProperty.BEHAVIOR)
@@ -130,7 +127,7 @@ public class FaerieWindow extends JFrame {
     private JCheckBox disappearInACloudCheckBox;
 
     @Configures(EnumProperty.BEHAVIOR)
-    private JComboBox spriteClippingComboBox;
+    private JComboBox<String> spriteClippingComboBox;
     @Configures(EnumProperty.BEHAVIOR)
     private JCheckBox useShellAsDeathCheckBox;
     @Configures(EnumProperty.BEHAVIOR)
@@ -139,7 +136,7 @@ public class FaerieWindow extends JFrame {
     @Configures(EnumProperty.BEHAVIOR)
     private JCheckBox useSecondGraphicsPageCheckBox;
     @Configures(EnumProperty.BEHAVIOR)
-    private JComboBox paletteComboBox;
+    private JComboBox<String> paletteComboBox;
     @Configures(EnumProperty.BEHAVIOR)
     private JCheckBox disableFireballKillingCheckBox;
     @Configures(EnumProperty.BEHAVIOR)
@@ -205,7 +202,7 @@ public class FaerieWindow extends JFrame {
     @Configures(EnumProperty.PROPERTY_BYTES)
     private JFormattedTextField secondPropertyTextField;
     @Configures(EnumProperty.PROPERTY_BYTES)
-    private JComboBox statusOverrideComboBox;
+    private JComboBox<String> statusOverrideComboBox;
     private JFormattedTextField uniqueByteTextField;
     private JFormattedTextField extraByteAmountTextField;
 
@@ -351,6 +348,12 @@ public class FaerieWindow extends JFrame {
         }
 
         try {
+            String[] availableSprites = this.getProvider().getAvailableSprites();
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(availableSprites);
+            this.spriteSelectionComboBox.setModel(model);
+            this.spriteSelectionComboBox.setSelectedIndex(0);
+            this.spriteClippingComboBox.setEnabled(availableSprites.length > 1);
+
             return this.loadSprite(0);
         }catch(ProvisionException exception){
             JOptionPane.showMessageDialog(
@@ -514,16 +517,7 @@ public class FaerieWindow extends JFrame {
      */
     private void createUIComponents(){
         // Create sprite selection combobox.
-        // XXX: temporary placeholder, will be replaced by the yet unwritten Repository system later
-        try {
-            URL listURL = this.getClass().getResource("/com/telinc1/faerie/sprites/list.txt");
-            File listFile = new File(listURL.getFile());
-            List<String> sprites = Files.readAllLines(listFile.toPath(), StandardCharsets.UTF_8);
-
-            this.spriteSelectionComboBox = new JComboBox<>(sprites.toArray());
-        }catch(IOException exception){
-            throw new RuntimeException(exception);
-        }
+        this.spriteSelectionComboBox = new JComboBox<>();
 
         // Create type combobox.
         // XXX: should these be localized

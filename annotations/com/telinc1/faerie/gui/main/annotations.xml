@@ -21,6 +21,11 @@
   -->
 
 <root>
+    <item name='com.telinc1.faerie.gui.main.FaerieWindow com.telinc1.faerie.gui.main.FaerieWindow loadSprite(int)'>
+        <annotation name='java.lang.SuppressWarnings'>
+            <val val="&quot;HardcodedFileSeparator&quot;"/>
+        </annotation>
+    </item>
     <item name='com.telinc1.faerie.gui.main.FaerieWindow void createUIComponents()'>
         <annotation name='java.lang.SuppressWarnings'>
             <val val="&quot;HardcodedFileSeparator&quot;"/>

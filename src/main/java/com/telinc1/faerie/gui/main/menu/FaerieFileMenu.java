@@ -86,7 +86,7 @@ public class FaerieFileMenu extends FaerieMenu {
                         );
                     }
                 }else if(TypeUtils.isROM(file)){
-                    // XXX: open and edit ROM files
+                    // TODO: open and edit ROM files
                 }else{
                     JOptionPane.showMessageDialog(
                         window,
