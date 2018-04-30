@@ -56,6 +56,8 @@ public class FaerieMenuBar extends JMenuBar {
 
         this.fileMenu = new FaerieFileMenu(this);
 
+        this.add(this.fileMenu);
+
         this.getWindow().setJMenuBar(this);
     }
 

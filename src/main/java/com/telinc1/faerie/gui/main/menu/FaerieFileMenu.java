@@ -22,9 +22,8 @@
 
 package com.telinc1.faerie.gui.main.menu;
 
-import com.telinc1.faerie.Resources;
-
-import javax.swing.JMenu;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 /**
  * The "File" menu of the main Faerie application window.
@@ -32,33 +31,29 @@ import javax.swing.JMenu;
  * @author Telinc1
  * @since 1.0.0
  */
-public class FaerieFileMenu extends JMenu {
-    /**
-     * The menu bar which owns this menu.
-     */
-    private FaerieMenuBar parent;
-
+public class FaerieFileMenu extends FaerieMenu {
     /**
      * Constructs a "File" menu.
-     * <p>
-     * The name and settings are automatically set. The menu is automatically
-     * added to its parent.
      *
      * @param parent the menu bar which this menu will belong to
      */
     FaerieFileMenu(FaerieMenuBar parent){
-        super(Resources.getString("main", "menu.file"));
-        this.parent = parent;
+        super(parent);
+    }
 
-        this.getMenuBar().add(this);
+    @Override
+    String getID(){
+        return "file";
     }
 
     /**
-     * Returns the parent menu bar for this "File" menu.
-     *
-     * @return an instance of the {@link FaerieMenuBar} which owns this menu
+     * Creates and adds all of the items this menu contains.
      */
-    public FaerieMenuBar getMenuBar(){
-        return this.parent;
+    @Override
+    void setupMenu(){
+        this.addItem("new", KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK);
+        this.addItem("open", KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK);
+        this.addItem("save", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
+        this.addItem("saveAs", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK);
     }
 }
