@@ -39,12 +39,12 @@ public class JScaledImage extends JComponent {
 
     @Override
     public void paintComponent(Graphics destination){
-        if(this.isOpaque()){
+        BufferedImage image = this.getImage();
+
+        if(this.isOpaque() || image == null){
             destination.setColor(this.getBackground());
             destination.fillRect(0, 0, this.getWidth(), this.getHeight());
         }
-
-        BufferedImage image = this.getImage();
 
         if(image == null){
             return;
@@ -110,6 +110,7 @@ public class JScaledImage extends JComponent {
         BufferedImage image = ImageIO.read(imageURL);
 
         this.setImage(image);
+        this.repaint();
         return this;
     }
 }
