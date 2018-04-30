@@ -27,6 +27,7 @@ import com.telinc1.faerie.Resources;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import java.awt.event.ActionListener;
 
 /**
  * This is the common ancestor of all Faerie menus. It provides basic utility
@@ -114,10 +115,11 @@ public abstract class FaerieMenu extends JMenu {
      * @param key the key from the resource bundle for the name
      * @param keyCode the key for the accelerator from {@link java.awt.event.KeyEvent}
      * @param modifiers the modifiers for the accelerator from {@link java.awt.event.InputEvent}
+     * @param actionListener the {@link ActionListener} for the menu item
      * @return the created menu item
      */
-    protected JMenuItem addItem(String key, int keyCode, int modifiers){
-        JMenuItem item = this.addItem(key);
+    protected JMenuItem addItem(String key, int keyCode, int modifiers, ActionListener actionListener){
+        JMenuItem item = this.addItem(key, actionListener);
         item.setAccelerator(KeyStroke.getKeyStroke(keyCode, modifiers));
 
         return item;
@@ -130,12 +132,17 @@ public abstract class FaerieMenu extends JMenu {
      * key.
      *
      * @param key the key from the resource bundle for the name
+     * @param actionListener the {@link ActionListener} for the menu item
      * @return the created menu item
      */
-    protected JMenuItem addItem(String key){
+    protected JMenuItem addItem(String key, ActionListener actionListener){
         JMenuItem item = new JMenuItem();
         this.setTitle(item, this.getID() + "." + key);
         this.add(item);
+
+        if(actionListener != null){
+            item.addActionListener(actionListener);
+        }
 
         return item;
     }

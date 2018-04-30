@@ -22,7 +22,7 @@
 
 package com.telinc1.faerie.gui;
 
-import com.telinc1.faerie.math.Bounds;
+import com.telinc1.faerie.util.Bounds;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.text.DefaultFormatterFactory;
@@ -94,6 +94,17 @@ public class HexadecimalFormatter extends JFormattedTextField.AbstractFormatter 
         return this.setBounds(new Bounds(min, max));
     }
 
+    /**
+     * Sets new bounds for the formatter.
+     *
+     * @param bounds the new bounds to set
+     * @return the formatter, for chaining
+     */
+    public HexadecimalFormatter setBounds(Bounds bounds){
+        this.bounds = bounds;
+        return this;
+    }
+
     @Override
     public Object stringToValue(String text) throws ParseException{
         try {
@@ -110,17 +121,6 @@ public class HexadecimalFormatter extends JFormattedTextField.AbstractFormatter 
      */
     public Bounds getBounds(){
         return this.bounds;
-    }
-
-    /**
-     * Sets new bounds for the formatter.
-     *
-     * @param bounds the new bounds to set
-     * @return the formatter, for chaining
-     */
-    public HexadecimalFormatter setBounds(Bounds bounds){
-        this.bounds = bounds;
-        return this;
     }
 
     @Override

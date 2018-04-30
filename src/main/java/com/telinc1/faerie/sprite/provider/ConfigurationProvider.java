@@ -28,6 +28,7 @@ import com.telinc1.faerie.sprite.emitter.Emitter;
 import com.telinc1.faerie.sprite.parser.CFGParser;
 import com.telinc1.faerie.sprite.parser.ParseException;
 import com.telinc1.faerie.sprite.parser.Parser;
+import com.telinc1.faerie.util.TypeUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -63,7 +64,7 @@ public class ConfigurationProvider extends Provider {
         this.isModified = false;
 
         try(FileReader reader = new FileReader(input)) {
-            String extension = this.getExtension();
+            String extension = TypeUtils.getExtension(this.getInput());
             Parser parser = null;
 
             if("cfg".equalsIgnoreCase(extension)){
@@ -116,7 +117,7 @@ public class ConfigurationProvider extends Provider {
 
     @Override
     public void save(File file) throws SavingException{
-        String extension = this.getExtension(file);
+        String extension = TypeUtils.getExtension(file);
         Emitter emitter = null;
 
         if("cfg".equalsIgnoreCase(extension)){

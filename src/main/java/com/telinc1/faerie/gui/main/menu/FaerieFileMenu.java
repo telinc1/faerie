@@ -22,8 +22,18 @@
 
 package com.telinc1.faerie.gui.main.menu;
 
+import com.telinc1.faerie.Resources;
+import com.telinc1.faerie.gui.chooser.ConfigurationChooser;
+import com.telinc1.faerie.gui.main.FaerieWindow;
+import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
+import com.telinc1.faerie.sprite.provider.LoadingException;
+import com.telinc1.faerie.util.TypeUtils;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 /**
  * The "File" menu of the main Faerie application window.
@@ -33,12 +43,65 @@ import java.awt.event.KeyEvent;
  */
 public class FaerieFileMenu extends FaerieMenu {
     /**
+     * The {@link JFileChooser} used for all opening and saving operations in
+     * the menu.
+     */
+    private ConfigurationChooser configurationChooser;
+
+    /**
      * Constructs a "File" menu.
      *
      * @param parent the menu bar which this menu will belong to
      */
     FaerieFileMenu(FaerieMenuBar parent){
         super(parent);
+
+        this.configurationChooser = new ConfigurationChooser();
+    }
+
+    /**
+     * Creates and adds all of the items this menu contains.
+     */
+    @Override
+    void setupMenu(){
+        FaerieWindow window = this.getMenuBar().getWindow();
+
+        this.addItem("new", KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, null);
+        this.addItem("open", KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK, event -> {
+            int result = this.getConfigurationChooser().showOpen(window);
+
+            if(result == JFileChooser.APPROVE_OPTION){
+                File file = this.getConfigurationChooser().getSelectedFile();
+
+                if(TypeUtils.isConfiguration(file)){
+                    try {
+                        ConfigurationProvider provider = new ConfigurationProvider(file);
+                        window.setProvider(provider);
+                    }catch(LoadingException exception){
+                        JOptionPane.showMessageDialog(
+                            window,
+                            exception.getMessage(),
+                            Resources.getString("chooser", "chooser.configuration.loading.title"),
+                            JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                }else if(TypeUtils.isROM(file)){
+                    // XXX: open and edit ROM files
+                }else{
+                    JOptionPane.showMessageDialog(
+                        window,
+                        Resources.getString("chooser", "chooser.configuration.type.content"),
+                        Resources.getString("chooser", "chooser.configuration.type.title"),
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+
+            this.getConfigurationChooser().setSelectedFile(null);
+        });
+
+        this.addItem("save", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK, null);
+        this.addItem("saveAs", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, null);
     }
 
     @Override
@@ -47,13 +110,11 @@ public class FaerieFileMenu extends FaerieMenu {
     }
 
     /**
-     * Creates and adds all of the items this menu contains.
+     * Returns the {@link JFileChooser} for the File menu.
+     *
+     * @return the shared file chooser used for opening and saving
      */
-    @Override
-    void setupMenu(){
-        this.addItem("new", KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK);
-        this.addItem("open", KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK);
-        this.addItem("save", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
-        this.addItem("saveAs", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK);
+    public ConfigurationChooser getConfigurationChooser(){
+        return this.configurationChooser;
     }
 }

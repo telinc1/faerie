@@ -103,6 +103,39 @@ public class Sprite {
     }
 
     /**
+     * Returns the type of the sprite.
+     *
+     * @return an element of {@link EnumSpriteType} which represents this
+     * sprite's type
+     */
+    public EnumSpriteType getType(){
+        return this.type;
+    }
+
+    /**
+     * Sets a new type for the sprite.
+     *
+     * @param type the new type to set
+     * @return the sprite, for chaining
+     */
+    public Sprite setType(EnumSpriteType type){
+        this.type = type;
+        return this;
+    }
+
+    /**
+     * Returns the sprite's first property byte.
+     * <p>
+     * If the subtype doesn't have property bytes, this can return -1.
+     *
+     * @return an integer in the range [0; 255] representing the
+     * first property byte
+     */
+    public int getFirstPropertyByte(){
+        return this.getSubType().hasExtraProperties() ? this.firstPropertyByte & 0xFF : 0xFF;
+    }
+
+    /**
      * Sets a new subtype for the sprite.
      *
      * @param subtype the new subtype to set
@@ -145,18 +178,6 @@ public class Sprite {
     }
 
     /**
-     * Returns the sprite's first property byte.
-     * <p>
-     * If the subtype doesn't have property bytes, this can return -1.
-     *
-     * @return an integer in the range [0; 255] representing the
-     * first property byte
-     */
-    public int getFirstPropertyByte(){
-        return this.getSubType().hasExtraProperties() ? this.firstPropertyByte & 0xFF : -1;
-    }
-
-    /**
      * Returns the subtype of the sprite.
      *
      * @return an element of {@link EnumSpriteSubType} which represents this
@@ -191,7 +212,7 @@ public class Sprite {
      * first extra property byte
      */
     public int getSecondPropertyByte(){
-        return this.getSubType().hasExtraProperties() ? this.secondPropertyByte & 0x3F : -1;
+        return this.getSubType().hasExtraProperties() ? this.secondPropertyByte & 0x3F : 0x3F;
     }
 
     /**
@@ -214,7 +235,7 @@ public class Sprite {
      * the sprite status is handled
      */
     public EnumStatusHandling getStatusHandling(){
-        return this.getSubType().hasExtraProperties() ? this.statusHandling : EnumStatusHandling.HANDLE_STUNNED;
+        return this.getSubType().hasExtraProperties() ? this.statusHandling : EnumStatusHandling.OVERRIDE_ALL;
     }
 
     /**
@@ -236,7 +257,7 @@ public class Sprite {
      * @return an integer in the range [0; 255] representing the unique byte (code)
      */
     public int getUniqueByte(){
-        return this.getSubType().hasUniqueByte() ? this.uniqueByte & 0xFF : -1;
+        return this.getSubType().hasUniqueByte() ? this.uniqueByte & 0xFF : 0xFF;
     }
 
     /**
@@ -324,8 +345,7 @@ public class Sprite {
     /**
      * Returns the display data of the sprite.
      *
-     * @return any {@link DisplayData} object which describes how the sprite
-     * should display in Lunar Magic
+     * @return any {@link DisplayData} object which describes how the sprite should display in Lunar Magic
      */
     public DisplayData getDisplayData(){
         return this.displayData;
@@ -357,26 +377,5 @@ public class Sprite {
         }
 
         return !this.getSubType().usesSecondASM() || (this.secondASMFile != null && !this.secondASMFile.isEmpty());
-    }
-
-    /**
-     * Returns the type of the sprite.
-     *
-     * @return an element of {@link EnumSpriteType} which represents this
-     * sprite's type
-     */
-    public EnumSpriteType getType(){
-        return this.type;
-    }
-
-    /**
-     * Sets a new type for the sprite.
-     *
-     * @param type the new type to set
-     * @return the sprite, for chaining
-     */
-    public Sprite setType(EnumSpriteType type){
-        this.type = type;
-        return this;
     }
 }

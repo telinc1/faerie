@@ -53,28 +53,6 @@ public abstract class Provider {
     }
 
     /**
-     * Returns the extension of the original input file.
-     *
-     * @return the file extension
-     */
-    public String getExtension(){
-        return this.getExtension(this.getInput());
-    }
-
-    /**
-     * Returns the extension of a file.
-     *
-     * @param file the file whose name should be processed
-     * @return the file extension
-     */
-    public String getExtension(File file){
-        String name = this.getInput().getName();
-        int dotIndex = name.lastIndexOf('.');
-
-        return (dotIndex == -1) ? "" : name.substring(dotIndex + 1);
-    }
-
-    /**
      * Returns the original input {@code File}.
      *
      * @return the input

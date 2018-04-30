@@ -22,7 +22,7 @@
 
 package com.telinc1.faerie.gui;
 
-import com.telinc1.faerie.math.Bounds;
+import com.telinc1.faerie.util.Bounds;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.text.DefaultFormatterFactory;

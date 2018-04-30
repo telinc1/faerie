@@ -284,6 +284,7 @@ public class JPaletteView extends JComponent {
         }
 
         this.firstIndex = firstIndex;
+        this.repaint();
         return this;
     }
 }

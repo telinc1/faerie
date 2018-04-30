@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.telinc1.faerie.math;
+package com.telinc1.faerie.util;
 
 /**
  * Specifies a lower and an upper bound for an integer.

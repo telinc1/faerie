@@ -21,7 +21,7 @@
   -->
 
 <root>
-    <item name='com.telinc1.faerie.math.Bounds java.lang.String toString()'>
+    <item name='com.telinc1.faerie.util.Bounds java.lang.String toString()'>
         <annotation name='org.jetbrains.annotations.NonNls'/>
     </item>
 </root>
