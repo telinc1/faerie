@@ -143,7 +143,9 @@
                                 <minimum-size width="84" height="84"/>
                               </grid>
                             </constraints>
-                            <properties/>
+                            <properties>
+                              <focusable value="false"/>
+                            </properties>
                           </component>
                         </children>
                       </grid>
@@ -269,7 +271,9 @@
                                 <minimum-size width="84" height="84"/>
                               </grid>
                             </constraints>
-                            <properties/>
+                            <properties>
+                              <focusable value="false"/>
+                            </properties>
                           </component>
                         </children>
                       </grid>

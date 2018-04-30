@@ -23,8 +23,7 @@
 package com.telinc1.faerie.gui;
 
 import javax.imageio.ImageIO;
-import javax.swing.JLabel;
-import java.awt.Dimension;
+import javax.swing.JComponent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -32,48 +31,52 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
-public class JScaledImage extends JLabel {
+public class JScaledImage extends JComponent {
     /**
      * The image which is currently being displayed.
      */
     private BufferedImage image;
 
-    /**
-     * Creates a new image with no defined size.
-     */
-    public JScaledImage(){
-        super();
-    }
-
-    /**
-     * Creates a new image with a fixed minimum size.
-     *
-     * @param width the minimum width of the image
-     * @param height the minimum height of the image
-     */
-    public JScaledImage(int width, int height){
-        super();
-        this.setMinimumSize(new Dimension(width, height));
-    }
-
     @Override
     public void paintComponent(Graphics destination){
+        if(this.isOpaque()){
+            destination.setColor(this.getBackground());
+            destination.fillRect(0, 0, this.getWidth(), this.getHeight());
+        }
+
         BufferedImage image = this.getImage();
 
         if(image == null){
-            super.paintComponent(destination);
             return;
         }
 
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        if(width > height){
+            width = this.getWidth();
+            height = (width * height) / image.getWidth();
+        }else{
+            height = this.getHeight();
+            width = (width * height) / image.getHeight();
+        }
+
         Graphics2D graphics = (Graphics2D)destination;
-        Dimension size = this.getSize();
 
         graphics.setRenderingHint(
             RenderingHints.KEY_INTERPOLATION,
             RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR
         );
 
-        graphics.drawImage(image, 0, 0, size.width, size.height, this.getBackground(), null);
+        graphics.drawImage(
+            image,
+            (this.getWidth() - width) / 2,
+            (this.getHeight() - height) / 2,
+            width,
+            height,
+            this.getBackground(),
+            null
+        );
     }
 
     /**
