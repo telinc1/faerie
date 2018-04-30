@@ -28,6 +28,7 @@ import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.DecimalFormatter;
 import com.telinc1.faerie.gui.HexadecimalFormatter;
+import com.telinc1.faerie.gui.JPaletteView;
 import com.telinc1.faerie.gui.JScaledImage;
 import com.telinc1.faerie.gui.main.menu.FaerieMenuBar;
 import com.telinc1.faerie.sprite.EnumSpriteSubType;
@@ -48,6 +49,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.io.File;
@@ -156,7 +158,7 @@ public class FaerieWindow extends JFrame {
     private JFormattedTextField extraByteAmountTextField;
     private JScaledImage objectClippingImage;
     private JScaledImage spriteClippingImage;
-    private JScaledImage paletteImage;
+    private JPaletteView paletteView;
 
     /**
      * Construct an application window, including all of its inner components.
@@ -190,6 +192,7 @@ public class FaerieWindow extends JFrame {
         try {
             URL palette = this.getClass().getResource("/com/telinc1/faerie/binary/generic.mw3");
             this.getPalette().loadMW3File(new File(palette.getPath()));
+            this.paletteView.setPalette(this.getPalette());
         }catch(IOException exception){
             exception.printStackTrace();
         }
@@ -442,8 +445,8 @@ public class FaerieWindow extends JFrame {
         disableSecondaryInteractionCheckBox = new JCheckBox();
         this.$$$loadButtonText$$$(disableSecondaryInteractionCheckBox, ResourceBundle.getBundle("com/telinc1/faerie/locale/Main").getString("sprite.behavior.disableSecondaryInteraction"));
         panel6.add(disableSecondaryInteractionCheckBox, new GridConstraints(5, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        paletteImage.setFocusable(false);
-        panel6.add(paletteImage, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(128, 16), null, null, 0, false));
+        paletteView.setFocusable(false);
+        panel6.add(paletteView, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(128, 16), null, null, 0, false));
         final JPanel panel7 = new JPanel();
         panel7.setLayout(new GridLayoutManager(8, 1, new Insets(0, 0, 0, 0), -1, 0));
         spritePanel.add(panel7, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
@@ -634,8 +637,12 @@ public class FaerieWindow extends JFrame {
             this.spriteClippingImage.loadImage("sprite/00.png");
 
             // Create palette image.
-            this.paletteImage = new JScaledImage();
-            this.paletteImage.loadImage("palette.png");
+            this.paletteView = new JPaletteView();
+            this.paletteView
+                .setCellSize(16, 16)
+                .setFirstIndex(0x80)
+                .setRegionSize(8, 1);
+            this.paletteView.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         }catch(IOException exception){
             throw new RuntimeException(exception);
         }
