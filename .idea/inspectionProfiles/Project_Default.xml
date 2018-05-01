@@ -49,15 +49,6 @@
     <inspection_tool class="SocketResource" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="insideTryAllowed" value="false" />
     </inspection_tool>
-    <inspection_tool class="StringConcatenation" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="ignoreAsserts" value="false" />
-      <option name="ignoreSystemOuts" value="false" />
-      <option name="ignoreSystemErrs" value="false" />
-      <option name="ignoreThrowableArguments" value="false" />
-      <option name="ignoreConstantInitializers" value="false" />
-      <option name="ignoreInTestCode" value="false" />
-      <option name="ignoreInToString" value="false" />
-    </inspection_tool>
     <inspection_tool class="SystemSetSecurityManager" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="UnaryPlus" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryDefault" enabled="true" level="WARNING" enabled_by_default="true" />

@@ -153,4 +153,9 @@ public class ConfigurationProvider extends Provider {
             throw new SavingException("The configuration file couldn't written to.", exception);
         }
     }
+
+    @Override
+    public boolean isModified(){
+        return this.isModified;
+    }
 }

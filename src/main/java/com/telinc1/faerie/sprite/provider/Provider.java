@@ -146,4 +146,11 @@ public abstract class Provider {
      * @return the currently loaded sprite
      */
     public abstract Sprite startModification();
+
+    /**
+     * Checks whether any sprite available in the provider has been modified.
+     *
+     * @return whether the provider has been modified
+     */
+    public abstract boolean isModified();
 }

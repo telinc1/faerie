@@ -66,4 +66,13 @@ public class MenuBar extends JMenuBar {
     public MainWindow getWindow(){
         return this.parent;
     }
+
+    /**
+     * Returns the "File" menu.
+     *
+     * @return the {@code FileMenu}
+     */
+    public FileMenu getFileMenu(){
+        return this.fileMenu;
+    }
 }

@@ -30,6 +30,7 @@ import com.telinc1.faerie.gui.DecimalFormatter;
 import com.telinc1.faerie.gui.HexadecimalFormatter;
 import com.telinc1.faerie.gui.JPaletteView;
 import com.telinc1.faerie.gui.JScaledImage;
+import com.telinc1.faerie.gui.chooser.ConfigurationChooser;
 import com.telinc1.faerie.gui.main.menu.MenuBar;
 import com.telinc1.faerie.sprite.EnumSpriteSubType;
 import com.telinc1.faerie.sprite.EnumSpriteType;
@@ -38,8 +39,11 @@ import com.telinc1.faerie.sprite.Sprite;
 import com.telinc1.faerie.sprite.SpriteBehavior;
 import com.telinc1.faerie.sprite.parser.CFGParser;
 import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
+import com.telinc1.faerie.sprite.provider.LoadingException;
 import com.telinc1.faerie.sprite.provider.Provider;
 import com.telinc1.faerie.sprite.provider.ProvisionException;
+import com.telinc1.faerie.sprite.provider.SavingException;
+import com.telinc1.faerie.util.TypeUtils;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -48,9 +52,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -61,6 +67,9 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -85,6 +94,12 @@ public class MainWindow extends JFrame {
      * The menu bar which the window displays.
      */
     private MenuBar menuBar;
+
+    /**
+     * The {@link JFileChooser} used for all opening and saving operations in
+     * the menu.
+     */
+    private ConfigurationChooser configurationChooser;
 
     /**
      * The currently loaded sprite provider.
@@ -248,7 +263,15 @@ public class MainWindow extends JFrame {
         this.setSize(760, 600);
         this.setMinimumSize(new Dimension(760, 600));
 
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event){
+                if(MainWindow.this.unloadProvider()){
+                    System.exit(0);
+                }
+            }
+        });
 
         URL iconURL = Resources.class.getResource(Resources.PACKAGE + "/images/application.png");
         ImageIcon icon = new ImageIcon(iconURL);
@@ -256,6 +279,203 @@ public class MainWindow extends JFrame {
 
         this.menuBar = new MenuBar(this);
         this.setJMenuBar(this.menuBar);
+
+        this.configurationChooser = new ConfigurationChooser();
+    }
+
+    /**
+     * Configures UI components after they have been created.
+     */
+    private void configureUIComponents(){
+        this.addComboBoxListener(this.typeComboBox, index -> {
+            if(index == this.getProvider().getCurrentSprite().getType().asInteger()){
+                return;
+            }
+
+            this.startModification().setType(EnumSpriteType.fromInteger(index));
+            this.updateGUI();
+        });
+
+        this.addComboBoxListener(this.subtypeComboBox, index -> {
+            if(index == this.getProvider().getCurrentSprite().getSubType().asInteger()){
+                return;
+            }
+
+            this.startModification().setSubtype(EnumSpriteSubType.fromInteger(index));
+            this.updateGUI();
+        });
+
+        HexadecimalFormatter.apply(this.actsLikeTextField, 0x0, 0xFF, value -> {
+            if(this.getProvider().getCurrentSprite().getActsLike() == value){
+                return;
+            }
+
+            this.startModification().setActsLike(value);
+        });
+
+        this.addTextFieldListener(this.firstASMTextField, text -> {
+            if(this.getProvider().getCurrentSprite().getFirstASMFile().equals(text)){
+                return;
+            }
+
+            this.startModification().setFirstASMFile(text);
+        });
+
+        this.addTextFieldListener(this.secondASMTextField, text -> {
+            if(this.getProvider().getCurrentSprite().getSecondASMFile().equals(text)){
+                return;
+            }
+
+            this.startModification().setSecondASMFile(text);
+        });
+
+        for(Field field : this.getClass().getDeclaredFields()){
+            if(field.getType() != JCheckBox.class){
+                continue;
+            }
+
+            BehaviorBit annotation = field.getDeclaredAnnotation(BehaviorBit.class);
+
+            if(annotation == null){
+                continue;
+            }
+
+            try {
+                JCheckBox checkBox = (JCheckBox)field.get(this);
+                Field bit = SpriteBehavior.class.getDeclaredField(annotation.value());
+                checkBox.addItemListener(event -> {
+                    try {
+                        if(bit.getBoolean(this.getProvider().getCurrentSprite().getBehavior()) == checkBox.isSelected()){
+                            return;
+                        }
+
+                        bit.setBoolean(this.startModification().getBehavior(), checkBox.isSelected());
+                    }catch(IllegalAccessException e){
+                        e.printStackTrace();
+                    }
+                });
+            }catch(ReflectiveOperationException exception){
+                exception.printStackTrace();
+            }
+        }
+
+        this.addComboBoxListener(this.objectClippingComboBox, this::setObjectClipping);
+        this.addComboBoxListener(this.spriteClippingComboBox, this::setSpriteClipping);
+        this.addComboBoxListener(this.paletteComboBox, this::setSpritePalette);
+
+        HexadecimalFormatter.apply(this.firstPropertyTextField, 0x0, 0xFF, value -> {
+            if(this.getProvider().getCurrentSprite().getFirstPropertyByte() == value){
+                return;
+            }
+
+            this.startModification().setFirstPropertyByte(value);
+        });
+
+        HexadecimalFormatter.apply(this.secondPropertyTextField, 0x0, 0x3F, value -> {
+            if(this.getProvider().getCurrentSprite().getSecondPropertyByte() == value){
+                return;
+            }
+
+            this.startModification().setSecondPropertyByte(value);
+        });
+
+        this.addComboBoxListener(this.statusOverrideComboBox, index -> {
+            EnumStatusHandling handling = EnumStatusHandling.fromBits(index);
+
+            if(this.getProvider().getCurrentSprite().getStatusHandling() == handling){
+                return;
+            }
+
+            this.startModification().setStatusHandling(handling);
+        });
+
+        HexadecimalFormatter.apply(this.uniqueByteTextField, 0x0, 0xFF, value -> {
+            if(this.getProvider().getCurrentSprite().getUniqueByte() == value){
+                return;
+            }
+
+            this.startModification().setUniqueByte(value);
+        });
+
+        DecimalFormatter.apply(this.extraByteAmountTextField, 0x0, 0xFF, value -> {
+            if(this.getProvider().getCurrentSprite().getExtraBytes() == value){
+                return;
+            }
+
+            this.startModification().setExtraBytes(value);
+        });
+    }
+
+    /**
+     * Unloads the current provider, first making sure all changes are saved.
+     *
+     * @return whether the provider was unloaded
+     */
+    public boolean unloadProvider(){
+        if(this.getProvider() == null){
+            return true;
+        }
+
+        if(!this.getProvider().isModified()){
+            this.setProvider(null);
+            return true;
+        }
+
+        String[] options = new String[]{
+            Resources.getString("main", "dialog.option.yes"),
+            Resources.getString("main", "dialog.option.no"),
+            Resources.getString("main", "dialog.option.cancel")
+        };
+
+        int option = JOptionPane.showOptionDialog(
+            this,
+            Resources.getString("main", "dialog.unsaved.content"),
+            Resources.getString("main", "dialog.unsaved.title"),
+            JOptionPane.YES_NO_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            options[2]
+        );
+
+        if(option == -1 || option == 2){
+            return false;
+        }
+
+        if(option == 0){
+            this.getConfigurationChooser().setSelectedFile(this.getProvider().getInput());
+            this.saveFile();
+        }
+
+        this.setProvider(null);
+        return true;
+    }
+
+    /**
+     * Returns the {@link JFileChooser} for the File menu.
+     *
+     * @return the shared file chooser used for opening and saving
+     */
+    public ConfigurationChooser getConfigurationChooser(){
+        return this.configurationChooser;
+    }
+
+    /**
+     * Saves the current provider to a user-selected file.
+     */
+    public void saveFile(){
+        Provider provider = this.getProvider();
+
+        if(provider == null){
+            this.getApplication().getExceptionHandler().error("chooser", "save.blank");
+            return;
+        }
+
+        if(this.getConfigurationChooser().showSave(this) == JFileChooser.APPROVE_OPTION){
+            this.save(this.getConfigurationChooser().getSelectedFile());
+        }
+
+        this.getConfigurationChooser().setSelectedFile(null);
     }
 
     /**
@@ -300,61 +520,38 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Configures UI components after they have been created.
+     * Saves the current provider to the given file.
+     * <p>
+     * If a {@code null} {@code file} parameter is provided, the currently
+     * opened file will be save in-place.
+     *
+     * @param file the file to save to
      */
-    private void configureUIComponents(){
-        this.addComboBoxListener(this.typeComboBox, index -> {
-            this.startModification().setType(EnumSpriteType.fromInteger(index));
-            this.updateGUI();
-        });
+    public void save(File file){
+        Provider provider = this.getProvider();
 
-        this.addComboBoxListener(this.subtypeComboBox, index -> {
-            this.startModification().setSubtype(EnumSpriteSubType.fromInteger(index));
-            this.updateGUI();
-        });
-
-        HexadecimalFormatter.apply(this.actsLikeTextField, 0x0, 0xFF, value -> this.startModification().setActsLike(value));
-
-        this.addTextFieldListener(this.firstASMTextField, text -> this.startModification().setFirstASMFile(text));
-        this.addTextFieldListener(this.secondASMTextField, text -> this.startModification().setSecondASMFile(text));
-
-        for(Field field : this.getClass().getDeclaredFields()){
-            if(field.getType() != JCheckBox.class){
-                continue;
-            }
-
-            BehaviorBit annotation = field.getDeclaredAnnotation(BehaviorBit.class);
-
-            if(annotation == null){
-                continue;
-            }
-
-            try {
-                JCheckBox checkBox = (JCheckBox)field.get(this);
-                Field bit = SpriteBehavior.class.getDeclaredField(annotation.value());
-                checkBox.addItemListener(event -> {
-                    try {
-                        bit.setBoolean(this.startModification().getBehavior(), checkBox.isSelected());
-                    }catch(IllegalAccessException e){
-                        e.printStackTrace();
-                    }
-                });
-            }catch(ReflectiveOperationException exception){
-                exception.printStackTrace();
-            }
+        if(provider == null){
+            this.getApplication().getExceptionHandler().error("chooser", "save.blank");
+            return;
         }
 
-        this.addComboBoxListener(this.objectClippingComboBox, this::setObjectClipping);
-        this.addComboBoxListener(this.spriteClippingComboBox, this::setSpriteClipping);
-        this.addComboBoxListener(this.paletteComboBox, this::setSpritePalette);
+        try {
+            if(file == null){
+                provider.save();
+            }else{
+                provider.save(file);
+            }
+        }catch(SavingException exception){
+            exception.printStackTrace();
 
-        HexadecimalFormatter.apply(this.firstPropertyTextField, 0x0, 0xFF, value -> this.startModification().setFirstPropertyByte(value));
-        HexadecimalFormatter.apply(this.secondPropertyTextField, 0x0, 0x3F, value -> this.startModification().setSecondPropertyByte(value));
-        this.addComboBoxListener(this.statusOverrideComboBox, index -> this.startModification().setStatusHandling(EnumStatusHandling.fromBits(index)));
+            String message = exception.getMessage();
 
-        HexadecimalFormatter.apply(this.uniqueByteTextField, 0x0, 0xFF, value -> this.startModification().setUniqueByte(value));
+            if(exception.getCause() != null){
+                message += " (" + exception.getCause().getClass().getName() + ")";
+            }
 
-        DecimalFormatter.apply(this.extraByteAmountTextField, 0x0, 0xFF, value -> this.startModification().setExtraBytes(value));
+            this.getApplication().getExceptionHandler().error("chooser", "save", "message", message);
+        }
     }
 
     /**
@@ -511,6 +708,46 @@ public class MainWindow extends JFrame {
     }
 
     /**
+     * Opens a new user-selected file.
+     */
+    public void openFile(){
+        if(!this.unloadProvider()){
+            return;
+        }
+
+        int result = this.getConfigurationChooser().showOpen(this);
+
+        if(result == JFileChooser.APPROVE_OPTION){
+            File file = this.getConfigurationChooser().getSelectedFile();
+
+            if(TypeUtils.isConfiguration(file)){
+                try {
+                    ConfigurationProvider provider = new ConfigurationProvider(file);
+                    this.setProvider(provider);
+                }catch(LoadingException exception){
+                    JOptionPane.showMessageDialog(
+                        this,
+                        exception.getMessage(),
+                        Resources.getString("chooser", "chooser.configuration.loading.title"),
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }else if(TypeUtils.isROM(file)){
+                // TODO: open and edit ROM files
+            }else{
+                JOptionPane.showMessageDialog(
+                    this,
+                    Resources.getString("chooser", "chooser.configuration.type.content"),
+                    Resources.getString("chooser", "chooser.configuration.type.title"),
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+
+        this.getConfigurationChooser().setSelectedFile(null);
+    }
+
+    /**
      * Sets the object clipping of the active sprite and updates the fields
      * related to it.
      *
@@ -519,7 +756,7 @@ public class MainWindow extends JFrame {
     private void setObjectClipping(int index){
         index = Math.max(Math.min(index, 0xF), 0x0);
 
-        if(this.getProvider() != null){
+        if(this.getProvider() != null && this.getProvider().getCurrentSprite().getBehavior().objectClipping != index){
             this.modifyBehavior().objectClipping = (byte)index;
         }
 
@@ -541,7 +778,7 @@ public class MainWindow extends JFrame {
     private void setSpriteClipping(int index){
         index = Math.max(Math.min(index, 0x3F), 0x0);
 
-        if(this.getProvider() != null){
+        if(this.getProvider() != null && this.getProvider().getCurrentSprite().getBehavior().spriteClipping != index){
             this.modifyBehavior().spriteClipping = (byte)index;
         }
 
@@ -552,23 +789,6 @@ public class MainWindow extends JFrame {
         }catch(IOException exception){
             exception.printStackTrace();
         }
-    }
-
-    /**
-     * Sets the palette of the active sprite and updates the fields related to
-     * it.
-     *
-     * @param palette the new palette
-     */
-    private void setSpritePalette(int palette){
-        palette = Math.max(Math.min(palette, 0x7), 0x0);
-
-        if(this.getProvider() != null){
-            this.modifyBehavior().palette = (byte)palette;
-        }
-
-        this.paletteComboBox.setSelectedIndex(palette);
-        this.paletteView.setFirstIndex(0x80 + palette * 0x10);
     }
 
     /**
@@ -649,6 +869,23 @@ public class MainWindow extends JFrame {
         }
 
         return this;
+    }
+
+    /**
+     * Sets the palette of the active sprite and updates the fields related to
+     * it.
+     *
+     * @param palette the new palette
+     */
+    private void setSpritePalette(int palette){
+        palette = Math.max(Math.min(palette, 0x7), 0x0);
+
+        if(this.getProvider() != null && this.getProvider().getCurrentSprite().getBehavior().palette != palette){
+            this.modifyBehavior().palette = (byte)palette;
+        }
+
+        this.paletteComboBox.setSelectedIndex(palette);
+        this.paletteView.setFirstIndex(0x80 + palette * 0x10);
     }
 
     /**
