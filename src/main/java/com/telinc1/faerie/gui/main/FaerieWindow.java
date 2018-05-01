@@ -30,7 +30,6 @@ import com.telinc1.faerie.gui.DecimalFormatter;
 import com.telinc1.faerie.gui.HexadecimalFormatter;
 import com.telinc1.faerie.gui.JPaletteView;
 import com.telinc1.faerie.gui.JScaledImage;
-import com.telinc1.faerie.gui.main.Configures.EnumProperty;
 import com.telinc1.faerie.gui.main.menu.FaerieMenuBar;
 import com.telinc1.faerie.sprite.EnumSpriteSubType;
 import com.telinc1.faerie.sprite.EnumSpriteType;
@@ -60,6 +59,7 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Arrays;
@@ -72,446 +72,6 @@ import java.util.ResourceBundle;
  * @since 1.0.0
  */
 public class FaerieWindow extends JFrame {
-    /**
-     * The menu bar which the window displays.
-     */
-    private FaerieMenuBar menuBar;
-
-    /**
-     * The main content panel of the window which houses everything in it.
-     */
-    private JPanel contentPanel;
-
-    /**
-     * The tabbed pane of window which provides the separate views.
-     */
-    private JTabbedPane tabbedPane;
-
-    /**
-     * The main tab which houses the functional sprite information.
-     */
-    private JPanel spritePanel;
-
-    /**
-     * The main tab which houses the display information for the sprite.
-     */
-    private JPanel displayPanel;
-
-    /**
-     * The currently loaded palette.
-     */
-    private Palette palette;
-
-    /**
-     * The currently loaded sprite provider.
-     */
-    private Provider provider;
-
-    private JComboBox<String> spriteSelectionComboBox;
-
-    private JComboBox<Object> typeComboBox;
-    private JComboBox<Object> subtypeComboBox;
-    private JFormattedTextField actsLikeTextField;
-    private JTextField firstASMTextField;
-    private JTextField secondASMTextField;
-
-    @Configures(EnumProperty.BEHAVIOR)
-    private JComboBox<String> objectClippingComboBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox canBeJumpedOnCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox diesWhenJumpedOnCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox hopInKickShellsCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox disappearInACloudCheckBox;
-
-    @Configures(EnumProperty.BEHAVIOR)
-    private JComboBox<String> spriteClippingComboBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox useShellAsDeathCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox fallsWhenKilledCheckBox;
-
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox useSecondGraphicsPageCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JComboBox<String> paletteComboBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox disableFireballKillingCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox disableCapeKillingCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox disableWaterSplashCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox disableSecondaryInteractionCheckBox;
-
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox executeWhileBeingKilledCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox invincibleToPlayerCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox executeIfOffscreenCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox donTChangeIntoCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox canTBeKickedCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox processInteractionEveryFrameCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox givesPowerupWhenEatenCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox donTUseDefaultCheckBox;
-
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox inedibleCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox stayInYoshiSCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox weirdGroundBehaviorCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox donTInteractWithCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox donTChangeDirectionCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox donTTurnIntoCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox spawnsANewSpriteCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox donTInteractWithCheckBox1;
-
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox makePlatformPassableFromCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox donTEraseWhenCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox canTBeKilledCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox takes5FireballsToCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox canBeJumpedOnCheckBox1;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox deathFrame2TilesCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox ignoreSilverPSwitchCheckBox;
-    @Configures(EnumProperty.BEHAVIOR)
-    private JCheckBox donTGetStuckCheckBox;
-
-    @Configures(EnumProperty.PROPERTY_BYTES)
-    private JFormattedTextField firstPropertyTextField;
-    @Configures(EnumProperty.PROPERTY_BYTES)
-    private JFormattedTextField secondPropertyTextField;
-    @Configures(EnumProperty.PROPERTY_BYTES)
-    private JComboBox<String> statusOverrideComboBox;
-    private JFormattedTextField uniqueByteTextField;
-    private JFormattedTextField extraByteAmountTextField;
-
-    private JScaledImage objectClippingImage;
-    private JScaledImage spriteClippingImage;
-    private JPaletteView paletteView;
-
-    /**
-     * Construct an application window, including all of its inner components.
-     * <p>
-     * The title and sizes are automatically set.
-     * <p>
-     * Note that the window is not opened.
-     */
-    public FaerieWindow(){
-        super(Resources.getString("main", "title"));
-
-        this.$$$setupUI$$$();
-        this.configureUIComponents();
-
-        this.setInputEnabled(false);
-        this.setContentPane(this.contentPanel);
-
-        this.setSize(760, 600);
-        this.setMinimumSize(new Dimension(760, 600));
-
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        URL iconURL = this.getClass().getResource("/com/telinc1/faerie/icons/application.png");
-        ImageIcon icon = new ImageIcon(iconURL);
-        this.setIconImage(icon.getImage());
-
-        this.menuBar = new FaerieMenuBar(this);
-
-        this.palette = new Palette();
-
-        try {
-            URL palette = this.getClass().getResource("/com/telinc1/faerie/binary/generic.mw3");
-            this.getPalette().loadMW3File(new File(palette.getPath()));
-            this.paletteView.setPalette(this.getPalette());
-        }catch(IOException exception){
-            exception.printStackTrace();
-        }
-    }
-
-    /**
-     * Configures UI components after they have been created.
-     */
-    private void configureUIComponents(){
-        HexadecimalFormatter.apply(this.actsLikeTextField, 0, 255);
-        HexadecimalFormatter.apply(this.firstPropertyTextField, 0, 255);
-        HexadecimalFormatter.apply(this.secondPropertyTextField, 0, 63);
-        HexadecimalFormatter.apply(this.uniqueByteTextField, 0, 255);
-        DecimalFormatter.apply(this.extraByteAmountTextField, 0, 255);
-    }
-
-    /**
-     * Changes the "enabled" state of all user input elements.
-     * <p>
-     * This includes text fields, formatted text fields, checkboxes, and combo
-     * boxes.
-     *
-     * @param enabled whether to enable or disable all input elements
-     */
-    private void setInputEnabled(boolean enabled){
-        this.setInputEnabled(enabled, null);
-    }
-
-    /**
-     * Changes the "enabled" state of all user input elements.
-     * <p>
-     * This includes text fields, formatted text fields, checkboxes, and combo
-     * boxes.
-     * <p>
-     * If an {@link EnumProperty} value is specified, this method will only
-     * affect the fields which are annotated with {@link Configures} and have
-     * the same {@code EnumProperty} value.
-     *
-     * @param enabled whether to enable or disable all input elements
-     * @param condition the {@code EnumProperty} annotation value to check for
-     */
-    private void setInputEnabled(boolean enabled, EnumProperty condition){
-        Field[] fields = this.getClass().getDeclaredFields();
-
-        for(Field field : fields){
-            Class<?> type = field.getType();
-
-            if(type == JComboBox.class || type == JTextField.class || type == JFormattedTextField.class || type == JCheckBox.class){
-                if(condition != null){
-                    Configures annotation = field.getAnnotation(Configures.class);
-
-                    if(annotation == null || annotation.value() != condition){
-                        continue;
-                    }
-                }
-
-                try {
-                    JComponent component = (JComponent)field.get(this);
-                    component.setEnabled(enabled);
-                }catch(IllegalAccessException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns the color palette used by the window.
-     *
-     * @return the SNES {@link Palette} used by the window
-     */
-    public Palette getPalette(){
-        return this.palette;
-    }
-
-    /**
-     * Returns the current sprite provider used by the window.
-     *
-     * @return a nullable {@link Provider}
-     */
-    public Provider getProvider(){
-        return this.provider;
-    }
-
-    /**
-     * Sets a new sprite provider for the window.
-     * <p>
-     * If the provider is set to a null value, the interface will be wholly
-     * disabled and no file will be editable.
-     * <p>
-     * If the provider is non-null, the interface will be updated according to
-     * its settings and the first sprite from it will be loaded.
-     *
-     * @param provider the new provider
-     * @return the window, for chaining
-     */
-    public FaerieWindow setProvider(Provider provider){
-        this.provider = provider;
-
-        if(this.getProvider() == null){
-            this.setInputEnabled(false);
-            return this;
-        }
-
-        try {
-            String[] availableSprites = this.getProvider().getAvailableSprites();
-            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(availableSprites);
-            this.spriteSelectionComboBox.setModel(model);
-            this.spriteSelectionComboBox.setSelectedIndex(0);
-            this.spriteClippingComboBox.setEnabled(availableSprites.length > 1);
-
-            return this.loadSprite(0);
-        }catch(ProvisionException exception){
-            JOptionPane.showMessageDialog(
-                this,
-                Resources.getString("main", "error.provision.content", "message", exception),
-                Resources.getString("main", "error.provision.title"),
-                JOptionPane.ERROR_MESSAGE
-            );
-
-            return this.setProvider(null);
-        }
-    }
-
-    /**
-     * Loads the given sprite into the provider and updates all of the user
-     * input elements to show its properties.
-     *
-     * @param index the sprite index to load
-     * @return the window, for chaining
-     * @throws NullPointerException if there is no active provider
-     * @see Provider#loadSprite(int)
-     */
-    public FaerieWindow loadSprite(int index) throws ProvisionException, IndexOutOfBoundsException{
-        this.getProvider().loadSprite(index);
-        this.updateGUI();
-
-        Sprite sprite = this.getProvider().getCurrentSprite();
-        SpriteBehavior behavior = sprite.getBehavior();
-
-        this.spriteSelectionComboBox.setSelectedIndex(index);
-
-        this.typeComboBox.setSelectedIndex(sprite.getType().ordinal());
-        this.subtypeComboBox.setSelectedIndex(sprite.getSubType().ordinal());
-        this.actsLikeTextField.setValue(sprite.getActsLike());
-
-        this.firstASMTextField.setText(sprite.getFirstASMFile());
-        this.secondASMTextField.setText(sprite.getSecondASMFile());
-
-        // XXX: dear lord is there really no way around this upcoming wall of text
-        // XXX: i really should find some sort of way, doesn't matter how reflect-y or unorthodox it is
-        this.objectClippingComboBox.setSelectedIndex(behavior.objectClipping);
-        this.canBeJumpedOnCheckBox.setSelected(behavior.canBeJumpedOn);
-        this.diesWhenJumpedOnCheckBox.setSelected(behavior.diesWhenJumpedOn);
-        this.hopInKickShellsCheckBox.setSelected(behavior.hopInShells);
-        this.disappearInACloudCheckBox.setSelected(behavior.disappearInSmoke);
-
-        this.spriteClippingComboBox.setSelectedIndex(behavior.spriteClipping);
-        this.useShellAsDeathCheckBox.setSelected(behavior.useShellAsDeathFrame);
-        this.fallsWhenKilledCheckBox.setSelected(behavior.fallsWhenKilled);
-
-        this.useSecondGraphicsPageCheckBox.setSelected(behavior.useSecondGraphicsPage);
-        this.paletteComboBox.setSelectedIndex(behavior.palette);
-        this.paletteView.setFirstIndex(0x80 + behavior.palette * 0x10);
-        this.disableFireballKillingCheckBox.setSelected(behavior.disableFireballKilling);
-        this.disableCapeKillingCheckBox.setSelected(behavior.disableCapeKilling);
-        this.disableWaterSplashCheckBox.setSelected(behavior.disableWaterSplash);
-        this.disableSecondaryInteractionCheckBox.setSelected(behavior.disableSecondaryInteraction);
-
-        this.executeWhileBeingKilledCheckBox.setSelected(behavior.processIfDead);
-        this.invincibleToPlayerCheckBox.setSelected(behavior.invincibleToPlayer);
-        this.executeIfOffscreenCheckBox.setSelected(behavior.processWhileOffscreen);
-        this.donTChangeIntoCheckBox.setSelected(behavior.skipShellIfStunned);
-        this.canTBeKickedCheckBox.setSelected(behavior.disableKicking);
-        this.processInteractionEveryFrameCheckBox.setSelected(behavior.processInteractionEveryFrame);
-        this.givesPowerupWhenEatenCheckBox.setSelected(behavior.isPowerup);
-        this.donTUseDefaultCheckBox.setSelected(behavior.disableDefaultInteraction);
-
-        this.inedibleCheckBox.setSelected(behavior.inedible);
-        this.stayInYoshiSCheckBox.setSelected(behavior.stayInMouth);
-        this.weirdGroundBehaviorCheckBox.setSelected(behavior.weirdGroundBehavior);
-        this.donTInteractWithCheckBox.setSelected(behavior.disableSpriteInteraction);
-        this.donTChangeDirectionCheckBox.setSelected(behavior.preserveDirection);
-        this.donTTurnIntoCheckBox.setSelected(behavior.disappearOnGoal);
-        this.spawnsANewSpriteCheckBox.setSelected(behavior.spawnsSpriteWhenStunned);
-        this.donTInteractWithCheckBox1.setSelected(behavior.disableObjectInteraction);
-
-        this.makePlatformPassableFromCheckBox.setSelected(behavior.platformPassableFromBelow);
-        this.donTEraseWhenCheckBox.setSelected(behavior.ignoreGoal);
-        this.canTBeKilledCheckBox.setSelected(behavior.disableSlideKilling);
-        this.takes5FireballsToCheckBox.setSelected(behavior.takesFiveFireballs);
-        this.canBeJumpedOnCheckBox1.setSelected(behavior.canBeJumpedOnFromBelow);
-        this.deathFrame2TilesCheckBox.setSelected(behavior.tallDeathFrame);
-        this.ignoreSilverPSwitchCheckBox.setSelected(behavior.ignoreSilverPSwitch);
-        this.donTGetStuckCheckBox.setSelected(behavior.escapeWalls);
-
-        try {
-            this.objectClippingImage.loadImage(String.format("object/%02X.png", behavior.objectClipping));
-            this.spriteClippingImage.loadImage(String.format("sprite/%02X.png", behavior.spriteClipping));
-        }catch(IOException exception){
-            exception.printStackTrace();
-        }
-
-        this.firstPropertyTextField.setValue(sprite.getFirstPropertyByte());
-        this.secondPropertyTextField.setValue(sprite.getSecondPropertyByte());
-        this.statusOverrideComboBox.setSelectedIndex(sprite.getStatusHandling().ordinal());
-        this.uniqueByteTextField.setValue(sprite.getUniqueByte());
-        this.extraByteAmountTextField.setValue(sprite.getExtraBytes());
-
-        return this;
-    }
-
-    /**
-     * Updates the GUI based on the current sprite's available properties.
-     *
-     * @return the window, for chaining
-     */
-    public FaerieWindow updateGUI(){
-        this.setInputEnabled(false);
-
-        if(this.getProvider() == null){
-            return this;
-        }
-
-        Sprite sprite = this.getProvider().getCurrentSprite();
-        EnumSpriteSubType subtype = sprite.getSubType();
-
-        // TODO: disable type and subtype selection for ROMs
-        this.typeComboBox.setEnabled(true);
-        this.subtypeComboBox.setEnabled(true);
-        this.actsLikeTextField.setEnabled(true);
-
-        if(subtype.hasBehavior()){
-            this.setInputEnabled(true, EnumProperty.BEHAVIOR);
-        }
-
-        if(subtype.hasExtraProperties()){
-            this.setInputEnabled(true, EnumProperty.PROPERTY_BYTES);
-        }
-
-        if(subtype.hasUniqueByte()){
-            this.uniqueByteTextField.setEnabled(true);
-        }
-
-        if(subtype.getExtraBytes() > 0){
-            this.extraByteAmountTextField.setEnabled(true);
-        }
-
-        if(subtype.usesFirstASM()){
-            this.firstASMTextField.setEnabled(true);
-        }
-
-        if(subtype.usesSecondASM()){
-            this.secondASMTextField.setEnabled(true);
-        }
-
-        return this;
-    }
-
-    /**
-     * Returns the menu bar for the application window.
-     *
-     * @return an instance of {@link FaerieMenuBar} which represents the
-     * menu bar
-     */
-    public FaerieMenuBar getMenu(){
-        return this.menuBar;
-    }
-
     /**
      * Method generated by IntelliJ IDEA GUI Designer
      * >>> IMPORTANT!! <<<
@@ -859,46 +419,6 @@ public class FaerieWindow extends JFrame {
         label9.setLabelFor(extraByteAmountTextField);
     }
 
-    /**
-     * Creates the UI components which need specific constructor parameters.
-     */
-    private void createUIComponents(){
-        // Create sprite selection combobox.
-        this.spriteSelectionComboBox = new JComboBox<>();
-
-        // Create type combobox.
-        // XXX: should these be localized
-        this.typeComboBox = new JComboBox<>(Arrays
-            .stream(EnumSpriteType.values())
-            .map(EnumSpriteType::readable)
-            .toArray()
-        );
-
-        // Create subtype combobox.
-        // TODO: yeah, better localize them
-        this.subtypeComboBox = new JComboBox<>(Arrays
-            .stream(EnumSpriteSubType.values())
-            .map(EnumSpriteSubType::readable)
-            .toArray()
-        );
-
-        // Create object clipping image.
-        this.objectClippingImage = new JScaledImage();
-        this.objectClippingImage.setBackground(new Color(0x54D880));
-
-        // Create sprite clipping image.
-        this.spriteClippingImage = new JScaledImage();
-        this.spriteClippingImage.setBackground(new Color(0x73BDFF));
-
-        // Create palette image.
-        this.paletteView = new JPaletteView();
-        this.paletteView
-            .setCellSize(16, 16)
-            .setFirstIndex(0x80)
-            .setRegionSize(8, 1);
-        this.paletteView.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-    }
-
     /** @noinspection ALL */
     private void $$$loadLabelText$$$(JLabel component, String text){
         StringBuffer result = new StringBuffer();
@@ -951,4 +471,503 @@ public class FaerieWindow extends JFrame {
 
     /** @noinspection ALL */
     public JComponent $$$getRootComponent$$$(){ return contentPanel; }
+
+    /**
+     * The menu bar which the window displays.
+     */
+    private FaerieMenuBar menuBar;
+
+    /**
+     * The main content panel of the window which houses everything in it.
+     */
+    private JPanel contentPanel;
+
+    /**
+     * The tabbed pane of window which provides the separate views.
+     */
+    private JTabbedPane tabbedPane;
+
+    /**
+     * The main tab which houses the functional sprite information.
+     */
+    private JPanel spritePanel;
+
+    /**
+     * The main tab which houses the display information for the sprite.
+     */
+    private JPanel displayPanel;
+
+    /**
+     * The currently loaded palette.
+     */
+    private Palette palette;
+
+    /**
+     * The currently loaded sprite provider.
+     */
+    private Provider provider;
+
+    private JComboBox<String> spriteSelectionComboBox;
+
+    private JComboBox<Object> typeComboBox;
+    private JComboBox<Object> subtypeComboBox;
+    private JFormattedTextField actsLikeTextField;
+    private JTextField firstASMTextField;
+    private JTextField secondASMTextField;
+
+    @BehaviorBit("")
+    private JComboBox<String> objectClippingComboBox;
+
+    @BehaviorBit("canBeJumpedOn")
+    private JCheckBox canBeJumpedOnCheckBox;
+
+    @BehaviorBit("diesWhenJumpedOn")
+    private JCheckBox diesWhenJumpedOnCheckBox;
+
+    @BehaviorBit("hopInShells")
+    private JCheckBox hopInKickShellsCheckBox;
+
+    @BehaviorBit("disappearInSmoke")
+    private JCheckBox disappearInACloudCheckBox;
+
+    @BehaviorBit("")
+    private JComboBox<String> spriteClippingComboBox;
+
+    @BehaviorBit("useShellAsDeathFrame")
+    private JCheckBox useShellAsDeathCheckBox;
+
+    @BehaviorBit("fallsWhenKilled")
+    private JCheckBox fallsWhenKilledCheckBox;
+
+    @BehaviorBit("useSecondGraphicsPage")
+    private JCheckBox useSecondGraphicsPageCheckBox;
+
+    @BehaviorBit("")
+    private JComboBox<String> paletteComboBox;
+
+    @BehaviorBit("disableFireballKilling")
+    private JCheckBox disableFireballKillingCheckBox;
+
+    @BehaviorBit("disableCapeKilling")
+    private JCheckBox disableCapeKillingCheckBox;
+
+    @BehaviorBit("disableWaterSplash")
+    private JCheckBox disableWaterSplashCheckBox;
+
+    @BehaviorBit("disableSecondaryInteraction")
+    private JCheckBox disableSecondaryInteractionCheckBox;
+
+    @BehaviorBit("processIfDead")
+    private JCheckBox executeWhileBeingKilledCheckBox;
+
+    @BehaviorBit("invincibleToPlayer")
+    private JCheckBox invincibleToPlayerCheckBox;
+
+    @BehaviorBit("processWhileOffscreen")
+    private JCheckBox executeIfOffscreenCheckBox;
+
+    @BehaviorBit("skipShellIfStunned")
+    private JCheckBox donTChangeIntoCheckBox;
+
+    @BehaviorBit("disableKicking")
+    private JCheckBox canTBeKickedCheckBox;
+
+    @BehaviorBit("processInteractionEveryFrame")
+    private JCheckBox processInteractionEveryFrameCheckBox;
+
+    @BehaviorBit("isPowerup")
+    private JCheckBox givesPowerupWhenEatenCheckBox;
+
+    @BehaviorBit("disableDefaultInteraction")
+    private JCheckBox donTUseDefaultCheckBox;
+
+    @BehaviorBit("inedible")
+    private JCheckBox inedibleCheckBox;
+
+    @BehaviorBit("stayInMouth")
+    private JCheckBox stayInYoshiSCheckBox;
+
+    @BehaviorBit("weirdGroundBehavior")
+    private JCheckBox weirdGroundBehaviorCheckBox;
+
+    @BehaviorBit("disableSpriteInteraction")
+    private JCheckBox donTInteractWithCheckBox;
+
+    @BehaviorBit("preserveDirection")
+    private JCheckBox donTChangeDirectionCheckBox;
+
+    @BehaviorBit("disappearOnGoal")
+    private JCheckBox donTTurnIntoCheckBox;
+
+    @BehaviorBit("spawnsSpriteWhenStunned")
+    private JCheckBox spawnsANewSpriteCheckBox;
+
+    @BehaviorBit("disableObjectInteraction")
+    private JCheckBox donTInteractWithCheckBox1;
+
+    @BehaviorBit("platformPassableFromBelow")
+    private JCheckBox makePlatformPassableFromCheckBox;
+
+    @BehaviorBit("ignoreGoal")
+    private JCheckBox donTEraseWhenCheckBox;
+
+    @BehaviorBit("disableSlideKilling")
+    private JCheckBox canTBeKilledCheckBox;
+
+    @BehaviorBit("takesFiveFireballs")
+    private JCheckBox takes5FireballsToCheckBox;
+
+    @BehaviorBit("canBeJumpedOnFromBelow")
+    private JCheckBox canBeJumpedOnCheckBox1;
+
+    @BehaviorBit("tallDeathFrame")
+    private JCheckBox deathFrame2TilesCheckBox;
+
+    @BehaviorBit("ignoreSilverPSwitch")
+    private JCheckBox ignoreSilverPSwitchCheckBox;
+
+    @BehaviorBit("escapeWalls")
+    private JCheckBox donTGetStuckCheckBox;
+
+    private JFormattedTextField firstPropertyTextField;
+    private JFormattedTextField secondPropertyTextField;
+    private JComboBox<String> statusOverrideComboBox;
+    private JFormattedTextField uniqueByteTextField;
+    private JFormattedTextField extraByteAmountTextField;
+
+    private JScaledImage objectClippingImage;
+    private JScaledImage spriteClippingImage;
+    private JPaletteView paletteView;
+
+    /**
+     * Construct an application window, including all of its inner components.
+     * <p>
+     * The title and sizes are automatically set.
+     * <p>
+     * Note that the window is not opened.
+     */
+    public FaerieWindow(){
+        super(Resources.getString("main", "title"));
+
+        this.$$$setupUI$$$();
+        this.configureUIComponents();
+
+        this.setInputEnabled(false);
+        this.setContentPane(this.contentPanel);
+
+        this.setSize(760, 600);
+        this.setMinimumSize(new Dimension(760, 600));
+
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        URL iconURL = this.getClass().getResource("/com/telinc1/faerie/icons/application.png");
+        ImageIcon icon = new ImageIcon(iconURL);
+        this.setIconImage(icon.getImage());
+
+        this.menuBar = new FaerieMenuBar(this);
+
+        this.palette = new Palette();
+
+        try {
+            URL palette = this.getClass().getResource("/com/telinc1/faerie/binary/generic.mw3");
+            this.getPalette().loadMW3File(new File(palette.getPath()));
+            this.paletteView.setPalette(this.getPalette());
+        }catch(IOException exception){
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * BehaviorBit UI components after they have been created.
+     */
+    private void configureUIComponents(){
+        HexadecimalFormatter.apply(this.actsLikeTextField, 0, 255);
+        HexadecimalFormatter.apply(this.firstPropertyTextField, 0, 255);
+        HexadecimalFormatter.apply(this.secondPropertyTextField, 0, 63);
+        HexadecimalFormatter.apply(this.uniqueByteTextField, 0, 255);
+        DecimalFormatter.apply(this.extraByteAmountTextField, 0, 255);
+    }
+
+    /**
+     * Changes the "enabled" state of all user input elements.
+     * <p>
+     * This includes text fields, formatted text fields, checkboxes, and combo
+     * boxes.
+     *
+     * @param enabled whether to enable or disable all input elements
+     */
+    private void setInputEnabled(boolean enabled){
+        this.setInputEnabled(enabled, null);
+    }
+
+    /**
+     * Returns the color palette used by the window.
+     *
+     * @return the SNES {@link Palette} used by the window
+     */
+    public Palette getPalette(){
+        return this.palette;
+    }
+
+    /**
+     * Changes the "enabled" state of all user input elements.
+     * <p>
+     * This includes text fields, formatted text fields, checkboxes, and combo
+     * boxes.
+     * <p>
+     * If an {@link Annotation} is given, this method will
+     * only affect the fields which are annotated with that {@code Annotation}.
+     *
+     * @param enabled whether to enable or disable all input elements
+     * @param annotation the annotation class to check for
+     */
+    private void setInputEnabled(boolean enabled, Class<? extends Annotation> annotation){
+        Field[] fields = this.getClass().getDeclaredFields();
+
+        for(Field field : fields){
+            Class<?> type = field.getType();
+
+            if(type == JComboBox.class || type == JTextField.class || type == JFormattedTextField.class || type == JCheckBox.class){
+                if(annotation != null && field.getAnnotation(annotation) == null){
+                    continue;
+                }
+
+                try {
+                    JComponent component = (JComponent)field.get(this);
+                    component.setEnabled(enabled);
+                }catch(IllegalAccessException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * Loads the given sprite into the provider and updates all of the user
+     * input elements to show its properties.
+     *
+     * @param index the sprite index to load
+     * @return the window, for chaining
+     * @throws NullPointerException if there is no active provider
+     * @see Provider#loadSprite(int)
+     */
+    public FaerieWindow loadSprite(int index) throws ProvisionException, IndexOutOfBoundsException{
+        this.getProvider().loadSprite(index);
+        this.updateGUI();
+
+        Sprite sprite = this.getProvider().getCurrentSprite();
+        SpriteBehavior behavior = sprite.getBehavior();
+
+        this.spriteSelectionComboBox.setSelectedIndex(index);
+
+        this.typeComboBox.setSelectedIndex(sprite.getType().ordinal());
+        this.subtypeComboBox.setSelectedIndex(sprite.getSubType().ordinal());
+        this.actsLikeTextField.setValue(sprite.getActsLike());
+
+        this.firstASMTextField.setText(sprite.getFirstASMFile());
+        this.secondASMTextField.setText(sprite.getSecondASMFile());
+
+        // 3 am telinc, this is 4 pm telinc speaking
+        // i found you a method of doing this which is both reflect-y and unorthodox
+        // happy now? 4 pm telinc, out
+        for(Field field : this.getClass().getDeclaredFields()){
+            if(field.getType() != JCheckBox.class){
+                continue;
+            }
+
+            BehaviorBit annotation = field.getDeclaredAnnotation(BehaviorBit.class);
+
+            if(annotation == null){
+                continue;
+            }
+
+            try {
+                JCheckBox checkBox = (JCheckBox)field.get(this);
+                Field bit = SpriteBehavior.class.getDeclaredField(annotation.value());
+                checkBox.setSelected(bit.getBoolean(behavior));
+            }catch(ReflectiveOperationException exception){
+                exception.printStackTrace();
+            }
+        }
+
+        this.objectClippingComboBox.setSelectedIndex(behavior.objectClipping);
+        this.spriteClippingComboBox.setSelectedIndex(behavior.spriteClipping);
+
+        this.paletteComboBox.setSelectedIndex(behavior.palette);
+        this.paletteView.setFirstIndex(0x80 + behavior.palette * 0x10);
+
+        try {
+            this.objectClippingImage.loadImage(String.format("object/%02X.png", behavior.objectClipping));
+            this.spriteClippingImage.loadImage(String.format("sprite/%02X.png", behavior.spriteClipping));
+        }catch(IOException exception){
+            exception.printStackTrace();
+        }
+
+        this.firstPropertyTextField.setValue(sprite.getFirstPropertyByte());
+        this.secondPropertyTextField.setValue(sprite.getSecondPropertyByte());
+        this.statusOverrideComboBox.setSelectedIndex(sprite.getStatusHandling().ordinal());
+        this.uniqueByteTextField.setValue(sprite.getUniqueByte());
+        this.extraByteAmountTextField.setValue(sprite.getExtraBytes());
+
+        return this;
+    }
+
+    /**
+     * Starts a modification on the current sprite's behavior.
+     *
+     * @return the {@link SpriteBehavior} which can be modified
+     * @throws NullPointerException if there is no active provider
+     */
+    private SpriteBehavior modifyBehavior(){
+        return this.getProvider().startModification().getBehavior();
+    }
+
+    /**
+     * Returns the current sprite provider used by the window.
+     *
+     * @return a nullable {@link Provider}
+     */
+    public Provider getProvider(){
+        return this.provider;
+    }
+
+    /**
+     * Sets a new sprite provider for the window.
+     * <p>
+     * If the provider is set to a null value, the interface will be wholly
+     * disabled and no file will be editable.
+     * <p>
+     * If the provider is non-null, the interface will be updated according to
+     * its settings and the first sprite from it will be loaded.
+     *
+     * @param provider the new provider
+     * @return the window, for chaining
+     */
+    public FaerieWindow setProvider(Provider provider){
+        this.provider = provider;
+
+        if(this.getProvider() == null){
+            this.setInputEnabled(false);
+            return this;
+        }
+
+        try {
+            String[] availableSprites = this.getProvider().getAvailableSprites();
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(availableSprites);
+            this.spriteSelectionComboBox.setModel(model);
+            this.spriteSelectionComboBox.setSelectedIndex(0);
+            this.spriteClippingComboBox.setEnabled(availableSprites.length > 1);
+
+            return this.loadSprite(0);
+        }catch(ProvisionException exception){
+            JOptionPane.showMessageDialog(
+                this,
+                Resources.getString("main", "error.provision.content", "message", exception),
+                Resources.getString("main", "error.provision.title"),
+                JOptionPane.ERROR_MESSAGE
+            );
+
+            return this.setProvider(null);
+        }
+    }
+
+    /**
+     * Updates the GUI based on the current sprite's available properties.
+     *
+     * @return the window, for chaining
+     */
+    public FaerieWindow updateGUI(){
+        this.setInputEnabled(false);
+
+        if(this.getProvider() == null){
+            return this;
+        }
+
+        Sprite sprite = this.getProvider().getCurrentSprite();
+        EnumSpriteSubType subtype = sprite.getSubType();
+
+        // TODO: disable type and subtype selection for ROMs
+        this.typeComboBox.setEnabled(true);
+        this.subtypeComboBox.setEnabled(true);
+        this.actsLikeTextField.setEnabled(true);
+
+        if(subtype.hasBehavior()){
+            this.setInputEnabled(true, BehaviorBit.class);
+        }
+
+        if(subtype.hasExtraProperties()){
+            this.firstPropertyTextField.setEnabled(true);
+            this.secondPropertyTextField.setEnabled(true);
+            this.statusOverrideComboBox.setEnabled(true);
+        }
+
+        if(subtype.hasUniqueByte()){
+            this.uniqueByteTextField.setEnabled(true);
+        }
+
+        if(subtype.getExtraBytes() > 0){
+            this.extraByteAmountTextField.setEnabled(true);
+        }
+
+        if(subtype.usesFirstASM()){
+            this.firstASMTextField.setEnabled(true);
+        }
+
+        if(subtype.usesSecondASM()){
+            this.secondASMTextField.setEnabled(true);
+        }
+
+        return this;
+    }
+
+    /**
+     * Returns the menu bar for the application window.
+     *
+     * @return an instance of {@link FaerieMenuBar} which represents the
+     * menu bar
+     */
+    public FaerieMenuBar getMenu(){
+        return this.menuBar;
+    }
+
+    /**
+     * Creates the UI components which need specific constructor parameters.
+     */
+    private void createUIComponents(){
+        // Create sprite selection combobox.
+        this.spriteSelectionComboBox = new JComboBox<>();
+
+        // Create type combobox.
+        // XXX: should these be localized
+        this.typeComboBox = new JComboBox<>(Arrays
+            .stream(EnumSpriteType.values())
+            .map(EnumSpriteType::readable)
+            .toArray()
+        );
+
+        // Create subtype combobox.
+        // TODO: yeah, better localize them
+        this.subtypeComboBox = new JComboBox<>(Arrays
+            .stream(EnumSpriteSubType.values())
+            .map(EnumSpriteSubType::readable)
+            .toArray()
+        );
+
+        // Create object clipping image.
+        this.objectClippingImage = new JScaledImage();
+        this.objectClippingImage.setBackground(new Color(0x54D880));
+
+        // Create sprite clipping image.
+        this.spriteClippingImage = new JScaledImage();
+        this.spriteClippingImage.setBackground(new Color(0x73BDFF));
+
+        // Create palette image.
+        this.paletteView = new JPaletteView();
+        this.paletteView
+            .setCellSize(16, 16)
+            .setFirstIndex(0x80)
+            .setRegionSize(8, 1);
+        this.paletteView.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+    }
+
 }

@@ -28,16 +28,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation denotes that field configures a given sprite property and
- * thus should be disabled if the sprite lacks that property.
+ * This annotation denotes that a checkbox configures a specific bit from a
+ * sprite's behavior configuration.
+ *
+ * The value given to this annotation should match the name of a boolean field
+ * from {@link com.telinc1.faerie.sprite.SpriteBehavior}. If it's empty, the
+ * annotation will not automatically configure anything.
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Configures {
-    EnumProperty value();
-
-    enum EnumProperty {
-        BEHAVIOR,
-        PROPERTY_BYTES
-    }
+public @interface BehaviorBit {
+    String value();
 }
