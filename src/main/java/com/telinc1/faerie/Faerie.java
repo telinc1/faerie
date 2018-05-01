@@ -22,10 +22,14 @@
 
 package com.telinc1.faerie;
 
+import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.main.FaerieWindow;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * This is the main class of Faerie, responsible for opening the main program
@@ -43,12 +47,17 @@ public class Faerie {
     /**
      * The handler for unhandled exceptions.
      */
-    private ExceptionHandler exceptionHandler;
+    private final ExceptionHandler exceptionHandler;
 
     /**
      * The main program window.
      */
-    private FaerieWindow window;
+    private final FaerieWindow window;
+
+    /**
+     * The currently loaded palette.
+     */
+    private final Palette palette;
 
     /**
      * Construct and initialize Faerie.
@@ -69,18 +78,29 @@ public class Faerie {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }catch(ReflectiveOperationException | UnsupportedLookAndFeelException exception){
-            this.getExceptionHandler().error("core", "launch.lookAndFeel", exception);
+            this.getExceptionHandler().warn("core", "launch.lookAndFeel", exception);
         }
 
-        this.window = new FaerieWindow();
-        this.window.setVisible(true);
+        this.palette = new Palette();
+
+        try {
+            URL palette = this.getClass().getResource("/com/telinc1/faerie/binary/generic.mw3");
+            this.getPalette().loadMW3File(new File(palette.getPath()));
+        }catch(IOException exception){
+            this.getExceptionHandler().error("core", "launch.palette", exception);
+        }
+
+        this.window = new FaerieWindow(this);
+        this.getWindow().setVisible(true);
     }
 
     /**
-     * Returns the used exception handler.
+     * Returns the currently loaded {@link Palette}.
+     *
+     * @return the currently loaded palette
      */
-    public ExceptionHandler getExceptionHandler(){
-        return this.exceptionHandler;
+    public Palette getPalette(){
+        return this.palette;
     }
 
     /**
@@ -93,6 +113,13 @@ public class Faerie {
     }
 
     /**
+     * Returns the used exception handler.
+     */
+    public ExceptionHandler getExceptionHandler(){
+        return this.exceptionHandler;
+    }
+
+    /**
      * Returns the main program window.
      * <p>
      * Note that this can be null if the application hasn't fully initialized.
@@ -101,5 +128,14 @@ public class Faerie {
      */
     public FaerieWindow getWindow(){
         return this.window;
+    }
+
+    /**
+     * Returns the command line arguments passed to the application.
+     *
+     * @return the array of command line arguments
+     */
+    public String[] getArgs(){
+        return this.args;
     }
 }

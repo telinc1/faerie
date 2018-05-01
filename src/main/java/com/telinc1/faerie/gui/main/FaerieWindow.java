@@ -24,8 +24,8 @@ package com.telinc1.faerie.gui.main;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.telinc1.faerie.Faerie;
 import com.telinc1.faerie.Resources;
-import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.DecimalFormatter;
 import com.telinc1.faerie.gui.HexadecimalFormatter;
 import com.telinc1.faerie.gui.JPaletteView;
@@ -58,7 +58,6 @@ import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -74,6 +73,10 @@ import java.util.function.Consumer;
  * @since 1.0.0
  */
 public class FaerieWindow extends JFrame {
+    /**
+     * The parent application of the window.
+     */
+    private Faerie application;
 
     /**
      * The menu bar which the window displays.
@@ -81,34 +84,14 @@ public class FaerieWindow extends JFrame {
     private FaerieMenuBar menuBar;
 
     /**
-     * The main content panel of the window which houses everything in it.
-     */
-    private JPanel contentPanel;
-
-    /**
-     * The tabbed pane of window which provides the separate views.
-     */
-    private JTabbedPane tabbedPane;
-
-    /**
-     * The main tab which houses the functional sprite information.
-     */
-    private JPanel spritePanel;
-
-    /**
-     * The main tab which houses the display information for the sprite.
-     */
-    private JPanel displayPanel;
-
-    /**
-     * The currently loaded palette.
-     */
-    private Palette palette;
-
-    /**
      * The currently loaded sprite provider.
      */
     private Provider provider;
+
+    private JPanel contentPanel;
+    private JTabbedPane tabbedPane;
+    private JPanel spritePanel;
+    private JPanel displayPanel;
 
     private JComboBox<String> spriteSelectionComboBox;
 
@@ -249,8 +232,9 @@ public class FaerieWindow extends JFrame {
      * <p>
      * Note that the window is not opened.
      */
-    public FaerieWindow(){
+    public FaerieWindow(Faerie application){
         super(Resources.getString("main", "title"));
+        this.application = application;
 
         this.$$$setupUI$$$();
         this.configureUIComponents();
@@ -268,16 +252,47 @@ public class FaerieWindow extends JFrame {
         this.setIconImage(icon.getImage());
 
         this.menuBar = new FaerieMenuBar(this);
+    }
 
-        this.palette = new Palette();
+    /**
+     * Creates the UI components which need specific constructor parameters.
+     */
+    private void createUIComponents(){
+        // Create sprite selection combobox.
+        this.spriteSelectionComboBox = new JComboBox<>();
 
-        try {
-            URL palette = this.getClass().getResource("/com/telinc1/faerie/binary/generic.mw3");
-            this.getPalette().loadMW3File(new File(palette.getPath()));
-            this.paletteView.setPalette(this.getPalette());
-        }catch(IOException exception){
-            exception.printStackTrace();
-        }
+        // Create type combobox.
+        // XXX: should these be localized
+        this.typeComboBox = new JComboBox<>(Arrays
+            .stream(EnumSpriteType.values())
+            .map(EnumSpriteType::readable)
+            .toArray()
+        );
+
+        // Create subtype combobox.
+        // TODO: yeah, better localize them
+        this.subtypeComboBox = new JComboBox<>(Arrays
+            .stream(EnumSpriteSubType.values())
+            .map(EnumSpriteSubType::readable)
+            .toArray()
+        );
+
+        // Create object clipping image.
+        this.objectClippingImage = new JScaledImage();
+        this.objectClippingImage.setBackground(new Color(0x54D880));
+
+        // Create sprite clipping image.
+        this.spriteClippingImage = new JScaledImage();
+        this.spriteClippingImage.setBackground(new Color(0x73BDFF));
+
+        // Create palette image.
+        this.paletteView = new JPaletteView();
+        this.paletteView
+            .setPalette(this.getApplication().getPalette())
+            .setCellSize(16, 16)
+            .setFirstIndex(0x80)
+            .setRegionSize(8, 1);
+        this.paletteView.setBorder(BorderFactory.createLineBorder(Color.GRAY));
     }
 
     /**
@@ -363,15 +378,6 @@ public class FaerieWindow extends JFrame {
      */
     private void setInputEnabled(boolean enabled){
         this.setInputEnabled(enabled, null);
-    }
-
-    /**
-     * Returns the color palette used by the window.
-     *
-     * @return the SNES {@link Palette} used by the window
-     */
-    public Palette getPalette(){
-        return this.palette;
     }
 
     /**
@@ -667,43 +673,12 @@ public class FaerieWindow extends JFrame {
     }
 
     /**
-     * Creates the UI components which need specific constructor parameters.
+     * Returns the parent application of the window.
+     *
+     * @return the {@code Faerie} application hosting the window
      */
-    private void createUIComponents(){
-        // Create sprite selection combobox.
-        this.spriteSelectionComboBox = new JComboBox<>();
-
-        // Create type combobox.
-        // XXX: should these be localized
-        this.typeComboBox = new JComboBox<>(Arrays
-            .stream(EnumSpriteType.values())
-            .map(EnumSpriteType::readable)
-            .toArray()
-        );
-
-        // Create subtype combobox.
-        // TODO: yeah, better localize them
-        this.subtypeComboBox = new JComboBox<>(Arrays
-            .stream(EnumSpriteSubType.values())
-            .map(EnumSpriteSubType::readable)
-            .toArray()
-        );
-
-        // Create object clipping image.
-        this.objectClippingImage = new JScaledImage();
-        this.objectClippingImage.setBackground(new Color(0x54D880));
-
-        // Create sprite clipping image.
-        this.spriteClippingImage = new JScaledImage();
-        this.spriteClippingImage.setBackground(new Color(0x73BDFF));
-
-        // Create palette image.
-        this.paletteView = new JPaletteView();
-        this.paletteView
-            .setCellSize(16, 16)
-            .setFirstIndex(0x80)
-            .setRegionSize(8, 1);
-        this.paletteView.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+    public Faerie getApplication(){
+        return this.application;
     }
 
     /**
