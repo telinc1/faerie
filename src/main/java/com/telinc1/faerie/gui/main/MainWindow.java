@@ -51,7 +51,6 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -60,6 +59,8 @@ import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -314,8 +315,8 @@ public class MainWindow extends JFrame {
 
         HexadecimalFormatter.apply(this.actsLikeTextField, 0x0, 0xFF, value -> this.startModification().setActsLike(value));
 
-        this.firstASMTextField.addActionListener(event -> this.startModification().setFirstASMFile(this.firstASMTextField.getText()));
-        this.secondASMTextField.addActionListener(event -> this.startModification().setSecondASMFile(this.secondASMTextField.getText()));
+        this.addTextFieldListener(this.firstASMTextField, text -> this.startModification().setFirstASMFile(text));
+        this.addTextFieldListener(this.secondASMTextField, text -> this.startModification().setSecondASMFile(text));
 
         for(Field field : this.getClass().getDeclaredFields()){
             if(field.getType() != JCheckBox.class){
@@ -368,6 +369,38 @@ public class MainWindow extends JFrame {
         comboBox.addActionListener(event -> {
             JComboBox<?> source = (JComboBox<?>)event.getSource();
             consumer.accept(source.getSelectedIndex());
+        });
+    }
+
+    /**
+     * Adds a key listener to a {@link JTextField}.
+     * <p>
+     * The provided consumer is called with the field's text every time the
+     * text could have changed.
+     *
+     * @param field the field to add a listener to
+     * @param consumer the consumer to call when a key is released
+     */
+    private void addTextFieldListener(JTextField field, Consumer<String> consumer){
+        // yes i'm paranoid shut up
+        field.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent event){
+                JTextField source = (JTextField)event.getSource();
+                consumer.accept(source.getText());
+            }
+
+            @Override
+            public void keyPressed(KeyEvent event){
+                JTextField source = (JTextField)event.getSource();
+                consumer.accept(source.getText());
+            }
+
+            @Override
+            public void keyReleased(KeyEvent event){
+                JTextField source = (JTextField)event.getSource();
+                consumer.accept(source.getText());
+            }
         });
     }
 
@@ -596,12 +629,7 @@ public class MainWindow extends JFrame {
 
             this.loadSprite(0);
         }catch(ProvisionException exception){
-            JOptionPane.showMessageDialog(
-                this,
-                Resources.getString("main", "error.provision.content", "message", exception),
-                Resources.getString("main", "error.provision.title"),
-                JOptionPane.ERROR_MESSAGE
-            );
+            this.getApplication().getExceptionHandler().error("main", "provision", "message", "exception");
 
             return this.setProvider(null);
         }

@@ -35,25 +35,25 @@ public class SpriteBehavior {
     public byte objectClipping;
 
     /**
-     * The 4th bit of $1656, whether the player can jump on the sprite without
+     * Bit 4 of $1656, whether the player can jump on the sprite without
      * being hurt (if using default player interaction).
      */
     public boolean canBeJumpedOn;
 
     /**
-     * The 5th bit of $1656, whether the sprite will just die or turn carryable
+     * Bit 5 of $1656, whether the sprite will just die or turn carryable
      * after the player jumps on it.
      */
     public boolean diesWhenJumpedOn;
 
     /**
-     * The 6th bit of $1656, whether the sprites interacts with shells like a
+     * Bit 6 of $1656, whether the sprites interacts with shells like a
      * Beach Koopa.
      */
     public boolean hopInShells;
 
     /**
-     * The 7th bit of $1656, whether the sprite will disappear in a puff of
+     * Bit 7 of $1656, whether the sprite will disappear in a puff of
      * smoke when the player kills it.
      */
     public boolean disappearInSmoke;
@@ -263,7 +263,7 @@ public class SpriteBehavior {
                 | (this.useShellAsDeathFrame ? 0x40 : 0x0)
                 | (this.fallsWhenKilled ? 0x80 : 0x0),
             (this.useSecondGraphicsPage ? 0x1 : 0x0)
-                | (this.palette & 0x7 << 0x1)
+                | ((this.palette & 0b111) << 0x1)
                 | (this.disableFireballKilling ? 0x10 : 0x0)
                 | (this.disableCapeKilling ? 0x20 : 0x0)
                 | (this.disableWaterSplash ? 0x40 : 0x0)
@@ -276,22 +276,22 @@ public class SpriteBehavior {
                 | (this.processInteractionEveryFrame ? 0x20 : 0x0)
                 | (this.isPowerup ? 0x40 : 0x0)
                 | (this.disableDefaultInteraction ? 0x80 : 0x0),
-            (this.disableObjectInteraction ? 0x1 : 0x0)
-                | (this.spawnsSpriteWhenStunned ? 0x2 : 0x0)
-                | (this.disappearOnGoal ? 0x4 : 0x0)
-                | (this.preserveDirection ? 0x8 : 0x0)
-                | (this.disableSpriteInteraction ? 0x10 : 0x0)
-                | (this.weirdGroundBehavior ? 0x20 : 0x0)
-                | (this.stayInMouth ? 0x40 : 0x0)
-                | (this.inedible ? 0x80 : 0x0),
-            (this.escapeWalls ? 0x1 : 0x0)
-                | (this.ignoreSilverPSwitch ? 0x2 : 0x0)
-                | (this.tallDeathFrame ? 0x4 : 0x0)
-                | (this.canBeJumpedOnFromBelow ? 0x8 : 0x0)
-                | (this.takesFiveFireballs ? 0x10 : 0x0)
-                | (this.disableSlideKilling ? 0x20 : 0x0)
-                | (this.ignoreGoal ? 0x40 : 0x0)
-                | (this.platformPassableFromBelow ? 0x80 : 0x0)
+            (this.inedible ? 0x1 : 0x0)
+                | (this.stayInMouth ? 0x2 : 0x0)
+                | (this.weirdGroundBehavior ? 0x4 : 0x0)
+                | (this.disableSpriteInteraction ? 0x8 : 0x0)
+                | (this.preserveDirection ? 0x10 : 0x0)
+                | (this.disappearOnGoal ? 0x20 : 0x0)
+                | (this.spawnsSpriteWhenStunned ? 0x40 : 0x0)
+                | (this.disableObjectInteraction ? 0x80 : 0x0),
+            (this.platformPassableFromBelow ? 0x1 : 0x0)
+                | (this.ignoreGoal ? 0x2 : 0x0)
+                | (this.disableSlideKilling ? 0x4 : 0x0)
+                | (this.takesFiveFireballs ? 0x8 : 0x0)
+                | (this.canBeJumpedOnFromBelow ? 0x10 : 0x0)
+                | (this.tallDeathFrame ? 0x20 : 0x0)
+                | (this.ignoreSilverPSwitch ? 0x40 : 0x0)
+                | (this.escapeWalls ? 0x80 : 0x0)
         };
     }
 
@@ -332,22 +332,22 @@ public class SpriteBehavior {
         this.isPowerup = (settings[3] & 0x40) != 0x0;
         this.disableDefaultInteraction = (settings[3] & 0x80) != 0x0;
 
-        this.disableObjectInteraction = (settings[4] & 0x1) != 0x0;
-        this.spawnsSpriteWhenStunned = (settings[4] & 0x2) != 0x0;
-        this.disappearOnGoal = (settings[4] & 0x4) != 0x0;
-        this.preserveDirection = (settings[4] & 0x8) != 0x0;
-        this.disableSpriteInteraction = (settings[4] & 0x10) != 0x0;
-        this.weirdGroundBehavior = (settings[4] & 0x20) != 0x0;
-        this.stayInMouth = (settings[4] & 0x40) != 0x0;
-        this.inedible = (settings[4] & 0x80) != 0x0;
+        this.inedible = (settings[4] & 0x1) != 0x0;
+        this.stayInMouth = (settings[4] & 0x2) != 0x0;
+        this.weirdGroundBehavior = (settings[4] & 0x4) != 0x0;
+        this.disableSpriteInteraction = (settings[4] & 0x8) != 0x0;
+        this.preserveDirection = (settings[4] & 0x10) != 0x0;
+        this.disappearOnGoal = (settings[4] & 0x20) != 0x0;
+        this.spawnsSpriteWhenStunned = (settings[4] & 0x40) != 0x0;
+        this.disableObjectInteraction = (settings[4] & 0x80) != 0x0;
 
-        this.escapeWalls = (settings[5] & 0x1) != 0x0;
-        this.ignoreSilverPSwitch = (settings[5] & 0x2) != 0x0;
-        this.tallDeathFrame = (settings[5] & 0x4) != 0x0;
-        this.canBeJumpedOnFromBelow = (settings[5] & 0x8) != 0x0;
-        this.takesFiveFireballs = (settings[5] & 0x10) != 0x0;
-        this.disableSlideKilling = (settings[5] & 0x20) != 0x0;
-        this.ignoreGoal = (settings[5] & 0x40) != 0x0;
-        this.platformPassableFromBelow = (settings[5] & 0x80) != 0x0;
+        this.platformPassableFromBelow = (settings[5] & 0x1) != 0x0;
+        this.ignoreGoal = (settings[5] & 0x2) != 0x0;
+        this.disableSlideKilling = (settings[5] & 0x4) != 0x0;
+        this.takesFiveFireballs = (settings[5] & 0x8) != 0x0;
+        this.canBeJumpedOnFromBelow = (settings[5] & 0x10) != 0x0;
+        this.tallDeathFrame = (settings[5] & 0x20) != 0x0;
+        this.ignoreSilverPSwitch = (settings[5] & 0x40) != 0x0;
+        this.escapeWalls = (settings[5] & 0x80) != 0x0;
     }
 }
