@@ -36,6 +36,8 @@ import com.telinc1.faerie.sprite.EnumSpriteType;
 import com.telinc1.faerie.sprite.EnumStatusHandling;
 import com.telinc1.faerie.sprite.Sprite;
 import com.telinc1.faerie.sprite.SpriteBehavior;
+import com.telinc1.faerie.sprite.parser.CFGParser;
+import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
 import com.telinc1.faerie.sprite.provider.Provider;
 import com.telinc1.faerie.sprite.provider.ProvisionException;
 
@@ -592,7 +594,7 @@ public class MainWindow extends JFrame {
             this.spriteSelectionComboBox.setSelectedIndex(0);
             this.spriteClippingComboBox.setEnabled(availableSprites.length > 1);
 
-            return this.loadSprite(0);
+            this.loadSprite(0);
         }catch(ProvisionException exception){
             JOptionPane.showMessageDialog(
                 this,
@@ -603,6 +605,22 @@ public class MainWindow extends JFrame {
 
             return this.setProvider(null);
         }
+
+        // this is the mother of all nesting and botched oop
+        if(this.getProvider() instanceof ConfigurationProvider){
+            ConfigurationProvider configurationProvider = (ConfigurationProvider)this.getProvider();
+
+            if(configurationProvider.getParser() instanceof CFGParser){
+                CFGParser parser = (CFGParser)configurationProvider.getParser();
+
+                // hoo boy finally extracted it
+                if(parser.isLegacy()){
+                    this.getApplication().getExceptionHandler().warn("parse", "legacy");
+                }
+            }
+        }
+
+        return this;
     }
 
     /**

@@ -45,30 +45,27 @@ import java.util.Scanner;
  */
 public class CFGParser extends Parser {
     /**
+     * Whether the parsed CFG file was a SpriteTool file.
+     */
+    private boolean isLegacy;
+
+    /**
      * Constructs a CFG file parser.
      *
      * @param input the input file
      */
     public CFGParser(Reader input){
         super(input);
+        this.isLegacy = false;
     }
 
-    @Override
-    public Sprite parse() throws ParseException{
-        Sprite sprite = new Sprite();
-        Scanner scanner = new Scanner(this.getInput());
-
-        boolean hasDisplayData = this.parseConfiguration(sprite, scanner);
-
-        if(!sprite.verify()){
-            throw new ParseException("incomplete", null);
-        }
-
-        if(hasDisplayData){
-            sprite.setDisplayData(this.parseDisplayData(scanner));
-        }
-
-        return sprite;
+    /**
+     * Returns whether the parsed CFG file was a legacy SpriteTool file.
+     *
+     * @return whether the file was a legacy file
+     */
+    public boolean isLegacy(){
+        return this.isLegacy;
     }
 
     /**
@@ -85,12 +82,13 @@ public class CFGParser extends Parser {
      * @throws ParseException if the scanner has malformed data
      */
     private boolean parseConfiguration(Sprite sprite, Scanner scanner) throws ParseException{
-        int lines = 1;
+        int lines = 0;
         boolean previousEmpty = false;
         boolean hasDisplayData = false;
 
         while(scanner.hasNextLine()){
             String line = scanner.nextLine();
+            lines += 1;
 
             if(previousEmpty && line.startsWith("---")){
                 lines -= 2;
@@ -191,15 +189,46 @@ public class CFGParser extends Parser {
                 default:
                     break;
             }
-
-            lines += 1;
         }
 
-        if(lines < 7){
+        if(lines < 5){
             throw new ParseException("cfg.tooFew", null, "min", 7);
         }
 
+        if(lines < 7){
+            this.setLegacy(true);
+        }
+
         return hasDisplayData;
+    }
+
+    @Override
+    public Sprite parse() throws ParseException{
+        Sprite sprite = new Sprite();
+        Scanner scanner = new Scanner(this.getInput());
+
+        boolean hasDisplayData = this.parseConfiguration(sprite, scanner);
+
+        if(!sprite.verify()){
+            throw new ParseException("incomplete", null);
+        }
+
+        if(hasDisplayData){
+            sprite.setDisplayData(this.parseDisplayData(scanner));
+        }
+
+        return sprite;
+    }
+
+    /**
+     * Sets whether the parsed file was a legacy SpriteTool file.
+     *
+     * @param legacy whether the file was a legacy file
+     * @return the parser, for chaining
+     */
+    private CFGParser setLegacy(boolean legacy){
+        this.isLegacy = legacy;
+        return this;
     }
 
     /**

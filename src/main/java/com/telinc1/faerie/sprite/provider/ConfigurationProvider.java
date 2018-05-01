@@ -44,6 +44,11 @@ import java.io.IOException;
  */
 public class ConfigurationProvider extends Provider {
     /**
+     * The {@code Parser} which was used to parse the configuration file.
+     */
+    private Parser parser;
+
+    /**
      * The sprite which was parsed from the configuration file.
      */
     private Sprite sprite;
@@ -65,22 +70,30 @@ public class ConfigurationProvider extends Provider {
 
         try(FileReader reader = new FileReader(input)) {
             String extension = TypeUtils.getExtension(this.getInput());
-            Parser parser = null;
 
             if("cfg".equalsIgnoreCase(extension)){
-                parser = new CFGParser(reader);
+                this.parser = new CFGParser(reader);
             }
 
-            if(parser == null){
+            if(this.getParser() == null){
                 throw new LoadingException("The type of the configuration file could not be determined.");
             }
 
-            this.sprite = parser.parse();
+            this.sprite = this.getParser().parse();
         }catch(IOException exception){
             throw new LoadingException("The configuration file could not be read.", exception);
         }catch(ParseException exception){
             throw new LoadingException("The configuration file is malformed.", exception);
         }
+    }
+
+    /**
+     * Returns the {@code Parser} which was used to parse the configuration file.
+     *
+     * @return the parser used
+     */
+    public Parser getParser(){
+        return this.parser;
     }
 
     @Override
