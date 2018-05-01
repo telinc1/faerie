@@ -102,6 +102,26 @@ public class ConfigurationChooser extends JFileChooser {
     }
 
     /**
+     * Shows a configuration file chooser for saving a file.
+     * <p>
+     * This entails setting the choosable filters to disallow ROM images and
+     * setting an appropriate title for the chooser.
+     *
+     * @return the return state of the file chooser
+     * @see #showSaveDialog(Component)
+     */
+    public int showSave(Component parent){
+        this.setDialogTitle(Resources.getString("chooser", "chooser.configuration.save"));
+
+        this.resetChoosableFileFilters();
+        this.addChoosableFileFilter(this.getCFGFilter());
+        this.addChoosableFileFilter(this.getJSONFilter());
+        this.setAcceptAllFileFilterUsed(false);
+
+        return this.showSaveDialog(parent);
+    }
+
+    /**
      * Returns the filter for editable files.
      *
      * @return the {@link java.io.FileFilter} for editable files

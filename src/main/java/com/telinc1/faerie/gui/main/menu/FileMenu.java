@@ -27,6 +27,8 @@ import com.telinc1.faerie.gui.chooser.ConfigurationChooser;
 import com.telinc1.faerie.gui.main.MainWindow;
 import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
 import com.telinc1.faerie.sprite.provider.LoadingException;
+import com.telinc1.faerie.sprite.provider.Provider;
+import com.telinc1.faerie.sprite.provider.SavingException;
 import com.telinc1.faerie.util.TypeUtils;
 
 import javax.swing.JFileChooser;
@@ -100,8 +102,61 @@ public class FileMenu extends Menu {
             this.getConfigurationChooser().setSelectedFile(null);
         });
 
-        this.addItem("save", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK, null);
-        this.addItem("saveAs", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, null);
+        this.addItem("save", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK, event -> {
+            Provider provider = window.getProvider();
+
+            if(provider == null){
+                // TODO: disable the item instead of showing an error
+                window.getApplication().getExceptionHandler().error("chooser", "save.blank");
+                return;
+            }
+
+            try {
+                provider.save();
+            }catch(SavingException exception){
+                exception.printStackTrace();
+
+                String message = exception.getMessage();
+
+                if(exception.getCause() != null){
+                    message += " (" + exception.getCause().getClass().getName() + ")";
+                }
+
+                window.getApplication().getExceptionHandler().error("chooser", "save", "message", message);
+            }
+        });
+
+        this.addItem("saveAs", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, event -> {
+            Provider provider = window.getProvider();
+
+            if(provider == null){
+                // TODO: disable the item instead of showing an error
+                window.getApplication().getExceptionHandler().error("chooser", "save.blank");
+                return;
+            }
+
+            int result = this.getConfigurationChooser().showSave(window);
+
+            if(result == JFileChooser.APPROVE_OPTION){
+                File file = this.getConfigurationChooser().getSelectedFile();
+
+                try {
+                    provider.save(file);
+                }catch(SavingException exception){
+                    exception.printStackTrace();
+
+                    String message = exception.getMessage();
+
+                    if(exception.getCause() != null){
+                        message += " (" + exception.getCause().getClass().getName() + ")";
+                    }
+
+                    window.getApplication().getExceptionHandler().error("chooser", "save", "message", message);
+                }
+            }
+
+            this.getConfigurationChooser().setSelectedFile(null);
+        });
     }
 
     @Override
