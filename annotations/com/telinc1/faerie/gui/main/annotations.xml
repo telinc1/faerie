@@ -31,4 +31,14 @@
             <val val="&quot;HardcodedFileSeparator&quot;"/>
         </annotation>
     </item>
+    <item name='com.telinc1.faerie.gui.main.FaerieWindow void setObjectClipping(int)'>
+        <annotation name='java.lang.SuppressWarnings'>
+            <val val="&quot;HardcodedFileSeparator&quot;"/>
+        </annotation>
+    </item>
+    <item name='com.telinc1.faerie.gui.main.FaerieWindow void setSpriteClipping(int)'>
+        <annotation name='java.lang.SuppressWarnings'>
+            <val val="&quot;HardcodedFileSeparator&quot;"/>
+        </annotation>
+    </item>
 </root>

@@ -132,7 +132,7 @@ public class Sprite {
      * first property byte
      */
     public int getFirstPropertyByte(){
-        return this.getSubType().hasExtraProperties() ? this.firstPropertyByte & 0xFF : 0xFF;
+        return this.hasPropertyBytes() ? this.firstPropertyByte & 0xFF : 0xFF;
     }
 
     /**
@@ -147,12 +147,12 @@ public class Sprite {
     }
 
     /**
-     * Returns the vanilla sprite number whose properties this sprite shares.
+     * Checks if the sprite has property bytes.
      *
-     * @return an integer in the range [0; 255] representing a vanilla sprite
+     * @return whether the sprite has property bytes
      */
-    public int getActsLike(){
-        return this.actsLike & 0xFF;
+    public boolean hasPropertyBytes(){
+        return !this.isTweak() && this.getSubType().hasPropertyBytes();
     }
 
     /**
@@ -168,8 +168,6 @@ public class Sprite {
 
     /**
      * Returns the behavior (Tweaker settings) of the sprite.
-     * <p>
-     * If the subtype doesn't have behavior settings, this can return null.
      *
      * @return the {@link SpriteBehavior} of this sprite
      */
@@ -201,18 +199,12 @@ public class Sprite {
     }
 
     /**
-     * Returns the sprite's second property byte.
-     * <p>
-     * The top two bits of the second property byte are implicitly used
-     * as the status override settings and should be masked out.
-     * <p>
-     * If the subtype doesn't have property bytes, this can return -1.
+     * Checks if this is a tweak of a vanilla sprite.
      *
-     * @return an integer in the range [0; 63] representing the
-     * first extra property byte
+     * @return whether the sprite is a tweak
      */
-    public int getSecondPropertyByte(){
-        return this.getSubType().hasExtraProperties() ? this.secondPropertyByte & 0x3F : 0x3F;
+    public boolean isTweak(){
+        return this.getType() == EnumSpriteType.TWEAK;
     }
 
     /**
@@ -229,13 +221,14 @@ public class Sprite {
     }
 
     /**
-     * Returns the type of handling this sprite uses for its status.
+     * Returns the vanilla sprite number whose properties this sprite shares.
+     * <p>
+     * If the sprite doesn't have an acts like property, this can return -1.
      *
-     * @return an element of {@link EnumStatusHandling} which represents how
-     * the sprite status is handled
+     * @return an integer in the range [0; 255] representing a vanilla sprite
      */
-    public EnumStatusHandling getStatusHandling(){
-        return this.getSubType().hasExtraProperties() ? this.statusHandling : EnumStatusHandling.OVERRIDE_ALL;
+    public int getActsLike(){
+        return this.hasActsLike() ? this.actsLike & 0xFF : 0xFF;
     }
 
     /**
@@ -250,14 +243,12 @@ public class Sprite {
     }
 
     /**
-     * Returns the sprite's additional unique byte.
-     * <p>
-     * If the subtype doesn't have a unique byte, this can return -1.
+     * Checks if the sprite has an acts like property.
      *
-     * @return an integer in the range [0; 255] representing the unique byte (code)
+     * @return whether the sprite has an acts like property
      */
-    public int getUniqueByte(){
-        return this.getSubType().hasUniqueByte() ? this.uniqueByte & 0xFF : 0xFF;
+    public boolean hasActsLike(){
+        return this.getSubType() != EnumSpriteSubType.VANILLA;
     }
 
     /**
@@ -274,39 +265,39 @@ public class Sprite {
     }
 
     /**
-     * Returns the amount of extra bytes this sprite has.
+     * Returns the sprite's second property byte.
      * <p>
-     * This should not be greater than maximum amount defined by the subtype.
+     * The top two bits of the second property byte are implicitly used
+     * as the status override settings and should be masked out.
+     * <p>
+     * If the subtype doesn't have property bytes, this can return -1.
      *
-     * @return an integer which represents how many extra bytes the sprite uses
-     * @see EnumSpriteSubType#getExtraBytes()
+     * @return an integer in the range [0; 63] representing the
+     * first extra property byte
      */
-    public int getExtraBytes(){
-        return Math.min(Math.max(0, this.extraBytes), this.getSubType().getExtraBytes());
+    public int getSecondPropertyByte(){
+        return this.hasPropertyBytes() ? this.secondPropertyByte & 0x3F : 0x3F;
     }
 
     /**
-     * Sets a new amount of extra bytes for the sprite.
-     * <p>
-     * It is clamped to the maximum amount of extra bytes for the subtype.
+     * Returns the type of handling this sprite uses for its status.
      *
-     * @param extraBytes the new amount of extra bytes to set
-     * @return the sprite, for chaining
+     * @return an element of {@link EnumStatusHandling} which represents how
+     * the sprite status is handled
      */
-    public Sprite setExtraBytes(int extraBytes){
-        this.extraBytes = Math.min(Math.max(0, extraBytes), this.getSubType().getExtraBytes());
-        return this;
+    public EnumStatusHandling getStatusHandling(){
+        return this.hasPropertyBytes() ? this.statusHandling : EnumStatusHandling.OVERRIDE_ALL;
     }
 
     /**
-     * Returns the name of the first ASM file used by the sprite.
+     * Returns the sprite's additional unique byte.
      * <p>
-     * If the subtype doesn't use its first ASM file, this can return null.
+     * If the subtype doesn't have a unique byte, this can return -1.
      *
-     * @return a nullable {@link String} which doesn't have to be a valid path
+     * @return an integer in the range [0; 255] representing the unique byte (code)
      */
-    public String getFirstASMFile(){
-        return this.getSubType().usesFirstASM() ? this.firstASMFile : null;
+    public int getUniqueByte(){
+        return this.hasUniqueByte() ? this.uniqueByte & 0xFF : 0xFF;
     }
 
     /**
@@ -321,14 +312,12 @@ public class Sprite {
     }
 
     /**
-     * Returns the name of the second ASM file used by the sprite.
-     * <p>
-     * If the subtype doesn't use its second ASM file, this can return null.
+     * Checks if the sprite has a unique byte.
      *
-     * @return a nullable {@link String} which doesn't have to be a valid path
+     * @return whether the sprite has a unique byte
      */
-    public String getSecondASMFile(){
-        return this.getSubType().usesSecondASM() ? this.secondASMFile : null;
+    public boolean hasUniqueByte(){
+        return !this.isTweak() && this.getSubType().hasUniqueByte();
     }
 
     /**
@@ -363,6 +352,80 @@ public class Sprite {
     }
 
     /**
+     * Returns the amount of extra bytes this sprite has.
+     * <p>
+     * This should not be greater than maximum amount defined by the subtype.
+     *
+     * @return an integer which represents how many extra bytes the sprite uses
+     * @see EnumSpriteSubType#getMaxExtraBytes()
+     */
+    public int getExtraBytes(){
+        return Math.min(Math.max(0, this.extraBytes), this.getMaxExtraBytes());
+    }
+
+    /**
+     * Sets a new amount of extra bytes for the sprite.
+     * <p>
+     * It is clamped to the maximum amount of extra bytes for the subtype.
+     *
+     * @param extraBytes the new amount of extra bytes to set
+     * @return the sprite, for chaining
+     */
+    public Sprite setExtraBytes(int extraBytes){
+        this.extraBytes = Math.min(Math.max(0, extraBytes), this.getMaxExtraBytes());
+        return this;
+    }
+
+    /**
+     * Returns the maximum amount of extra bytes the sprite can have.
+     *
+     * @return the maximum amount of extra bytes the sprite can have
+     */
+    public int getMaxExtraBytes(){
+        return this.isTweak() ? 0 : this.getSubType().getMaxExtraBytes();
+    }
+
+    /**
+     * Returns the name of the first ASM file used by the sprite.
+     * <p>
+     * If the subtype doesn't use its first ASM file, this can return null.
+     *
+     * @return a nullable {@link String} which doesn't have to be a valid path
+     */
+    public String getFirstASMFile(){
+        return this.usesFirstASM() ? this.firstASMFile : null;
+    }
+
+    /**
+     * Checks if the sprite uses its first ASM file.
+     *
+     * @return whether the sprite uses its first ASM file
+     */
+    public boolean usesFirstASM(){
+        return !this.isTweak() && this.getSubType().usesFirstASM();
+    }
+
+    /**
+     * Returns the name of the second ASM file used by the sprite.
+     * <p>
+     * If the subtype doesn't use its second ASM file, this can return null.
+     *
+     * @return a nullable {@link String} which doesn't have to be a valid path
+     */
+    public String getSecondASMFile(){
+        return this.usesSecondASM() ? this.secondASMFile : null;
+    }
+
+    /**
+     * Checks if the sprite uses its second ASM file.
+     *
+     * @return whether the sprite uses its second ASM file
+     */
+    public boolean usesSecondASM(){
+        return !this.isTweak() && this.getSubType().usesSecondASM();
+    }
+
+    /**
      * Checks if a sprite has sufficient data.
      *
      * @return whether the sprite has all of the data it needs
@@ -372,10 +435,19 @@ public class Sprite {
             return true;
         }
 
-        if(this.getSubType().usesFirstASM() && (this.firstASMFile == null || this.firstASMFile.isEmpty())){
+        if(this.usesFirstASM() && (this.firstASMFile == null || this.firstASMFile.isEmpty())){
             return false;
         }
 
-        return !this.getSubType().usesSecondASM() || (this.secondASMFile != null && !this.secondASMFile.isEmpty());
+        return !this.usesSecondASM() || (this.secondASMFile != null && !this.secondASMFile.isEmpty());
+    }
+
+    /**
+     * Checks if the sprite has behavior properties.
+     *
+     * @return whether the sprite has behavior properties
+     */
+    public boolean hasBehavior(){
+        return this.getSubType().hasBehavior();
     }
 }

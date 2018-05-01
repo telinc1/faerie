@@ -617,40 +617,40 @@ public class FaerieWindow extends JFrame {
         this.typeComboBox.setEnabled(true);
         this.subtypeComboBox.setEnabled(true);
 
-        if(subtype != EnumSpriteSubType.VANILLA){
+        if(sprite.hasActsLike()){
             this.actsLikeTextField.setEnabled(true);
         }
 
-        if(subtype.hasBehavior()){
+        if(sprite.hasBehavior()){
             this.setInputEnabled(true, BehaviorBit.class);
         }
 
-        if(subtype.hasExtraProperties()){
+        if(sprite.hasPropertyBytes()){
             this.firstPropertyTextField.setEnabled(true);
             this.secondPropertyTextField.setEnabled(true);
             this.statusOverrideComboBox.setEnabled(true);
         }
 
-        if(subtype.hasUniqueByte()){
+        if(sprite.hasUniqueByte()){
             this.uniqueByteTextField.setEnabled(true);
         }
 
-        if(subtype.getExtraBytes() > 0){
+        if(sprite.getMaxExtraBytes() > 0){
             this.extraByteAmountTextField.setEnabled(true);
         }
 
-        if(subtype.usesFirstASM()){
+        if(sprite.usesFirstASM()){
             this.firstASMTextField.setEnabled(true);
         }
 
-        if(subtype.usesSecondASM()){
+        if(sprite.usesSecondASM()){
             this.secondASMTextField.setEnabled(true);
         }
 
         JFormattedTextField.AbstractFormatter formatter = this.extraByteAmountTextField.getFormatter();
 
         if(formatter instanceof DecimalFormatter){
-            ((DecimalFormatter)formatter).setBounds(0, sprite.getSubType().getExtraBytes());
+            ((DecimalFormatter)formatter).setBounds(0, sprite.getSubType().getMaxExtraBytes());
         }
 
         return this;

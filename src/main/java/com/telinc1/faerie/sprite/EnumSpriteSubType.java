@@ -172,7 +172,7 @@ public enum EnumSpriteSubType {
      *
      * @return a boolean which represents the property
      */
-    public boolean hasExtraProperties(){
+    public boolean hasPropertyBytes(){
         return this.hasExtraProperties;
     }
 
@@ -190,7 +190,7 @@ public enum EnumSpriteSubType {
      *
      * @return an integer which represents the property
      */
-    public int getExtraBytes(){
+    public int getMaxExtraBytes(){
         return this.extraBytes;
     }
 
