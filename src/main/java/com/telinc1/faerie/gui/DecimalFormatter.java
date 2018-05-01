@@ -27,6 +27,7 @@ import com.telinc1.faerie.util.Bounds;
 import javax.swing.JFormattedTextField;
 import javax.swing.text.DefaultFormatterFactory;
 import java.text.ParseException;
+import java.util.function.Consumer;
 
 /**
  * Formats decimal numbers into strings.
@@ -69,38 +70,38 @@ public class DecimalFormatter extends JFormattedTextField.AbstractFormatter {
      * @param field the field to apply to
      * @param min the lower bound of the value
      * @param max the upper bound of the value
+     * @param listener the consumer to call when the field's value changes
+     * @return the field, for chaining
      */
-    public static void apply(JFormattedTextField field, int min, int max){
+    public static JFormattedTextField apply(JFormattedTextField field, int min, int max, Consumer<Integer> listener){
         field.setFormatterFactory(new DefaultFormatterFactory(new DecimalFormatter(min, max)));
-    }
 
-    /**
-     * Makes the formatter unbounded.
-     *
-     * @return the formatter, for chaining
-     */
-    public DecimalFormatter setUnbounded(){
-        return this.setBounds(new Bounds(Integer.MIN_VALUE, Integer.MAX_VALUE));
-    }
-
-    /**
-     * Sets new bounds for the formatter.
-     *
-     * @param min the new lower bound
-     * @param max the new upper bound
-     * @return the formatter, for chaining
-     */
-    public DecimalFormatter setBounds(int min, int max){
-        return this.setBounds(new Bounds(min, max));
-    }
-
-    @Override
-    public Object stringToValue(String text) throws ParseException{
-        try {
-            return this.getBounds().clamp(Integer.valueOf(text, 10));
-        }catch(NumberFormatException exception){
-            throw new ParseException("Invalid decimal number.", 0);
+        if(listener != null){
+            DecimalFormatter.addListener(field, listener);
         }
+
+        return field;
+    }
+
+    /**
+     * Adds a property listener to the given {@code JFormattedField}.
+     * <p>
+     * The given {@code Consumer} will receive the formatted integer value from
+     * the field, not the {@link java.beans.PropertyChangeEvent}.
+     *
+     * @param field the field to add the listener to
+     * @param listener the consumer to call with the integer value
+     * @return the field, for chaining
+     */
+    public static JFormattedTextField addListener(JFormattedTextField field, Consumer<Integer> listener){
+        field.addPropertyChangeListener("value", event -> {
+            JFormattedTextField source = (JFormattedTextField)event.getSource();
+            Number value = (Number)source.getValue();
+
+            listener.accept(value.intValue());
+        });
+
+        return field;
     }
 
     /**
@@ -123,8 +124,37 @@ public class DecimalFormatter extends JFormattedTextField.AbstractFormatter {
         return this;
     }
 
+    /**
+     * Sets new bounds for the formatter.
+     *
+     * @param min the new lower bound
+     * @param max the new upper bound
+     * @return the formatter, for chaining
+     */
+    public DecimalFormatter setBounds(int min, int max){
+        return this.setBounds(new Bounds(min, max));
+    }
+
+    /**
+     * Makes the formatter unbounded.
+     *
+     * @return the formatter, for chaining
+     */
+    public DecimalFormatter setUnbounded(){
+        return this.setBounds(new Bounds(Integer.MIN_VALUE, Integer.MAX_VALUE));
+    }
+
     @Override
-    public String valueToString(Object value) throws ParseException{
+    public Object stringToValue(String text) throws ParseException{
+        try {
+            return this.getBounds().clamp(Integer.valueOf(text, 10));
+        }catch(NumberFormatException exception){
+            throw new ParseException("Invalid decimal number.", 0);
+        }
+    }
+
+    @Override
+    public String valueToString(Object value) throws ParseException {
         if(value instanceof Number){
             value = ((Number)value).intValue();
         }

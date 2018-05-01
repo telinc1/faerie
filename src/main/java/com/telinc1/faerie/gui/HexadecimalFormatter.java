@@ -27,6 +27,7 @@ import com.telinc1.faerie.util.Bounds;
 import javax.swing.JFormattedTextField;
 import javax.swing.text.DefaultFormatterFactory;
 import java.text.ParseException;
+import java.util.function.Consumer;
 
 /**
  * Formats hexadecimal numbers into strings.
@@ -34,14 +35,12 @@ import java.text.ParseException;
  * @author Telinc1
  * @since 1.0.0
  */
-public class HexadecimalFormatter extends JFormattedTextField.AbstractFormatter {
-    private Bounds bounds;
-
+public class HexadecimalFormatter extends DecimalFormatter {
     /**
      * Creates an unbounded hexadecimal formatter.
      */
     public HexadecimalFormatter(){
-        this(new Bounds(Integer.MIN_VALUE, Integer.MAX_VALUE));
+        super();
     }
 
     /**
@@ -50,7 +49,7 @@ public class HexadecimalFormatter extends JFormattedTextField.AbstractFormatter 
      * @param bounds the bounds of the integer
      */
     public HexadecimalFormatter(Bounds bounds){
-        this.bounds = bounds;
+        super(bounds);
     }
 
     /**
@@ -60,7 +59,7 @@ public class HexadecimalFormatter extends JFormattedTextField.AbstractFormatter 
      * @param max the upper bound
      */
     public HexadecimalFormatter(int min, int max){
-        this(new Bounds(min, max));
+        super(min, max);
     }
 
     /**
@@ -69,40 +68,17 @@ public class HexadecimalFormatter extends JFormattedTextField.AbstractFormatter 
      * @param field the field to apply to
      * @param min the lower bound of the value
      * @param max the upper bound of the value
+     * @param listener the consumer to call when the field's value changes
+     * @return the field, for chaining
      */
-    public static void apply(JFormattedTextField field, int min, int max){
+    public static JFormattedTextField apply(JFormattedTextField field, int min, int max, Consumer<Integer> listener){
         field.setFormatterFactory(new DefaultFormatterFactory(new HexadecimalFormatter(min, max)));
-    }
 
-    /**
-     * Makes the formatter unbounded.
-     *
-     * @return the formatter, for chaining
-     */
-    public HexadecimalFormatter setUnbounded(){
-        return this.setBounds(new Bounds(Integer.MIN_VALUE, Integer.MAX_VALUE));
-    }
+        if(listener != null){
+            DecimalFormatter.addListener(field, listener);
+        }
 
-    /**
-     * Sets new bounds for the formatter.
-     *
-     * @param min the new lower bound
-     * @param max the new upper bound
-     * @return the formatter, for chaining
-     */
-    public HexadecimalFormatter setBounds(int min, int max){
-        return this.setBounds(new Bounds(min, max));
-    }
-
-    /**
-     * Sets new bounds for the formatter.
-     *
-     * @param bounds the new bounds to set
-     * @return the formatter, for chaining
-     */
-    public HexadecimalFormatter setBounds(Bounds bounds){
-        this.bounds = bounds;
-        return this;
+        return field;
     }
 
     @Override
@@ -112,15 +88,6 @@ public class HexadecimalFormatter extends JFormattedTextField.AbstractFormatter 
         }catch(NumberFormatException exception){
             throw new ParseException("Invalid hexadecimal number.", 0);
         }
-    }
-
-    /**
-     * Returns the formatter's bounds.
-     *
-     * @return the {@link Bounds} of the formatter
-     */
-    public Bounds getBounds(){
-        return this.bounds;
     }
 
     @Override

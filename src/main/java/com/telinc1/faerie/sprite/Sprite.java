@@ -162,7 +162,7 @@ public class Sprite {
      * @return the sprite, for chaining
      */
     public Sprite setActsLike(int actsLike){
-        this.actsLike = actsLike;
+        this.actsLike = actsLike & 0xFF;
         return this;
     }
 
