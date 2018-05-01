@@ -835,6 +835,8 @@ public class MainWindow extends JFrame {
     public MainWindow setProvider(Provider provider){
         this.provider = provider;
 
+        this.setTitle(Resources.getString("main", "title"));
+
         if(this.getProvider() == null){
             this.setInputEnabled(false);
             return this;
@@ -853,6 +855,8 @@ public class MainWindow extends JFrame {
 
             return this.setProvider(null);
         }
+
+        this.setTitle(Resources.getString("main", "title.open", "path", this.getProvider().getInput().getAbsolutePath()));
 
         // this is the mother of all nesting and botched oop
         if(this.getProvider() instanceof ConfigurationProvider){

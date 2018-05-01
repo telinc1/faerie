@@ -152,6 +152,8 @@ public class ConfigurationProvider extends Provider {
         }catch(IOException | SecurityException exception){
             throw new SavingException("The configuration file couldn't written to.", exception);
         }
+
+        this.isModified = false;
     }
 
     @Override
