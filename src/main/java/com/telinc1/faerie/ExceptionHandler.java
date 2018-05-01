@@ -37,14 +37,14 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
     /**
      * The application which this exception handler manages.
      */
-    private Faerie application;
+    private Application application;
 
     /**
      * Construct an unhandled exception handler.
      *
-     * @param application the {@link Faerie} application to use
+     * @param application the {@link Application} application to use
      */
-    ExceptionHandler(Faerie application){
+    ExceptionHandler(Application application){
         this.application = application;
     }
 

@@ -24,13 +24,13 @@ package com.telinc1.faerie.gui.main;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.telinc1.faerie.Faerie;
+import com.telinc1.faerie.Application;
 import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.gui.DecimalFormatter;
 import com.telinc1.faerie.gui.HexadecimalFormatter;
 import com.telinc1.faerie.gui.JPaletteView;
 import com.telinc1.faerie.gui.JScaledImage;
-import com.telinc1.faerie.gui.main.menu.FaerieMenuBar;
+import com.telinc1.faerie.gui.main.menu.MenuBar;
 import com.telinc1.faerie.sprite.EnumSpriteSubType;
 import com.telinc1.faerie.sprite.EnumSpriteType;
 import com.telinc1.faerie.sprite.EnumStatusHandling;
@@ -72,16 +72,16 @@ import java.util.function.Consumer;
  * @author Telinc1
  * @since 1.0.0
  */
-public class FaerieWindow extends JFrame {
+public class MainWindow extends JFrame {
     /**
      * The parent application of the window.
      */
-    private Faerie application;
+    private Application application;
 
     /**
      * The menu bar which the window displays.
      */
-    private FaerieMenuBar menuBar;
+    private MenuBar menuBar;
 
     /**
      * The currently loaded sprite provider.
@@ -232,7 +232,7 @@ public class FaerieWindow extends JFrame {
      * <p>
      * Note that the window is not opened.
      */
-    public FaerieWindow(Faerie application){
+    public MainWindow(Application application){
         super(Resources.getString("main", "title"));
         this.application = application;
 
@@ -247,11 +247,12 @@ public class FaerieWindow extends JFrame {
 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        URL iconURL = this.getClass().getResource("/com/telinc1/faerie/icons/application.png");
+        URL iconURL = Resources.class.getResource(Resources.PACKAGE + "/images/application.png");
         ImageIcon icon = new ImageIcon(iconURL);
         this.setIconImage(icon.getImage());
 
-        this.menuBar = new FaerieMenuBar(this);
+        this.menuBar = new MenuBar(this);
+        this.setJMenuBar(this.menuBar);
     }
 
     /**
@@ -422,7 +423,7 @@ public class FaerieWindow extends JFrame {
      * @throws NullPointerException if there is no active provider
      * @see Provider#loadSprite(int)
      */
-    public FaerieWindow loadSprite(int index) throws ProvisionException, IndexOutOfBoundsException{
+    public MainWindow loadSprite(int index) throws ProvisionException, IndexOutOfBoundsException{
         this.getProvider().loadSprite(index);
         this.updateGUI();
 
@@ -576,7 +577,7 @@ public class FaerieWindow extends JFrame {
      * @param provider the new provider
      * @return the window, for chaining
      */
-    public FaerieWindow setProvider(Provider provider){
+    public MainWindow setProvider(Provider provider){
         this.provider = provider;
 
         if(this.getProvider() == null){
@@ -609,7 +610,7 @@ public class FaerieWindow extends JFrame {
      *
      * @return the window, for chaining
      */
-    public FaerieWindow updateGUI(){
+    public MainWindow updateGUI(){
         this.setInputEnabled(false);
 
         if(this.getProvider() == null){
@@ -665,19 +666,19 @@ public class FaerieWindow extends JFrame {
     /**
      * Returns the menu bar for the application window.
      *
-     * @return an instance of {@link FaerieMenuBar} which represents the
+     * @return an instance of {@link MenuBar} which represents the
      * menu bar
      */
-    public FaerieMenuBar getMenu(){
+    public MenuBar getMenu(){
         return this.menuBar;
     }
 
     /**
      * Returns the parent application of the window.
      *
-     * @return the {@code Faerie} application hosting the window
+     * @return the {@code Application} hosting the window
      */
-    public Faerie getApplication(){
+    public Application getApplication(){
         return this.application;
     }
 

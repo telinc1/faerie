@@ -22,51 +22,48 @@
 
 package com.telinc1.faerie.gui.main.menu;
 
-import com.telinc1.faerie.gui.main.FaerieWindow;
+import com.telinc1.faerie.gui.main.MainWindow;
 
 import javax.swing.JMenuBar;
 
 /**
- * The menu bar for the main Faerie application window.
+ * The menu bar for the main application window.
  *
  * @author Telinc1
  * @since 1.0.0
  */
-public class FaerieMenuBar extends JMenuBar {
+public class MenuBar extends JMenuBar {
     /**
      * The application window which owns this menu bar.
      */
-    private FaerieWindow parent;
+    private MainWindow parent;
 
     /**
      * The "File" menu of the menu bar.
      */
-    private FaerieFileMenu fileMenu;
+    private FileMenu fileMenu;
 
     /**
      * Constructs a main window menu bar.
      * <p>
-     * All menus are automatically created. The menu bar is automatically added
-     * to the parent.
+     * All menus are automatically created.
      *
      * @param parent the application window which owns this menu bar
      */
-    public FaerieMenuBar(FaerieWindow parent){
+    public MenuBar(MainWindow parent){
         this.parent = parent;
 
-        this.fileMenu = new FaerieFileMenu(this);
+        this.fileMenu = new FileMenu(this);
 
         this.add(this.fileMenu);
-
-        this.getWindow().setJMenuBar(this);
     }
 
     /**
      * Returns the parent window of the menu bar.
      *
-     * @return an instance of the {@link FaerieWindow} which owns the menu bar
+     * @return an instance of the {@link MainWindow} which owns the menu bar
      */
-    public FaerieWindow getWindow(){
+    public MainWindow getWindow(){
         return this.parent;
     }
 }

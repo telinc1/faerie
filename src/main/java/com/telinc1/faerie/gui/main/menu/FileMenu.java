@@ -24,7 +24,7 @@ package com.telinc1.faerie.gui.main.menu;
 
 import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.gui.chooser.ConfigurationChooser;
-import com.telinc1.faerie.gui.main.FaerieWindow;
+import com.telinc1.faerie.gui.main.MainWindow;
 import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
 import com.telinc1.faerie.sprite.provider.LoadingException;
 import com.telinc1.faerie.util.TypeUtils;
@@ -36,12 +36,12 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 /**
- * The "File" menu of the main Faerie application window.
+ * The "File" menu of the main application window.
  *
  * @author Telinc1
  * @since 1.0.0
  */
-public class FaerieFileMenu extends FaerieMenu {
+public class FileMenu extends Menu {
     /**
      * The {@link JFileChooser} used for all opening and saving operations in
      * the menu.
@@ -53,7 +53,7 @@ public class FaerieFileMenu extends FaerieMenu {
      *
      * @param parent the menu bar which this menu will belong to
      */
-    FaerieFileMenu(FaerieMenuBar parent){
+    FileMenu(MenuBar parent){
         super(parent);
 
         this.configurationChooser = new ConfigurationChooser();
@@ -64,7 +64,7 @@ public class FaerieFileMenu extends FaerieMenu {
      */
     @Override
     void setupMenu(){
-        FaerieWindow window = this.getMenuBar().getWindow();
+        MainWindow window = this.getMenuBar().getWindow();
 
         this.addItem("new", KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, null);
         this.addItem("open", KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK, event -> {

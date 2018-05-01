@@ -30,24 +30,24 @@ import javax.swing.KeyStroke;
 import java.awt.event.ActionListener;
 
 /**
- * This is the common ancestor of all Faerie menus. It provides basic utility
- * methods.
+ * This is the common ancestor of all application menus. It provides basic
+ * shared utility methods.
  *
  * @author Telinc1
  * @since 1.0.0
  */
-public abstract class FaerieMenu extends JMenu {
+public abstract class Menu extends JMenu {
     /**
      * The menu bar which owns this menu.
      */
-    private FaerieMenuBar parent;
+    private MenuBar parent;
 
     /**
      * Constructs a menu.
      *
      * @param parent the menu bar which this menu will belong to
      */
-    FaerieMenu(FaerieMenuBar parent){
+    Menu(MenuBar parent){
         super();
         this.parent = parent;
 
@@ -150,9 +150,9 @@ public abstract class FaerieMenu extends JMenu {
     /**
      * Returns the parent menu bar for this "File" menu.
      *
-     * @return an instance of the {@link FaerieMenuBar} which owns this menu
+     * @return an instance of the {@link MenuBar} which owns this menu
      */
-    public FaerieMenuBar getMenuBar(){
+    public MenuBar getMenuBar(){
         return this.parent;
     }
 }

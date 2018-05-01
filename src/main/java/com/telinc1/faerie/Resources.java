@@ -22,6 +22,8 @@
 
 package com.telinc1.faerie;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,13 +39,20 @@ import java.util.ResourceBundle;
  * @since 1.0.0
  */
 public class Resources {
+    /**
+     * The top-level package of the application.
+     */
+    public static final String PACKAGE = "/com/telinc1/faerie";
+
+    /**
+     * A map of {@code ResourceBundle}s which have already been loaded.
+     */
     private static Map<String, ResourceBundle> bundles = new HashMap<>();
 
     /**
      * Dummy private constructor to prevent construction of the class.
      */
-    private Resources(){
-    }
+    private Resources(){}
 
     /**
      * Retrieves a string from the given bundle.
@@ -122,5 +131,22 @@ public class Resources {
         Resources.bundles.put(name, bundle);
 
         return bundle;
+    }
+
+    /**
+     * Finds a resource with the given name using the default class loader.
+     *
+     * @param path the path to the resource, excluding the top-level packages
+     * @return an {@code InputStream} for the resource
+     * @throws FileNotFoundException if the file doesn't exist
+     */
+    public static InputStream getResource(String path) throws FileNotFoundException{
+        InputStream stream = Resources.class.getResourceAsStream(Resources.PACKAGE + "/" + path);
+
+        if(stream == null){
+            throw new FileNotFoundException(Resources.PACKAGE + "/" + path);
+        }
+
+        return stream;
     }
 }

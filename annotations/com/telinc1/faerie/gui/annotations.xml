@@ -21,11 +21,6 @@
   -->
 
 <root>
-    <item name='com.telinc1.faerie.gui.JScaledImage com.telinc1.faerie.gui.JScaledImage loadImage(java.lang.String)'>
-        <annotation name='java.lang.SuppressWarnings'>
-            <val val="&quot;HardcodedFileSeparator&quot;"/>
-        </annotation>
-    </item>
     <item name='com.telinc1.faerie.gui.JScaledImage com.telinc1.faerie.gui.JScaledImage loadImage(java.lang.String) 0'>
         <annotation name='org.jetbrains.annotations.NonNls'/>
     </item>

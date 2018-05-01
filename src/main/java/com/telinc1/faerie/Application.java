@@ -23,13 +23,11 @@
 package com.telinc1.faerie;
 
 import com.telinc1.faerie.display.Palette;
-import com.telinc1.faerie.gui.main.FaerieWindow;
+import com.telinc1.faerie.gui.main.MainWindow;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * This is the main class of Faerie, responsible for opening the main program
@@ -38,7 +36,7 @@ import java.net.URL;
  * @author Telinc1
  * @since 1.0.0
  */
-public class Faerie {
+public class Application {
     /**
      * The command line arguments given to the application.
      */
@@ -52,7 +50,7 @@ public class Faerie {
     /**
      * The main program window.
      */
-    private final FaerieWindow window;
+    private final MainWindow window;
 
     /**
      * The currently loaded palette.
@@ -60,11 +58,11 @@ public class Faerie {
     private final Palette palette;
 
     /**
-     * Construct and initialize Faerie.
+     * Construct and initialize the application.
      *
      * @param args the command line arguments given to the application
      */
-    private Faerie(String[] args){
+    private Application(String[] args){
         this.args = args;
         this.exceptionHandler = new ExceptionHandler(this);
 
@@ -84,13 +82,12 @@ public class Faerie {
         this.palette = new Palette();
 
         try {
-            URL palette = this.getClass().getResource("/com/telinc1/faerie/binary/generic.mw3");
-            this.getPalette().loadMW3File(new File(palette.getPath()));
+            this.getPalette().loadMW3File(Resources.getResource("data/generic.mw3"));
         }catch(IOException exception){
             this.getExceptionHandler().error("core", "launch.palette", exception);
         }
 
-        this.window = new FaerieWindow(this);
+        this.window = new MainWindow(this);
         this.getWindow().setVisible(true);
     }
 
@@ -104,12 +101,14 @@ public class Faerie {
     }
 
     /**
-     * Creates and starts Faerie by opening the main window.
+     * Returns the main program window.
+     * <p>
+     * Note that this can be null if the application hasn't fully initialized.
      *
-     * @param args the command line arguments given to the application
+     * @return the main {@link MainWindow} of the application
      */
-    public static void main(String[] args){
-        Faerie faerie = new Faerie(args);
+    public MainWindow getWindow(){
+        return this.window;
     }
 
     /**
@@ -120,14 +119,12 @@ public class Faerie {
     }
 
     /**
-     * Returns the main program window.
-     * <p>
-     * Note that this can be null if the application hasn't fully initialized.
+     * Creates and starts the application by opening the main window.
      *
-     * @return the main {@link FaerieWindow} of the application
+     * @param args the command line arguments given to the application
      */
-    public FaerieWindow getWindow(){
-        return this.window;
+    public static void main(String[] args){
+        Application application = new Application(args);
     }
 
     /**

@@ -22,6 +22,8 @@
 
 package com.telinc1.faerie.gui;
 
+import com.telinc1.faerie.Resources;
+
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import java.awt.Graphics;
@@ -29,7 +31,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URL;
 
 public class JScaledImage extends JComponent {
     /**
@@ -102,12 +103,11 @@ public class JScaledImage extends JComponent {
     /**
      * Loads a new image into the component.
      *
-     * @param name the path of the image to load, relative to {@code com.telinc1.faerie.icons}
+     * @param name the path of the image to load, relative to {@code com.telinc1.faerie.images}
      * @return the component, for chaining
      */
     public JScaledImage loadImage(String name) throws IOException{
-        URL imageURL = this.getClass().getResource("/com/telinc1/faerie/icons/" + name);
-        BufferedImage image = ImageIO.read(imageURL);
+        BufferedImage image = ImageIO.read(Resources.getResource("images/" + name));
 
         this.setImage(image);
         this.repaint();

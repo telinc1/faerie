@@ -24,9 +24,8 @@ package com.telinc1.faerie.display;
 
 import java.awt.Color;
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * This class represents a loaded palette file.
@@ -73,12 +72,12 @@ public class Palette {
     /**
      * Loads the given PAL file into the internal color array.
      *
-     * @param file the file to load
+     * @param input the data to load
      * @return the palette, for chaining
      * @throws IOException if an I/O error occurs
      */
-    public Palette loadPALFile(File file) throws IOException{
-        try(BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file))) {
+    public Palette loadPALFile(InputStream input) throws IOException{
+        try(BufferedInputStream stream = new BufferedInputStream(input)) {
             byte[] palette = new byte[768];
             int bytes = stream.read(palette);
 
@@ -131,12 +130,12 @@ public class Palette {
     /**
      * Loads the given TPL file into the internal color array.
      *
-     * @param file the file to load
+     * @param input the data to load
      * @return the palette, for chaining
      * @throws IOException if an I/O error occurs
      */
-    public Palette loadTPLFile(File file) throws IOException{
-        try(BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file))) {
+    public Palette loadTPLFile(InputStream input) throws IOException{
+        try(BufferedInputStream stream = new BufferedInputStream(input)) {
             byte[] header = new byte[4];
             byte[] palette = new byte[512];
             int headerBytes = stream.read(header);
@@ -161,12 +160,12 @@ public class Palette {
     /**
      * Loads the given MW3 file into the internal color array.
      *
-     * @param file the file to load
+     * @param input the data to load
      * @return the palette, for chaining
      * @throws IOException if an I/O error occurs
      */
-    public Palette loadMW3File(File file) throws IOException{
-        try(BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file))) {
+    public Palette loadMW3File(InputStream input) throws IOException{
+        try(BufferedInputStream stream = new BufferedInputStream(input)) {
             byte[] palette = new byte[512];
             int bytes = stream.read(palette);
 
