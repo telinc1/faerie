@@ -301,6 +301,7 @@ public class SpriteBehavior {
      * @param settings the six bytes to unpack
      * @throws IllegalArgumentException if the given array has less than 6 elements
      */
+    @SuppressWarnings("ConstantConditions")
     public void unpack(int[] settings) throws IllegalArgumentException{
         if(settings.length < 6){
             throw new IllegalArgumentException("The packed settings array must have 6 integers.");

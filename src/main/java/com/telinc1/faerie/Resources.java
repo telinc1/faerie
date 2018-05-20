@@ -38,6 +38,7 @@ import java.util.ResourceBundle;
  * @author Telinc1
  * @since 1.0.0
  */
+@SuppressWarnings("StringConcatenation")
 public class Resources {
     /**
      * The top-level package of the application.

@@ -242,6 +242,7 @@ public class CFGParser extends Parser {
      * @return the parsed display data
      * @throws ParseException if the scanner has malformed data
      */
+    @SuppressWarnings({"HardcodedLineSeparator", "StringConcatenation"})
     private DisplayData parseDisplayData(Scanner scanner) throws ParseException{
         Map<String, String> sections = new HashMap<>();
         String section = null;
