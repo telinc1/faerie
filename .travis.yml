@@ -1,0 +1,9 @@
+language: java
+sudo: false
+
+jdk:
+  - oraclejdk8
+
+notifications:
+  email: false
+  webhooks: https://telinc1.com/travis-ci.php
