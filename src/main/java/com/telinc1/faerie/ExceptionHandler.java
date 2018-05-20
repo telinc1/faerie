@@ -22,12 +22,11 @@
 
 package com.telinc1.faerie;
 
-import javax.swing.JOptionPane;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * The unhandled exception handler which cleanly exists when an exception
+ * The unhandled exception handler which cleanly exits when an exception
  * is thrown.
  *
  * @author Telinc1
@@ -63,48 +62,52 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * Shows a warning dialog.
+     * Shows a detailed string representation of an exception without
+     * reporting it.
      *
-     * @param source the bundle to look in
-     * @param subkey the base key to look for
-     * @param arguments the arguments to format the message with
-     */
-    public void warn(String source, String subkey, Object... arguments){
-        String title = Resources.getString(source, "error." + subkey + ".title", arguments);
-        String content = Resources.getString(source, "error." + subkey + ".content", arguments);
-
-        JOptionPane.showMessageDialog(this.application.getWindow(), content, title, JOptionPane.WARNING_MESSAGE);
-    }
-
-    /**
-     * Shows a detailed string representation of an exception and exits the
-     * application with exit code 1.
+     * If the {@link Throwable} is {@link ILocalizable}, it will directly be
+     * displayed as a notification. If not, it will be shown as a fatal error.
      *
      * @param throwable the {@link Throwable} to display
      */
-    public void exception(Throwable throwable){
-        throwable.printStackTrace();
-        this.error("core", "exception", throwable);
+    public void handle(Throwable throwable){
+        if(throwable instanceof ILocalizable){
+            this.getApplication().getNotifier().notify((ILocalizable)throwable);
+            return;
+        }
+
+        this.getApplication().getNotifier().fatal("core", "exception", throwable);
     }
 
     /**
-     * Shows an error dialog and exits the application with error code 1.
+     * Returns the application of the exception handler.
      *
-     * @param source the bundle to look in
-     * @param subkey the base key to look for
-     * @param arguments the arguments to format the message with
+     * @return the {@code Application} which owns this {@code ExceptionHandler}
      */
-    public void error(String source, String subkey, Object... arguments){
-        String title = Resources.getString(source, "error." + subkey + ".title", arguments);
-        String content = Resources.getString(source, "error." + subkey + ".content", arguments);
-
-        JOptionPane.showMessageDialog(this.application.getWindow(), content, title, JOptionPane.ERROR_MESSAGE);
-        System.exit(1);
+    public Application getApplication(){
+        return this.application;
     }
 
     @Override
     public void uncaughtException(Thread thread, Throwable throwable){
+        this.report(throwable);
+
+        if(throwable instanceof ILocalizable){
+            this.getApplication().getNotifier().notify((ILocalizable)throwable);
+            return;
+        }
+
+        this.getApplication().getNotifier().fatal("core", "threadedException", "thread", thread.getName(), throwable);
+    }
+
+    /**
+     * Reports a {@link Throwable} to the application log and saves a detailed
+     * crash report.
+     *
+     * @param throwable the {@code Throwable} to report
+     */
+    public void report(Throwable throwable){
+        // TODO: actually report and save the exception correctly
         throwable.printStackTrace();
-        this.error("core", "threadedException", "thread", thread.getName(), throwable);
     }
 }

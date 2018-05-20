@@ -43,6 +43,11 @@ public class Application {
     private final String[] args;
 
     /**
+     * The application's {@link Notifier}.
+     */
+    private final Notifier notifier;
+
+    /**
      * The handler for unhandled exceptions.
      */
     private final ExceptionHandler exceptionHandler;
@@ -64,19 +69,21 @@ public class Application {
      */
     private Application(String[] args){
         this.args = args;
+        this.notifier = new Notifier(this);
         this.exceptionHandler = new ExceptionHandler(this);
 
         try {
             Thread.setDefaultUncaughtExceptionHandler(this.exceptionHandler);
         }catch(SecurityException exception){
-            exception.printStackTrace();
-            this.getExceptionHandler().warn("core", "launch.handler");
+            this.getExceptionHandler().report(exception);
+            this.getNotifier().warn("core", "launch.handler");
         }
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }catch(ReflectiveOperationException | UnsupportedLookAndFeelException exception){
-            this.getExceptionHandler().warn("core", "launch.lookAndFeel", exception);
+            this.getExceptionHandler().report(exception);
+            this.getNotifier().warn("core", "launch.lookAndFeel", exception);
         }
 
         this.palette = new Palette();
@@ -84,7 +91,7 @@ public class Application {
         try {
             this.getPalette().loadMW3File(Resources.getResource("data/generic.mw3"));
         }catch(IOException exception){
-            this.getExceptionHandler().error("core", "launch.palette", exception);
+            throw new LocalizedException(exception, "core", "launch.palette");
         }
 
         this.window = new MainWindow(this);
@@ -112,10 +119,21 @@ public class Application {
     }
 
     /**
-     * Returns the used exception handler.
+     * Returns the {@link ExceptionHandler} for the application.
+     *
+     * @return the {@code ExceptionHandler} for unhandled exceptions
      */
     public ExceptionHandler getExceptionHandler(){
         return this.exceptionHandler;
+    }
+
+    /**
+     * Returns the {@link Notifier} for the application.
+     *
+     * @return the {@code Notifier} instance for displaying messages
+     */
+    public Notifier getNotifier(){
+        return this.notifier;
     }
 
     /**

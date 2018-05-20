@@ -467,7 +467,7 @@ public class MainWindow extends JFrame {
         Provider provider = this.getProvider();
 
         if(provider == null){
-            this.getApplication().getExceptionHandler().error("chooser", "save.blank");
+            this.getApplication().getNotifier().error(this, "chooser", "save.blank");
             return;
         }
 
@@ -531,7 +531,7 @@ public class MainWindow extends JFrame {
         Provider provider = this.getProvider();
 
         if(provider == null){
-            this.getApplication().getExceptionHandler().error("chooser", "save.blank");
+            this.getApplication().getNotifier().error(this, "chooser", "save.blank");
             return;
         }
 
@@ -542,7 +542,7 @@ public class MainWindow extends JFrame {
                 provider.save(file);
             }
         }catch(SavingException exception){
-            exception.printStackTrace();
+            this.getApplication().getExceptionHandler().report(exception);
 
             String message = exception.getMessage();
 
@@ -550,7 +550,7 @@ public class MainWindow extends JFrame {
                 message += " (" + exception.getCause().getClass().getName() + ")";
             }
 
-            this.getApplication().getExceptionHandler().error("chooser", "save", "message", message);
+            this.getApplication().getNotifier().error(this, "chooser", "save", "message", message);
         }
     }
 
@@ -851,7 +851,7 @@ public class MainWindow extends JFrame {
 
             this.loadSprite(0);
         }catch(ProvisionException exception){
-            this.getApplication().getExceptionHandler().error("main", "provision", "message", "exception");
+            this.getApplication().getNotifier().error(this, "main", "provision", "message", exception);
 
             return this.setProvider(null);
         }
@@ -867,7 +867,7 @@ public class MainWindow extends JFrame {
 
                 // hoo boy finally extracted it
                 if(parser.isLegacy()){
-                    this.getApplication().getExceptionHandler().warn("parse", "legacy");
+                    this.getApplication().getNotifier().warn(this, "parse", "legacy");
                 }
             }
         }
