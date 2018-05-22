@@ -22,22 +22,80 @@
 
 package com.telinc1.faerie.sprite.provider;
 
+import com.telinc1.faerie.EnumSeverity;
+import com.telinc1.faerie.ILocalizable;
+
 /**
  * A {@code LoadingException} is thrown by a {@link Provider}'s constructor if
  * it can't load or parse the given input {@code File}.
  */
-public class LoadingException extends RuntimeException {
-    public LoadingException(){}
+public class LoadingException extends RuntimeException implements ILocalizable {
+    /**
+     * The exception's subkey from the "file" resource bundle.
+     */
+    private final String subkey;
 
-    public LoadingException(String message){
-        super(message);
+    /**
+     * Create a {@code LoadingException} with no defined message.
+     */
+    public LoadingException(){
+        super();
+        this.subkey = null;
     }
 
-    public LoadingException(String message, Throwable cause){
-        super(message, cause);
-    }
-
+    /**
+     * Create a {@code LoadingException} with no defined message and known
+     * cause.
+     *
+     * @param cause the cause of the exception
+     */
     public LoadingException(Throwable cause){
         super(cause);
+        this.subkey = null;
+    }
+
+    /**
+     * Create a {@code LoadingException} with a defined message and localizable
+     * subkey.
+     *
+     * @param message the error message of the exception
+     * @param subkey the subkey used when showing the exception to the user
+     */
+    public LoadingException(String message, String subkey){
+        super(message);
+        this.subkey = subkey;
+    }
+
+    /**
+     * Create a {@code LoadingException} with a defined message, localizable
+     * subkey, and cause.
+     *
+     * @param message the error message of the exception
+     * @param subkey the subkey used when showing the exception to the user
+     * @param cause the cause of the exception
+     */
+    public LoadingException(String message, String subkey, Throwable cause){
+        super(message, cause);
+        this.subkey = subkey;
+    }
+
+    @Override
+    public String getResource(){
+        return "file";
+    }
+
+    @Override
+    public EnumSeverity getSeverity(){
+        return EnumSeverity.ERROR;
+    }
+
+    @Override
+    public String getSubkey(){
+        return this.subkey == null ? "load" : "load." + this.subkey;
+    }
+
+    @Override
+    public Object[] getArguments(){
+        return new Object[0];
     }
 }

@@ -725,22 +725,12 @@ public class MainWindow extends JFrame {
                     ConfigurationProvider provider = new ConfigurationProvider(file);
                     this.setProvider(provider);
                 }catch(LoadingException exception){
-                    JOptionPane.showMessageDialog(
-                        this,
-                        exception.getMessage(),
-                        Resources.getString("chooser", "chooser.configuration.loading.title"),
-                        JOptionPane.ERROR_MESSAGE
-                    );
+                    this.getApplication().getNotifier().notify(this, exception);
                 }
             }else if(TypeUtils.isROM(file)){
                 // TODO: open and edit ROM files
             }else{
-                JOptionPane.showMessageDialog(
-                    this,
-                    Resources.getString("chooser", "chooser.configuration.type.content"),
-                    Resources.getString("chooser", "chooser.configuration.type.title"),
-                    JOptionPane.ERROR_MESSAGE
-                );
+                this.getApplication().getNotifier().error(this, "file", "load.type");
             }
         }
 
