@@ -36,11 +36,17 @@ public class LoadingException extends RuntimeException implements ILocalizable {
     private final String subkey;
 
     /**
+     * The arguments to pass to the exception's message.
+     */
+    private final Object[] arguments;
+
+    /**
      * Create a {@code LoadingException} with no defined message.
      */
     public LoadingException(){
         super();
         this.subkey = null;
+        this.arguments = new Object[0];
     }
 
     /**
@@ -52,6 +58,7 @@ public class LoadingException extends RuntimeException implements ILocalizable {
     public LoadingException(Throwable cause){
         super(cause);
         this.subkey = null;
+        this.arguments = new Object[0];
     }
 
     /**
@@ -60,10 +67,12 @@ public class LoadingException extends RuntimeException implements ILocalizable {
      *
      * @param message the error message of the exception
      * @param subkey the subkey used when showing the exception to the user
+     * @param arguments the arguments to pass to the exception's message
      */
-    public LoadingException(String message, String subkey){
+    public LoadingException(String message, String subkey, Object... arguments){
         super(message);
         this.subkey = subkey;
+        this.arguments = arguments;
     }
 
     /**
@@ -73,10 +82,12 @@ public class LoadingException extends RuntimeException implements ILocalizable {
      * @param message the error message of the exception
      * @param subkey the subkey used when showing the exception to the user
      * @param cause the cause of the exception
+     * @param arguments the arguments to pass to the exception's message
      */
-    public LoadingException(String message, String subkey, Throwable cause){
+    public LoadingException(String message, String subkey, Throwable cause, Object... arguments){
         super(message, cause);
         this.subkey = subkey;
+        this.arguments = arguments;
     }
 
     @Override
@@ -96,6 +107,6 @@ public class LoadingException extends RuntimeException implements ILocalizable {
 
     @Override
     public Object[] getArguments(){
-        return new Object[0];
+        return this.arguments;
     }
 }

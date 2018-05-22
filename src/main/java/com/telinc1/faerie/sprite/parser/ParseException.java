@@ -33,15 +33,33 @@ import com.telinc1.faerie.Resources;
  */
 public class ParseException extends Exception {
     /**
+     * The subkey from the "parse" bundle to use for the message.
+     */
+    private final String subkey;
+
+    /**
+     * The arguments to format the exception's message with.
+     */
+    private final Object[] arguments;
+
+    /**
      * Constructs a {@code ParseException} with an optional cause.
      * <p>
      * The messaged will be taken from the "parse" resource bundle.
      *
-     * @param key the key for the exception message from "parse"
+     * @param message the internal message of the exception
+     * @param subkey the key for the exception message from "parse"
      * @param cause the cause of the exception
      * @param arguments the arguments for the message
      */
-    public ParseException(String key, Throwable cause, Object... arguments){
-        super(Resources.getString("parse", key, arguments), cause);
+    public ParseException(String message, String subkey, Throwable cause, Object... arguments){
+        super(message, cause);
+        this.subkey = subkey;
+        this.arguments = arguments;
+    }
+
+    @Override
+    public String getLocalizedMessage(){
+        return Resources.getString("parse", this.subkey, this.arguments);
     }
 }

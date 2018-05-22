@@ -68,6 +68,24 @@ public class CFGParser extends Parser {
         return this.isLegacy;
     }
 
+    @Override
+    public Sprite parse() throws ParseException{
+        Sprite sprite = new Sprite();
+        Scanner scanner = new Scanner(this.getInput());
+
+        boolean hasDisplayData = this.parseConfiguration(sprite, scanner);
+
+        if(!sprite.verify()){
+            throw new ParseException("Incomplete sprite data.", "incomplete", null);
+        }
+
+        if(hasDisplayData){
+            sprite.setDisplayData(this.parseDisplayData(scanner));
+        }
+
+        return sprite;
+    }
+
     /**
      * Parses the configuration part of a CFG file.
      * <p>
@@ -105,7 +123,7 @@ public class CFGParser extends Parser {
                     try {
                         sprite.setType(EnumSpriteType.fromInteger(Integer.parseInt(line, 16)));
                     }catch(NumberFormatException exception){
-                        throw new ParseException("cfg.type", exception, 1);
+                        throw new ParseException("Invalid sprite type.", "cfg.type", exception, 1);
                     }
 
                     break;
@@ -114,7 +132,7 @@ public class CFGParser extends Parser {
                     try {
                         sprite.setActsLike(Integer.parseInt(line, 16));
                     }catch(NumberFormatException exception){
-                        throw new ParseException("cfg.actsLike", exception, 2);
+                        throw new ParseException("Invalid acts like setting.", "cfg.actsLike", exception, 2);
                     }
 
                     break;
@@ -123,7 +141,7 @@ public class CFGParser extends Parser {
                     try {
                         sprite.getBehavior().unpack(this.parseIntegers(line, " ", 6));
                     }catch(IllegalArgumentException exception){
-                        throw new ParseException("cfg.behavior", exception, 3);
+                        throw new ParseException("Invalid behavior bytes.", "cfg.behavior", exception, 3);
                     }
 
                     break;
@@ -136,9 +154,9 @@ public class CFGParser extends Parser {
                         sprite.setSecondPropertyByte(properties[1]);
                         sprite.setStatusHandling(EnumStatusHandling.fromBits(properties[1] >> 6));
                     }catch(IllegalArgumentException exception){
-                        throw new ParseException("cfg.properties", exception, 4);
+                        throw new ParseException("Invalid property bytes.", "cfg.properties", exception, 4);
                     }catch(NoSuchElementException exception){
-                        throw new ParseException("cfg.eof", exception, 4);
+                        throw new ParseException("Unexpected end of input.", "cfg.eof", exception, 4);
                     }
 
                     break;
@@ -154,9 +172,9 @@ public class CFGParser extends Parser {
                     try {
                         sprite.setSubtype(EnumSpriteSubType.fromInteger(Integer.parseInt(line, 16)));
                     }catch(NumberFormatException exception){
-                        throw new ParseException("cfg.subtype", exception, 1);
+                        throw new ParseException("Invalid sprite subtype.", "cfg.subtype", exception, 1);
                     }catch(NoSuchElementException exception){
-                        throw new ParseException("cfg.eof", exception, 1);
+                        throw new ParseException("Unexpected end of input", "cfg.eof", exception, 1);
                     }
 
                     break;
@@ -165,9 +183,9 @@ public class CFGParser extends Parser {
                     try {
                         sprite.setUniqueByte(Integer.parseInt(line, 16));
                     }catch(NumberFormatException exception){
-                        throw new ParseException("cfg.uniqueByte", exception, 1);
+                        throw new ParseException("Invalid unique byte.", "cfg.uniqueByte", exception, 1);
                     }catch(NoSuchElementException exception){
-                        throw new ParseException("cfg.eof", exception, 1);
+                        throw new ParseException("Unexpected end of input.", "cfg.eof", exception, 1);
                     }
 
                     break;
@@ -176,9 +194,9 @@ public class CFGParser extends Parser {
                     try {
                         sprite.setExtraBytes(Integer.parseInt(line, 16));
                     }catch(IllegalArgumentException exception){
-                        throw new ParseException("cfg.extraBytes", exception, 1);
+                        throw new ParseException("Invalid extra byte count.", "cfg.extraBytes", exception, 1);
                     }catch(NoSuchElementException exception){
-                        throw new ParseException("cfg.eof", exception, 1);
+                        throw new ParseException("Unexpected end of input.", "cfg.eof", exception, 1);
                     }
 
                     break;
@@ -192,7 +210,7 @@ public class CFGParser extends Parser {
         }
 
         if(lines < 5){
-            throw new ParseException("cfg.tooFew", null, "min", 7);
+            throw new ParseException("Incomplete configuration file.", "cfg.tooFew", null, "min", 7);
         }
 
         if(lines < 7){
@@ -200,24 +218,6 @@ public class CFGParser extends Parser {
         }
 
         return hasDisplayData;
-    }
-
-    @Override
-    public Sprite parse() throws ParseException{
-        Sprite sprite = new Sprite();
-        Scanner scanner = new Scanner(this.getInput());
-
-        boolean hasDisplayData = this.parseConfiguration(sprite, scanner);
-
-        if(!sprite.verify()){
-            throw new ParseException("incomplete", null);
-        }
-
-        if(hasDisplayData){
-            sprite.setDisplayData(this.parseDisplayData(scanner));
-        }
-
-        return sprite;
     }
 
     /**
@@ -258,17 +258,17 @@ public class CFGParser extends Parser {
                 int end = line.indexOf(']');
 
                 if(end < 2){
-                    throw new ParseException("cfg.section.malformed", null, "line", line);
+                    throw new ParseException("Malformed section definition.", "cfg.section.malformed", null, "line", line);
                 }
 
                 section = line.substring(1, end).toLowerCase();
 
                 if(sections.containsKey(section)){
-                    throw new ParseException("cfg.section.duplicate", null, "name", section);
+                    throw new ParseException("Duplicate section definition", "cfg.section.duplicate", null, "name", section);
                 }
             }else{
                 if(section == null){
-                    throw new ParseException("cfg.orphan", null, "line", line);
+                    throw new ParseException("Section data with no preceding section definition", "cfg.orphan", null, "line", line);
                 }
 
                 if(sections.containsKey(section)){
@@ -298,7 +298,7 @@ public class CFGParser extends Parser {
                     SpriteTile tile = new SpriteTile(integers[0], integers[1], integers[2]);
                     ((TileDisplayData)displayData).getTiles().add(tile);
                 }catch(IllegalArgumentException exception){
-                    throw new ParseException("cfg.display.tiles", exception, "list", list);
+                    throw new ParseException("Malformed tile data", "cfg.display.tiles", exception, "list", list);
                 }
             }
         }else{
@@ -310,7 +310,7 @@ public class CFGParser extends Parser {
                 int[] integers = this.parseIntegers(sections.get("position"), ",", 2, 10, 10);
                 displayData.getPosition().setLocation(integers[0], integers[1]);
             }catch(IllegalArgumentException exception){
-                throw new ParseException("cfg.display.position", exception, "list", sections.get("position"));
+                throw new ParseException("Malformed position.", "cfg.display.position", exception, "list", sections.get("position"));
             }
         }
 

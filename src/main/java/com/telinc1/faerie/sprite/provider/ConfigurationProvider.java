@@ -76,14 +76,14 @@ public class ConfigurationProvider extends Provider {
             }
 
             if(this.getParser() == null){
-                throw new LoadingException("The type of the configuration file could not be determined.", "configuration.unknown");
+                throw new LoadingException("Unknown configuration file type.", "configuration.unknown");
             }
 
             this.sprite = this.getParser().parse();
         }catch(IOException exception){
-            throw new LoadingException("The configuration file could not be read.", "configuration.io", exception);
+            throw new LoadingException("Error reading configuration file.", "configuration.io", exception);
         }catch(ParseException exception){
-            throw new LoadingException("The configuration file is malformed.", "configuration.malformed", exception);
+            throw new LoadingException("Malformed configuration file.", "configuration.malformed", exception, "message", exception.getLocalizedMessage());
         }
     }
 
