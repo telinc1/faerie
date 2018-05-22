@@ -20,7 +20,11 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.telinc1.faerie;
+package com.telinc1.faerie.util.notification;
+
+import com.telinc1.faerie.Application;
+import com.telinc1.faerie.Resources;
+import com.telinc1.faerie.util.locale.ILocalizable;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;

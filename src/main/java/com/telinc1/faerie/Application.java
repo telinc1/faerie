@@ -24,6 +24,8 @@ package com.telinc1.faerie;
 
 import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.main.MainWindow;
+import com.telinc1.faerie.util.locale.LocalizedException;
+import com.telinc1.faerie.util.notification.Notifier;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;

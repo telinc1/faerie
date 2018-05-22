@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.telinc1.faerie;
+package com.telinc1.faerie.util.notification;
 
 import javax.swing.JOptionPane;
 

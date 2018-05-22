@@ -20,7 +20,9 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.telinc1.faerie;
+package com.telinc1.faerie.util.locale;
+
+import com.telinc1.faerie.util.notification.EnumSeverity;
 
 /**
  * The {@code LocalizedException} is an unchecked wrapper around any other

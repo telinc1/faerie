@@ -20,7 +20,10 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.telinc1.faerie;
+package com.telinc1.faerie.util.locale;
+
+import com.telinc1.faerie.util.notification.EnumSeverity;
+import com.telinc1.faerie.util.notification.Notifier;
 
 /**
  * The {@code ILocalizable} interface can be implemented by a class to allow it

@@ -20,10 +20,9 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.telinc1.faerie.util;
+package com.telinc1.faerie.util.locale;
 
-import com.telinc1.faerie.EnumSeverity;
-import com.telinc1.faerie.ILocalizable;
+import com.telinc1.faerie.util.notification.EnumSeverity;
 
 /**
  * A {@code Warning} is a localizable message which can be created during the

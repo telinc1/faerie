@@ -43,7 +43,7 @@ import com.telinc1.faerie.sprite.provider.Provider;
 import com.telinc1.faerie.sprite.provider.ProvisionException;
 import com.telinc1.faerie.sprite.provider.SavingException;
 import com.telinc1.faerie.util.TypeUtils;
-import com.telinc1.faerie.util.Warning;
+import com.telinc1.faerie.util.locale.Warning;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;

@@ -30,7 +30,7 @@ import com.telinc1.faerie.sprite.display.DisplayData;
 import com.telinc1.faerie.sprite.display.LabelDisplayData;
 import com.telinc1.faerie.sprite.display.SpriteTile;
 import com.telinc1.faerie.sprite.display.TileDisplayData;
-import com.telinc1.faerie.util.Warning;
+import com.telinc1.faerie.util.locale.Warning;
 
 import java.io.Reader;
 import java.util.HashMap;

@@ -29,7 +29,7 @@ import com.telinc1.faerie.sprite.parser.CFGParser;
 import com.telinc1.faerie.sprite.parser.ParseException;
 import com.telinc1.faerie.sprite.parser.Parser;
 import com.telinc1.faerie.util.TypeUtils;
-import com.telinc1.faerie.util.Warning;
+import com.telinc1.faerie.util.locale.Warning;
 
 import java.io.BufferedWriter;
 import java.io.File;

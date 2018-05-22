@@ -22,6 +22,8 @@
 
 package com.telinc1.faerie;
 
+import com.telinc1.faerie.util.locale.ILocalizable;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 

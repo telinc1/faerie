@@ -23,7 +23,7 @@
 package com.telinc1.faerie.sprite.parser;
 
 import com.telinc1.faerie.sprite.Sprite;
-import com.telinc1.faerie.util.Warning;
+import com.telinc1.faerie.util.locale.Warning;
 
 import java.io.Reader;
 import java.util.ArrayList;
