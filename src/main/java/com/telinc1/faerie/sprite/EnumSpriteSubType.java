@@ -22,6 +22,8 @@
 
 package com.telinc1.faerie.sprite;
 
+import com.telinc1.faerie.Resources;
+
 /**
  * Contains the different possible subtypes of a sprite.
  *
@@ -217,7 +219,7 @@ public enum EnumSpriteSubType {
      *
      * @return the subtype's lower-case name with only the first letter capitalized
      */
-    public String readable(){
-        return this.toString().charAt(0) + this.toString().substring(1).toLowerCase();
+    public String toLocalizedString(){
+        return Resources.getString("main", "sprite.insertion.subtype." + this.toString().toLowerCase());
     }
 }

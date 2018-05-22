@@ -486,18 +486,16 @@ public class MainWindow extends JFrame {
         this.spriteSelectionComboBox = new JComboBox<>();
 
         // Create type combobox.
-        // XXX: should these be localized
         this.typeComboBox = new JComboBox<>(Arrays
             .stream(EnumSpriteType.values())
-            .map(EnumSpriteType::readable)
+            .map(EnumSpriteType::toLocalizedString)
             .toArray()
         );
 
         // Create subtype combobox.
-        // TODO: yeah, better localize them
         this.subtypeComboBox = new JComboBox<>(Arrays
             .stream(EnumSpriteSubType.values())
-            .map(EnumSpriteSubType::readable)
+            .map(EnumSpriteSubType::toLocalizedString)
             .toArray()
         );
 
