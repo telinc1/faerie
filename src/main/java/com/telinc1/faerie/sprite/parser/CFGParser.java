@@ -30,6 +30,7 @@ import com.telinc1.faerie.sprite.display.DisplayData;
 import com.telinc1.faerie.sprite.display.LabelDisplayData;
 import com.telinc1.faerie.sprite.display.SpriteTile;
 import com.telinc1.faerie.sprite.display.TileDisplayData;
+import com.telinc1.faerie.util.Warning;
 
 import java.io.Reader;
 import java.util.HashMap;
@@ -45,27 +46,12 @@ import java.util.Scanner;
  */
 public class CFGParser extends Parser {
     /**
-     * Whether the parsed CFG file was a SpriteTool file.
-     */
-    private boolean isLegacy;
-
-    /**
      * Constructs a CFG file parser.
      *
      * @param input the input file
      */
     public CFGParser(Reader input){
         super(input);
-        this.isLegacy = false;
-    }
-
-    /**
-     * Returns whether the parsed CFG file was a legacy SpriteTool file.
-     *
-     * @return whether the file was a legacy file
-     */
-    public boolean isLegacy(){
-        return this.isLegacy;
     }
 
     @Override
@@ -214,21 +200,10 @@ public class CFGParser extends Parser {
         }
 
         if(lines < 7){
-            this.setLegacy(true);
+            this.getWarnings().add(new Warning("parse", "legacy"));
         }
 
         return hasDisplayData;
-    }
-
-    /**
-     * Sets whether the parsed file was a legacy SpriteTool file.
-     *
-     * @param legacy whether the file was a legacy file
-     * @return the parser, for chaining
-     */
-    private CFGParser setLegacy(boolean legacy){
-        this.isLegacy = legacy;
-        return this;
     }
 
     /**

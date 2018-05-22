@@ -37,13 +37,13 @@ import com.telinc1.faerie.sprite.EnumSpriteType;
 import com.telinc1.faerie.sprite.EnumStatusHandling;
 import com.telinc1.faerie.sprite.Sprite;
 import com.telinc1.faerie.sprite.SpriteBehavior;
-import com.telinc1.faerie.sprite.parser.CFGParser;
 import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
 import com.telinc1.faerie.sprite.provider.LoadingException;
 import com.telinc1.faerie.sprite.provider.Provider;
 import com.telinc1.faerie.sprite.provider.ProvisionException;
 import com.telinc1.faerie.sprite.provider.SavingException;
 import com.telinc1.faerie.util.TypeUtils;
+import com.telinc1.faerie.util.Warning;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -848,18 +848,8 @@ public class MainWindow extends JFrame {
 
         this.setTitle(Resources.getString("main", "title.open", "path", this.getProvider().getInput().getAbsolutePath()));
 
-        // this is the mother of all nesting and botched oop
-        if(this.getProvider() instanceof ConfigurationProvider){
-            ConfigurationProvider configurationProvider = (ConfigurationProvider)this.getProvider();
-
-            if(configurationProvider.getParser() instanceof CFGParser){
-                CFGParser parser = (CFGParser)configurationProvider.getParser();
-
-                // hoo boy finally extracted it
-                if(parser.isLegacy()){
-                    this.getApplication().getNotifier().warn(this, "parse", "legacy");
-                }
-            }
+        for(Warning warning : this.getProvider().getWarnings()){
+            this.getApplication().getNotifier().notify(this, warning);
         }
 
         return this;

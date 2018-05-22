@@ -23,8 +23,11 @@
 package com.telinc1.faerie.sprite.parser;
 
 import com.telinc1.faerie.sprite.Sprite;
+import com.telinc1.faerie.util.Warning;
 
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Parses a sprite configuration file into an actual sprite.
@@ -39,12 +42,18 @@ public abstract class Parser {
     private Reader input;
 
     /**
+     * The list of warnings created during the parsing.
+     */
+    private List<Warning> warnings;
+
+    /**
      * Constructs a parser.
      *
      * @param input the input to the parser
      */
     public Parser(Reader input){
         this.input = input;
+        this.warnings = new ArrayList<>();
     }
 
     /**
@@ -54,6 +63,15 @@ public abstract class Parser {
      */
     public Reader getInput(){
         return this.input;
+    }
+
+    /**
+     * Returns the list of warnings created during the parsing.
+     *
+     * @return any {@link List} of arbitrary {@link Warning} objects
+     */
+    public List<Warning> getWarnings(){
+        return this.warnings;
     }
 
     /**

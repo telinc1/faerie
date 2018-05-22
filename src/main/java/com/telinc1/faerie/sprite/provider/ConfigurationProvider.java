@@ -29,6 +29,7 @@ import com.telinc1.faerie.sprite.parser.CFGParser;
 import com.telinc1.faerie.sprite.parser.ParseException;
 import com.telinc1.faerie.sprite.parser.Parser;
 import com.telinc1.faerie.util.TypeUtils;
+import com.telinc1.faerie.util.Warning;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -110,6 +111,16 @@ public class ConfigurationProvider extends Provider {
         if(index != 0){
             throw new IndexOutOfBoundsException();
         }
+    }
+
+    /**
+     * Returns any warnings created during the provision.
+     *
+     * @return an array of {@link Warning}s which were created
+     */
+    @Override
+    public Warning[] getWarnings(){
+        return this.getParser().getWarnings().toArray(new Warning[0]);
     }
 
     @Override

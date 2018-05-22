@@ -23,6 +23,7 @@
 package com.telinc1.faerie.sprite.provider;
 
 import com.telinc1.faerie.sprite.Sprite;
+import com.telinc1.faerie.util.Warning;
 
 import java.io.File;
 
@@ -114,6 +115,13 @@ public abstract class Provider {
      * @throws IndexOutOfBoundsException if the sprite index is invalid
      */
     public abstract void loadSprite(int index) throws ProvisionException, IndexOutOfBoundsException;
+
+    /**
+     * Returns any warnings created during the provision.
+     *
+     * @return an array of {@link Warning}s which were created
+     */
+    public abstract Warning[] getWarnings();
 
     /**
      * Returns the currently loaded sprite index.
