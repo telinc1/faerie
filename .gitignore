@@ -3,6 +3,7 @@
 .idea/**/tasks.xml
 .idea/**/dictionaries
 .idea/**/shelf
+faerie.ini
 
 # Sensitive or high-churn files
 .idea/**/libraries
