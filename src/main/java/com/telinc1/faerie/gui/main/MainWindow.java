@@ -1305,6 +1305,9 @@ public class MainWindow extends JFrame {
         displayPanel = new JPanel();
         displayPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane.addTab(ResourceBundle.getBundle("com/telinc1/faerie/locale/Main").getString("content.tab.display"), displayPanel);
+        final JLabel label10 = new JLabel();
+        label10.setText("This function is not yet implemented.");
+        displayPanel.add(label10, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         label1.setLabelFor(objectClippingComboBox);
         label2.setLabelFor(spriteClippingComboBox);
         label3.setLabelFor(paletteComboBox);
