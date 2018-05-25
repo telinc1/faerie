@@ -28,8 +28,10 @@ import com.telinc1.faerie.util.notification.EnumSeverity;
  * A {@code Warning} is a localizable message which can be created during the
  * application's lifetime. It is, in a way, a non-throwable, non-error
  * exception.
+ *
+ * @author Telinc1
+ * @since 1.0.0
  */
-
 public class Warning implements ILocalizable {
     /**
      * The resource from which the warning message is read.

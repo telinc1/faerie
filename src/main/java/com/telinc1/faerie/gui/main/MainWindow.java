@@ -267,9 +267,7 @@ public class MainWindow extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent event){
-                if(MainWindow.this.unloadProvider()){
-                    System.exit(0);
-                }
+                MainWindow.this.getApplication().exit(0);
             }
         });
 
@@ -280,7 +278,7 @@ public class MainWindow extends JFrame {
         this.menuBar = new MenuBar(this);
         this.setJMenuBar(this.menuBar);
 
-        this.configurationChooser = new ConfigurationChooser();
+        this.configurationChooser = new ConfigurationChooser(this.getApplication());
     }
 
     /**

@@ -85,7 +85,7 @@ public class Notifier {
         JOptionPane.showMessageDialog(parent, content, title, source.getSeverity().getMessageType());
 
         if(source.getSeverity() == EnumSeverity.FATAL){
-            System.exit(1);
+            this.getApplication().exit(1);
         }
     }
 

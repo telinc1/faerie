@@ -25,10 +25,12 @@ package com.telinc1.faerie;
 import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.main.MainWindow;
 import com.telinc1.faerie.util.locale.LocalizedException;
+import com.telinc1.faerie.util.locale.Warning;
 import com.telinc1.faerie.util.notification.Notifier;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -40,9 +42,19 @@ import java.io.IOException;
  */
 public class Application {
     /**
+     * The {@code File} in which all preferences are stored.
+     */
+    private static final File PREFERENCE_FILE = new File("faerie.ini");
+
+    /**
      * The command line arguments given to the application.
      */
     private final String[] args;
+
+    /**
+     * The preference store for the application.
+     */
+    private final Preferences preferences;
 
     /**
      * The application's {@link Notifier}.
@@ -71,6 +83,7 @@ public class Application {
      */
     private Application(String[] args){
         this.args = args;
+        this.preferences = new Preferences(this);
         this.notifier = new Notifier(this);
         this.exceptionHandler = new ExceptionHandler(this);
 
@@ -79,6 +92,12 @@ public class Application {
         }catch(SecurityException exception){
             this.getExceptionHandler().report(exception);
             this.getNotifier().warn("core", "launch.handler");
+        }
+
+        Warning preferenceWarning = this.getPreferences().load(Application.PREFERENCE_FILE);
+
+        if(preferenceWarning != null){
+            this.getNotifier().notify(preferenceWarning);
         }
 
         try {
@@ -98,6 +117,22 @@ public class Application {
 
         this.window = new MainWindow(this);
         this.getWindow().setVisible(true);
+    }
+
+    /**
+     * Returns the {@link Notifier} for the application.
+     *
+     * @return the {@code Notifier} instance for displaying messages
+     */
+    public Notifier getNotifier(){
+        return this.notifier;
+    }
+
+    /**
+     * Returns the {@code Preferences} object which manages this application.
+     */
+    public Preferences getPreferences(){
+        return this.preferences;
     }
 
     /**
@@ -130,15 +165,6 @@ public class Application {
     }
 
     /**
-     * Returns the {@link Notifier} for the application.
-     *
-     * @return the {@code Notifier} instance for displaying messages
-     */
-    public Notifier getNotifier(){
-        return this.notifier;
-    }
-
-    /**
      * Creates and starts the application by opening the main window.
      *
      * @param args the command line arguments given to the application
@@ -154,5 +180,27 @@ public class Application {
      */
     public String[] getArgs(){
         return this.args;
+    }
+
+    /**
+     * Cleanly exits out of the application with the a status code.
+     */
+    public void exit(int status){
+        if(status == 0){
+            Preferences preferences = this.getPreferences();
+            Warning warning = preferences.store(Application.PREFERENCE_FILE);
+
+            if(warning != null){
+                this.getNotifier().notify(warning);
+            }
+        }
+
+        MainWindow window = this.getWindow();
+
+        if(window != null && !window.unloadProvider() && status == 0){
+            return;
+        }
+
+        System.exit(status);
     }
 }
