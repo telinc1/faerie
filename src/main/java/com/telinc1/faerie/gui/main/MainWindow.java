@@ -441,7 +441,10 @@ public class MainWindow extends JFrame {
         }
 
         if(option == 0){
-            this.getConfigurationChooser().setSelectedFile(this.getProvider().getInput());
+            if(this.getProvider().getInput() != null){
+                this.getConfigurationChooser().setSelectedFile(this.getProvider().getInput());
+            }
+
             this.saveFile();
         }
 
@@ -519,7 +522,8 @@ public class MainWindow extends JFrame {
      * Saves the current provider to the given file.
      * <p>
      * If a {@code null} {@code file} parameter is provided, the currently
-     * opened file will be save in-place.
+     * opened file will be save in-place. If no file is currently open, a file
+     * chooser will be shown to the user.
      *
      * @param file the file to save to
      */
@@ -533,7 +537,11 @@ public class MainWindow extends JFrame {
 
         try {
             if(file == null){
-                provider.save();
+                if(provider.getInput() != null){
+                    provider.save(provider.getInput());
+                }else{
+                    this.saveFile();
+                }
             }else{
                 provider.save(file);
             }
@@ -704,6 +712,18 @@ public class MainWindow extends JFrame {
     }
 
     /**
+     * Creates a new {@link ConfigurationProvider} with no loaded file.
+     */
+    public void createNew(){
+        if(!this.unloadProvider()){
+            return;
+        }
+
+        ConfigurationProvider provider = new ConfigurationProvider(null);
+        this.setProvider(provider);
+    }
+
+    /**
      * Opens a new user-selected file.
      */
     public void openFile(){
@@ -842,7 +862,11 @@ public class MainWindow extends JFrame {
             return this.setProvider(null);
         }
 
-        this.setTitle(Resources.getString("main", "title.open", "path", this.getProvider().getInput().getAbsolutePath()));
+        if(this.getProvider().getInput() != null){
+            this.setTitle(Resources.getString("main", "title.open", "path", this.getProvider().getInput().getAbsolutePath()));
+        }else{
+            this.setTitle(Resources.getString("main", "title"));
+        }
 
         for(Warning warning : this.getProvider().getWarnings()){
             this.getApplication().getNotifier().notify(this, warning);

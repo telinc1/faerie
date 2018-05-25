@@ -39,38 +39,11 @@ import java.io.File;
  */
 public abstract class Provider {
     /**
-     * The input file to this {@code Provider}.
-     */
-    private File input;
-
-    /**
-     * Constructs a {@code Provider} for the given {@code File}.
-     *
-     * @param input the input file to the provider
-     * @throws LoadingException if the file is unreadable or malformed
-     */
-    public Provider(File input) throws LoadingException{
-        this.input = input;
-    }
-
-    /**
      * Returns the original input {@code File}.
      *
-     * @return the input
+     * @return the nullable input
      */
-    public File getInput(){
-        return this.input;
-    }
-
-    /**
-     * Saves all available sprites to the {@code Provider}'s original input
-     * file.
-     *
-     * @see Provider#save(File)
-     */
-    public void save() throws SavingException{
-        this.save(this.getInput());
-    }
+    public abstract File getInput();
 
     /**
      * Saves every available sprite to the given file.
@@ -94,8 +67,7 @@ public abstract class Provider {
      * the indexes used by {@link Provider#loadSprite(int)}.
      * <p>
      * There must always be at least one sprite available. If no sprites are
-     * available, the {@link Provider#Provider(File) constructor} should throw
-     * a {@link LoadingException}.
+     * available, the constructor should throw a {@link LoadingException}.
      *
      * @return an array of human-readable sprite names
      */

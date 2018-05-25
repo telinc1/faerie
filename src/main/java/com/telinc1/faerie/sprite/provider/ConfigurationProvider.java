@@ -55,6 +55,11 @@ public class ConfigurationProvider extends Provider {
     private Sprite sprite;
 
     /**
+     * The input file to this {@code Provider}.
+     */
+    private File input;
+
+    /**
      * Stores whether the loaded sprite has been touched.
      */
     private boolean isModified;
@@ -66,8 +71,14 @@ public class ConfigurationProvider extends Provider {
      * @throws LoadingException if the file is unreadable or malformed
      */
     public ConfigurationProvider(File input) throws LoadingException{
-        super(input);
+        super();
+        this.input = input;
         this.isModified = false;
+
+        if(this.getInput() == null){
+            this.sprite = new Sprite();
+            return;
+        }
 
         try(FileReader reader = new FileReader(input)) {
             String extension = TypeUtils.getExtension(this.getInput());
@@ -86,6 +97,11 @@ public class ConfigurationProvider extends Provider {
         }catch(ParseException exception){
             throw new LoadingException("Malformed configuration file.", "configuration.malformed", exception, "message", exception.getLocalizedMessage());
         }
+    }
+
+    @Override
+    public File getInput(){
+        return this.input;
     }
 
     /**
@@ -113,32 +129,6 @@ public class ConfigurationProvider extends Provider {
         }
     }
 
-    /**
-     * Returns any warnings created during the provision.
-     *
-     * @return an array of {@link Warning}s which were created
-     */
-    @Override
-    public Warning[] getWarnings(){
-        return this.getParser().getWarnings().toArray(new Warning[0]);
-    }
-
-    @Override
-    public int getLoadedIndex(){
-        return 0;
-    }
-
-    @Override
-    public Sprite getCurrentSprite(){
-        return this.sprite;
-    }
-
-    @Override
-    public Sprite startModification(){
-        this.isModified = true;
-        return this.getCurrentSprite();
-    }
-
     @Override
     public void save(File file) throws SavingException{
         String extension = TypeUtils.getExtension(file);
@@ -164,7 +154,38 @@ public class ConfigurationProvider extends Provider {
             throw new SavingException("The configuration file couldn't written to.", exception);
         }
 
+        this.input = file;
         this.isModified = false;
+    }
+
+    @Override
+    public int getLoadedIndex(){
+        return 0;
+    }
+
+    @Override
+    public Sprite getCurrentSprite(){
+        return this.sprite;
+    }
+
+    @Override
+    public Sprite startModification(){
+        this.isModified = true;
+        return this.getCurrentSprite();
+    }
+
+    /**
+     * Returns any warnings created during the provision.
+     *
+     * @return an array of {@link Warning}s which were created
+     */
+    @Override
+    public Warning[] getWarnings(){
+        if(this.getParser() == null){
+            return new Warning[0];
+        }
+
+        return this.getParser().getWarnings().toArray(new Warning[0]);
     }
 
     @Override

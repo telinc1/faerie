@@ -99,6 +99,9 @@ public class Sprite {
         this.subtype = EnumSpriteSubType.REGULAR;
         this.actsLike = 0x36;
         this.spriteBehavior = new SpriteBehavior();
+        this.statusHandling = EnumStatusHandling.HANDLE_STUNNED;
+        this.firstASMFile = "";
+        this.secondASMFile = "";
         this.displayData = null;
     }
 
