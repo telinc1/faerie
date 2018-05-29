@@ -28,6 +28,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,6 +47,12 @@ public class Preferences {
     public static final String LAST_DIRECTORY = "last_directory";
 
     /**
+     * The name of the configuration file, relative to the directory in which
+     * Faerie is launched.
+     */
+    private static final String FILE_NAME = "faerie.ini";
+
+    /**
      * The {@code Application} which this class backs.
      */
     private final Application application;
@@ -54,6 +61,11 @@ public class Preferences {
      * All of the preferences stored in this object.
      */
     private final Map<String, String> preferences;
+
+    /**
+     * The configuration file for the object.
+     */
+    private File file;
 
     /**
      * Construct a new {@code Preferences} manager for an {@link Application}.
@@ -68,7 +80,13 @@ public class Preferences {
      *
      * @return any {@link Warning}s created while reading the file
      */
-    public Warning load(File file){
+    public Warning load(){
+        File file = this.getFile();
+
+        if(file == null){
+            return new Warning("core", "preferences.file");
+        }
+
         if(!file.exists()){
             return null;
         }
@@ -108,26 +126,26 @@ public class Preferences {
     }
 
     /**
-     * Stores the preferences to a given {@code File}.
-     *
-     * @return any {@link Warning}s created while writing the file
+     * Returns the {@link File} which stores preferences, or {@code null} if
+     * it isn't accessible.
      */
-    public Warning store(File file){
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            for(Map.Entry<String, String> entry : this.preferences.entrySet()){
-                writer.write(String.format("%s=%s%n", entry.getKey(), entry.getValue()));
-            }
+    private File getFile(){
+        if(this.file == null){
+            try {
+                String path = Application.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+                File file = new File(path);
 
-            writer.flush();
-        }catch(IOException exception){
-            this.getApplication().getExceptionHandler().report(exception);
-            return new Warning("core", "preferences.store.io");
-        }catch(SecurityException exception){
-            this.getApplication().getExceptionHandler().report(exception);
-            return new Warning("core", "preferences.store.security");
+                if(!file.isDirectory()){
+                    path = file.getParent();
+                }
+
+                this.file = new File(path + "/" + Preferences.FILE_NAME);
+            }catch(NullPointerException | URISyntaxException | SecurityException exception){
+                return null;
+            }
         }
 
-        return null;
+        return this.file;
     }
 
     /**
@@ -170,5 +188,34 @@ public class Preferences {
     public Preferences set(String key, String value){
         this.preferences.put(key, value);
         return this;
+    }
+
+    /**
+     * Stores the preferences to a given {@code File}.
+     *
+     * @return any {@link Warning}s created while writing the file
+     */
+    public Warning store(){
+        File file = this.getFile();
+
+        if(file == null){
+            return new Warning("core", "preferences.file");
+        }
+
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for(Map.Entry<String, String> entry : this.preferences.entrySet()){
+                writer.write(String.format("%s=%s%n", entry.getKey(), entry.getValue()));
+            }
+
+            writer.flush();
+        }catch(IOException exception){
+            this.getApplication().getExceptionHandler().report(exception);
+            return new Warning("core", "preferences.store.io");
+        }catch(SecurityException exception){
+            this.getApplication().getExceptionHandler().report(exception);
+            return new Warning("core", "preferences.store.security");
+        }
+
+        return null;
     }
 }

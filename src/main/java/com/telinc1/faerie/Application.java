@@ -30,7 +30,6 @@ import com.telinc1.faerie.util.notification.Notifier;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -41,11 +40,6 @@ import java.io.IOException;
  * @since 1.0.0
  */
 public class Application {
-    /**
-     * The {@code File} in which all preferences are stored.
-     */
-    private static final File PREFERENCE_FILE = new File("faerie.ini");
-
     /**
      * The command line arguments given to the application.
      */
@@ -94,7 +88,7 @@ public class Application {
             this.getNotifier().warn("core", "launch.handler");
         }
 
-        Warning preferenceWarning = this.getPreferences().load(Application.PREFERENCE_FILE);
+        Warning preferenceWarning = this.getPreferences().load();
 
         if(preferenceWarning != null){
             this.getNotifier().notify(preferenceWarning);
@@ -188,7 +182,7 @@ public class Application {
     public void exit(int status){
         if(status == 0){
             Preferences preferences = this.getPreferences();
-            Warning warning = preferences.store(Application.PREFERENCE_FILE);
+            Warning warning = preferences.store();
 
             if(warning != null){
                 this.getNotifier().notify(warning);
