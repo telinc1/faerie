@@ -42,6 +42,11 @@ import java.util.stream.Stream;
  */
 public class Preferences {
     /**
+     * The preference key for storing the scrolling speed in scroll panes.
+     */
+    public static final String SCROLL_SPEED = "scroll_speed";
+
+    /**
      * The preference key for storing the last used directory in file choosers.
      */
     public static final String LAST_DIRECTORY = "last_directory";
@@ -165,6 +170,28 @@ public class Preferences {
     }
 
     /**
+     * Retrieves the value for a key. If the key doesn't exist, it
+     * will be set to a default (fallback) value.
+     *
+     * @return the {@code int} for the key, or the {@code fallback} if
+     * it doesn't exist
+     */
+    public int get(String key, int fallback){
+        if(this.has(key)){
+            String value = this.get(key);
+
+            try {
+                return Integer.valueOf(value);
+            }catch(NumberFormatException exception){
+                // ignore and drop down to the fallback
+            }
+        }
+
+        this.set(key, fallback);
+        return fallback;
+    }
+
+    /**
      * Checks if a key exists in the preferences.
      */
     public boolean has(String key){
@@ -187,6 +214,16 @@ public class Preferences {
      */
     public Preferences set(String key, String value){
         this.preferences.put(key, value);
+        return this;
+    }
+
+    /**
+     * Sets the integer value of a key.
+     *
+     * @return the {@code Preferences}, for chaining
+     */
+    public Preferences set(String key, int value){
+        this.preferences.put(key, Integer.toString(value));
         return this;
     }
 

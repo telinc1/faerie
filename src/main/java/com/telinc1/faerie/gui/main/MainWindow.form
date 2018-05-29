@@ -38,7 +38,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <scrollpane id="98351">
+          <scrollpane id="98351" binding="spriteScrollPane">
             <constraints>
               <tabbedpane title-resource-bundle="com/telinc1/faerie/locale/Main" title-key="content.tab.sprite"/>
             </constraints>

@@ -25,6 +25,7 @@ package com.telinc1.faerie.gui.main;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.telinc1.faerie.Application;
+import com.telinc1.faerie.Preferences;
 import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.gui.DecimalFormatter;
 import com.telinc1.faerie.gui.HexadecimalFormatter;
@@ -110,6 +111,8 @@ public class MainWindow extends JFrame {
     private JTabbedPane tabbedPane;
     private JPanel spritePanel;
     private JPanel displayPanel;
+
+    private JScrollPane spriteScrollPane;
 
     private JComboBox<String> spriteSelectionComboBox;
 
@@ -285,6 +288,10 @@ public class MainWindow extends JFrame {
      * Configures UI components after they have been created.
      */
     private void configureUIComponents(){
+        this.spriteScrollPane.getVerticalScrollBar().setUnitIncrement(
+            this.getApplication().getPreferences().get(Preferences.SCROLL_SPEED, 14)
+        );
+
         this.addComboBoxListener(this.typeComboBox, index -> {
             if(index == this.getProvider().getCurrentSprite().getType().asInteger()){
                 return;
@@ -409,6 +416,7 @@ public class MainWindow extends JFrame {
      *
      * @return whether the provider was unloaded
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean unloadProvider(){
         if(this.getProvider() == null){
             return true;
@@ -991,12 +999,12 @@ public class MainWindow extends JFrame {
         panel1.add(spriteSelectionComboBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         tabbedPane = new JTabbedPane();
         contentPanel.add(tabbedPane, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
-        final JScrollPane scrollPane1 = new JScrollPane();
-        scrollPane1.setEnabled(true);
-        tabbedPane.addTab(ResourceBundle.getBundle("com/telinc1/faerie/locale/Main").getString("content.tab.sprite"), scrollPane1);
+        spriteScrollPane = new JScrollPane();
+        spriteScrollPane.setEnabled(true);
+        tabbedPane.addTab(ResourceBundle.getBundle("com/telinc1/faerie/locale/Main").getString("content.tab.sprite"), spriteScrollPane);
         spritePanel = new JPanel();
         spritePanel.setLayout(new GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
-        scrollPane1.setViewportView(spritePanel);
+        spriteScrollPane.setViewportView(spritePanel);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(6, 2, new Insets(0, 0, 0, 0), -1, 0));
         panel2.setEnabled(true);
