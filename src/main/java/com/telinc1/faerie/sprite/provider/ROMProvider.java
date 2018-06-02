@@ -22,6 +22,8 @@
 
 package com.telinc1.faerie.sprite.provider;
 
+import com.telinc1.faerie.sprite.EnumSpriteSubType;
+import com.telinc1.faerie.sprite.EnumSpriteType;
 import com.telinc1.faerie.sprite.Sprite;
 import com.telinc1.faerie.util.locale.Warning;
 
@@ -31,7 +33,9 @@ import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A {@code ROMProvider} provides all of the sprites from a Super Mario World
@@ -57,6 +61,21 @@ public class ROMProvider extends Provider {
     private File input;
 
     /**
+     * The index of the sprite which is currently loaded.
+     */
+    private int index;
+
+    /**
+     * An array of all currently loaded sprites.
+     */
+    private Sprite[] sprites;
+
+    /**
+     * A {@code Set} of the sprites which have been modified.
+     */
+    private Set<Sprite> modified;
+
+    /**
      * Constructs a {@code ROMProvider} for the given ROM file.
      *
      * @param input the input file to the provider
@@ -66,6 +85,8 @@ public class ROMProvider extends Provider {
     public ROMProvider(File input) throws LoadingException{
         super();
         this.input = input;
+        this.sprites = new Sprite[0xFF];
+        this.modified = new HashSet<>();
 
         if(this.getInput() == null){
             throw new NullPointerException("A ROM image file must be provided.");
@@ -86,13 +107,58 @@ public class ROMProvider extends Provider {
     }
 
     @Override
+    public void save(File file) throws SavingException{
+        throw new SavingException("Unimplemented.");
+    }
+
+    @Override
     public File getInput(){
         return this.input;
     }
 
     @Override
-    public void save(File file) throws SavingException{
+    public void loadSprite(int index) throws ProvisionException, IndexOutOfBoundsException{
+        if(index < 0 || index > this.sprites.length){
+            throw new IndexOutOfBoundsException();
+        }
 
+        if(this.sprites[index] != null){
+            this.index = index;
+            return;
+        }
+
+        Sprite sprite = new Sprite();
+        sprite.setType(EnumSpriteType.TWEAK);
+        sprite.setActsLike(index);
+
+        if(index <= 0xC8){
+            sprite.setSubtype(EnumSpriteSubType.REGULAR);
+
+            try(RandomAccessFile rom = new RandomAccessFile(this.getInput(), "r")) {
+                sprite.getBehavior().unpack(new int[]{
+                    this.readByte(rom, 0x3F26C + index),
+                    this.readByte(rom, 0x3F335 + index),
+                    this.readByte(rom, 0x3F3FE + index),
+                    this.readByte(rom, 0x3F4C7 + index),
+                    this.readByte(rom, 0x3F590 + index),
+                    this.readByte(rom, 0x3F659 + index)
+                });
+            }catch(IOException exception){
+                exception.printStackTrace();
+                throw new ProvisionException("Error reading the ROM file.", exception);
+            }
+        }else if(index == 0xC9 || index == 0xCA){
+            sprite.setSubtype(EnumSpriteSubType.SHOOTER);
+        }else if(index <= 0xD9){
+            sprite.setSubtype(EnumSpriteSubType.GENERATOR);
+        }else if(index <= 0xE6){
+            sprite.setSubtype(EnumSpriteSubType.INITIALIZER);
+        }else{
+            sprite.setSubtype(EnumSpriteSubType.SCROLLER);
+        }
+
+        this.index = index;
+        this.sprites[index] = sprite;
     }
 
     @Override
@@ -100,9 +166,18 @@ public class ROMProvider extends Provider {
         return ROMProvider.NAMES.toArray(new String[0]);
     }
 
-    @Override
-    public void loadSprite(int index) throws ProvisionException, IndexOutOfBoundsException{
-        throw new ProvisionException();
+    /**
+     * Reads an unsigned byte at the given PC offset in a readable ROM image.
+     *
+     * @param rom the opened readable ROM image to read from
+     * @param pc the unheadered PC offset to read, which will automatically be
+     * adjusted if a header is found
+     * @return the unsigned byte at the given offset
+     * @throws IOException if reading from the file fails
+     */
+    private int readByte(RandomAccessFile rom, long pc) throws IOException{
+        rom.seek(pc + (rom.length() & 0x200));
+        return rom.readUnsignedByte();
     }
 
     @Override
@@ -112,21 +187,24 @@ public class ROMProvider extends Provider {
 
     @Override
     public int getLoadedIndex(){
-        return 0;
+        return this.index;
     }
 
     @Override
     public Sprite getCurrentSprite(){
-        return null;
+        return this.sprites[this.getLoadedIndex()];
     }
 
     @Override
     public Sprite startModification(){
-        return null;
+        Sprite sprite = this.getCurrentSprite();
+        this.modified.add(sprite);
+
+        return sprite;
     }
 
     @Override
     public boolean isModified(){
-        return false;
+        return !this.modified.isEmpty();
     }
 }

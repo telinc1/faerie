@@ -76,7 +76,7 @@ public abstract class Provider {
     /**
      * Loads the given sprite into the {@code Provider}.
      * <p>
-     * The index must matches the indexes from
+     * The index must match the indexes from
      * {@link Provider#getAvailableSprites()}.
      * <p>
      * Index 0 should always be valid. Negative indexes should always be
