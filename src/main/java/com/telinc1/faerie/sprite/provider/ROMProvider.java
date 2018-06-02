@@ -25,6 +25,7 @@ package com.telinc1.faerie.sprite.provider;
 import com.telinc1.faerie.sprite.EnumSpriteSubType;
 import com.telinc1.faerie.sprite.EnumSpriteType;
 import com.telinc1.faerie.sprite.Sprite;
+import com.telinc1.faerie.util.TypeUtils;
 import com.telinc1.faerie.util.locale.Warning;
 
 import java.io.File;
@@ -90,6 +91,10 @@ public class ROMProvider extends Provider {
 
         if(this.getInput() == null){
             throw new NullPointerException("A ROM image file must be provided.");
+        }
+
+        if(!TypeUtils.isROM(this.getInput())){
+            throw new LoadingException("Unknown ROM image type.", "rom.type");
         }
 
         try(RandomAccessFile rom = new RandomAccessFile(this.getInput(), "r")) {
