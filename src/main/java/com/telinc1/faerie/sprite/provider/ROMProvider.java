@@ -113,7 +113,45 @@ public class ROMProvider extends Provider {
 
     @Override
     public void save(File file) throws SavingException{
-        throw new SavingException("Unimplemented.");
+        if(!TypeUtils.isROM(file)){
+            throw new SavingException("The file is not a recognized SNES ROM image.");
+        }
+
+        if(!file.exists()){
+            throw new SavingException("The file must already exist.");
+        }
+
+        try(RandomAccessFile rom = new RandomAccessFile(file, "rw")) {
+            long offset = rom.length() & 0x200;
+            byte[] title = new byte[21];
+            rom.seek(0x7FC0 + offset);
+            rom.read(title);
+
+            if(!Arrays.equals(ROMProvider.ROM_TITLE, title)){
+                throw new SavingException("Wrong ROM title.");
+            }
+
+            for(Sprite sprite : this.modified){
+                if(!sprite.hasBehavior()){
+                    continue;
+                }
+
+                int index = sprite.getActsLike();
+                int[] behavior = sprite.getBehavior().pack();
+
+                this.writeByte(rom, 0x3F26C + index, behavior[0]);
+                this.writeByte(rom, 0x3F335 + index, behavior[1]);
+                this.writeByte(rom, 0x3F3FE + index, behavior[2]);
+                this.writeByte(rom, 0x3F4C7 + index, behavior[3]);
+                this.writeByte(rom, 0x3F590 + index, behavior[4]);
+                this.writeByte(rom, 0x3F659 + index, behavior[5]);
+            }
+        }catch(IOException exception){
+            throw new SavingException("Error reading the ROM file.", exception);
+        }
+
+        this.input = file;
+        this.modified.clear();
     }
 
     @Override
@@ -183,6 +221,20 @@ public class ROMProvider extends Provider {
     private int readByte(RandomAccessFile rom, long pc) throws IOException{
         rom.seek(pc + (rom.length() & 0x200));
         return rom.readUnsignedByte();
+    }
+
+    /**
+     * Writes an unsigned byte to the given PC offset of a readable ROM image.
+     *
+     * @param rom the opened readable ROM image to read from
+     * @param pc the unheadered PC offset to read, which will automatically be
+     * adjusted if a header is found
+     * @param data the byte to write
+     * @throws IOException if writing to the file fails
+     */
+    private void writeByte(RandomAccessFile rom, long pc, int data) throws IOException{
+        rom.seek(pc + (rom.length() & 0x200));
+        rom.writeByte(data & 0xFF);
     }
 
     @Override
