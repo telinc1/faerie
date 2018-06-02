@@ -42,6 +42,7 @@ import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
 import com.telinc1.faerie.sprite.provider.LoadingException;
 import com.telinc1.faerie.sprite.provider.Provider;
 import com.telinc1.faerie.sprite.provider.ProvisionException;
+import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.sprite.provider.SavingException;
 import com.telinc1.faerie.util.TypeUtils;
 import com.telinc1.faerie.util.locale.Warning;
@@ -752,7 +753,12 @@ public class MainWindow extends JFrame {
                     this.getApplication().getNotifier().notify(this, exception);
                 }
             }else if(TypeUtils.isROM(file)){
-                // TODO: open and edit ROM files
+                try {
+                    ROMProvider provider = new ROMProvider(file);
+                    this.setProvider(provider);
+                }catch(LoadingException exception){
+                    this.getApplication().getNotifier().notify(this, exception);
+                }
             }else{
                 this.getApplication().getNotifier().error(this, "file", "load.type");
             }

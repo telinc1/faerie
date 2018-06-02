@@ -24,13 +24,16 @@ package com.telinc1.faerie;
 
 import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.main.MainWindow;
+import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.util.locale.LocalizedException;
 import com.telinc1.faerie.util.locale.Warning;
 import com.telinc1.faerie.util.notification.Notifier;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * This is the main class of Faerie, responsible for opening the main program
@@ -107,6 +110,16 @@ public class Application {
             this.getPalette().loadMW3File(Resources.getResource("data/generic.mw3"));
         }catch(IOException exception){
             throw new LocalizedException(exception, "core", "launch.palette");
+        }
+
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.getResource("data/sprites/list.txt")))) {
+            String line;
+
+            while((line = reader.readLine()) != null){
+                ROMProvider.NAMES.add(line);
+            }
+        }catch(IOException exception){
+            throw new LocalizedException(exception, "core", "launch.sprites");
         }
 
         this.window = new MainWindow(this);

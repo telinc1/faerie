@@ -42,6 +42,8 @@ import java.io.IOException;
  * configuration file.
  *
  * @see com.telinc1.faerie.sprite.parser.Parser
+ * @author Telinc1
+ * @since 1.0.0
  */
 public class ConfigurationProvider extends Provider {
     /**
@@ -55,7 +57,7 @@ public class ConfigurationProvider extends Provider {
     private Sprite sprite;
 
     /**
-     * The input file to this {@code Provider}.
+     * The input file to this {@code ConfigurationProvider}.
      */
     private File input;
 
