@@ -45,7 +45,9 @@ import com.telinc1.faerie.sprite.provider.ProvisionException;
 import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.sprite.provider.SavingException;
 import com.telinc1.faerie.util.TypeUtils;
+import com.telinc1.faerie.util.locale.LocalizedException;
 import com.telinc1.faerie.util.locale.Warning;
+import com.telinc1.faerie.util.notification.EnumSeverity;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -292,6 +294,19 @@ public class MainWindow extends JFrame {
         this.spriteScrollPane.getVerticalScrollBar().setUnitIncrement(
             this.getApplication().getPreferences().get(Preferences.SCROLL_SPEED, 14)
         );
+
+        this.addComboBoxListener(this.spriteSelectionComboBox, index -> {
+            try {
+                this.loadSprite(index);
+            }catch(RuntimeException exception){
+                this.getApplication().getNotifier().notify(this, new LocalizedException(
+                    exception,
+                    EnumSeverity.ERROR,
+                    "main", "provision",
+                    "message", exception.getMessage()
+                ));
+            }
+        });
 
         this.addComboBoxListener(this.typeComboBox, index -> {
             if(index == this.getProvider().getCurrentSprite().getType().asInteger()){
@@ -867,7 +882,6 @@ public class MainWindow extends JFrame {
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(availableSprites);
             this.spriteSelectionComboBox.setModel(model);
             this.spriteSelectionComboBox.setSelectedIndex(0);
-            this.spriteClippingComboBox.setEnabled(availableSprites.length > 1);
 
             this.loadSprite(0);
         }catch(ProvisionException exception){
@@ -912,20 +926,22 @@ public class MainWindow extends JFrame {
      * @return the window, for chaining
      */
     public MainWindow updateGUI(){
+        Provider provider = this.getProvider();
         this.setInputEnabled(false);
 
-        if(this.getProvider() == null){
+        if(provider == null){
             return this;
         }
 
-        Sprite sprite = this.getProvider().getCurrentSprite();
+        this.spriteSelectionComboBox.setEnabled(provider.getAvailableSprites().length > 1);
+
+        Sprite sprite = provider.getCurrentSprite();
         EnumSpriteSubType subtype = sprite.getSubType();
 
-        // TODO: disable type and subtype selection for ROMs
-        this.typeComboBox.setEnabled(true);
-        this.subtypeComboBox.setEnabled(true);
+        this.typeComboBox.setEnabled(!(provider instanceof ROMProvider));
+        this.subtypeComboBox.setEnabled(!(provider instanceof ROMProvider));
 
-        if(sprite.hasActsLike()){
+        if(sprite.hasActsLike() && !(provider instanceof ROMProvider)){
             this.actsLikeTextField.setEnabled(true);
         }
 

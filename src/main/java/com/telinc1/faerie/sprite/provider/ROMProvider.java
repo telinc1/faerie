@@ -85,7 +85,7 @@ public class ROMProvider extends Provider {
     public ROMProvider(File input) throws LoadingException{
         super();
         this.input = input;
-        this.sprites = new Sprite[0xFF];
+        this.sprites = new Sprite[256];
         this.modified = new HashSet<>();
 
         if(this.getInput() == null){
