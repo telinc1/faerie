@@ -22,22 +22,91 @@
 
 package com.telinc1.faerie.sprite.provider;
 
+import com.telinc1.faerie.util.locale.ILocalizable;
+import com.telinc1.faerie.util.notification.EnumSeverity;
+
 /**
  * A {@code ProvisionException} is thrown whenever a {@link Provider} is, for
- * any reason, unable to fully or properly provide a sprite.
+ * whatever reason, unable to fully or properly provide a sprite.
  */
-public class ProvisionException extends RuntimeException {
-    public ProvisionException(){}
+public class ProvisionException extends Exception implements ILocalizable {
+    /**
+     * The exception's subkey from the "file" resource bundle.
+     */
+    private final String subkey;
 
-    public ProvisionException(String message){
-        super(message);
+    /**
+     * The arguments to pass to the exception's message.
+     */
+    private final Object[] arguments;
+
+    /**
+     * Create a {@code ProvisionException} with no defined message.
+     */
+    public ProvisionException(){
+        super();
+        this.subkey = null;
+        this.arguments = new Object[0];
     }
 
-    public ProvisionException(String message, Throwable cause){
-        super(message, cause);
-    }
-
+    /**
+     * Create a {@code ProvisionException} with no defined message and known
+     * cause.
+     *
+     * @param cause the cause of the exception
+     */
     public ProvisionException(Throwable cause){
         super(cause);
+        this.subkey = null;
+        this.arguments = new Object[0];
+    }
+
+    /**
+     * Create a {@code ProvisionException} with a defined message and localizable
+     * subkey.
+     *
+     * @param message the error message of the exception
+     * @param subkey the subkey used when showing the exception to the user
+     * @param arguments the arguments to pass to the exception's message
+     */
+    public ProvisionException(String message, String subkey, Object... arguments){
+        super(message);
+        this.subkey = subkey;
+        this.arguments = arguments;
+    }
+
+    /**
+     * Create a {@code ProvisionException} with a defined message, localizable
+     * subkey, and cause.
+     *
+     * @param message the error message of the exception
+     * @param subkey the subkey used when showing the exception to the user
+     * @param cause the cause of the exception
+     * @param arguments the arguments to pass to the exception's message
+     */
+    public ProvisionException(String message, String subkey, Throwable cause, Object... arguments){
+        super(message, cause);
+        this.subkey = subkey;
+        this.arguments = arguments;
+    }
+
+    @Override
+    public String getResource(){
+        return "file";
+    }
+
+    @Override
+    public EnumSeverity getSeverity(){
+        return EnumSeverity.ERROR;
+    }
+
+    @Override
+    public String getSubkey(){
+        return this.subkey == null ? "provision" : "provision." + this.subkey;
+    }
+
+    @Override
+    public Object[] getArguments(){
+        return this.arguments;
     }
 }

@@ -187,8 +187,7 @@ public class ROMProvider extends Provider {
                     this.readByte(rom, 0x3F659 + index)
                 });
             }catch(IOException exception){
-                exception.printStackTrace();
-                throw new ProvisionException("Error reading the ROM file.", exception);
+                throw new ProvisionException("Error reading the file.", "rom.io", exception);
             }
         }else if(index == 0xC9 || index == 0xCA){
             sprite.setSubtype(EnumSpriteSubType.SHOOTER);
