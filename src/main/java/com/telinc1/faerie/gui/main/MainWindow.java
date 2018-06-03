@@ -461,7 +461,7 @@ public class MainWindow extends JFrame {
                 this.getConfigurationChooser().setSelectedFile(this.getProvider().getInput());
             }
 
-            this.saveFile();
+            this.showSaveDialog();
         }
 
         this.setProvider(null);
@@ -478,9 +478,9 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Saves the current provider to a user-selected file.
+     * Shows a save dialog and saves the current provider to the selected file.
      */
-    public void saveFile(){
+    public void showSaveDialog(){
         Provider provider = this.getProvider();
 
         if(provider == null){
@@ -489,7 +489,7 @@ public class MainWindow extends JFrame {
         }
 
         if(this.getConfigurationChooser().showSave(this) == JFileChooser.APPROVE_OPTION){
-            this.save(this.getConfigurationChooser().getSelectedFile());
+            this.saveProvider(this.getConfigurationChooser().getSelectedFile());
         }
 
         this.getConfigurationChooser().setSelectedFile(null);
@@ -543,7 +543,7 @@ public class MainWindow extends JFrame {
      *
      * @param file the file to save to
      */
-    public void save(File file){
+    public void saveProvider(File file){
         Provider provider = this.getProvider();
 
         if(provider == null){
@@ -555,10 +555,13 @@ public class MainWindow extends JFrame {
 
         try {
             if(file == null){
-                if(provider.getInput() != null){
-                    replacement = provider.save(provider.getInput());
+                File input = provider.getInput();
+
+                if(input != null){
+                    replacement = provider.save(input);
                 }else{
-                    this.saveFile();
+                    this.showSaveDialog();
+                    return;
                 }
             }else{
                 replacement = provider.save(file);
@@ -734,9 +737,10 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Creates a new {@link ConfigurationProvider} with no loaded file.
+     * Creates and loads a new {@link ConfigurationProvider} with no loaded
+     * file.
      */
-    public void createNew(){
+    public void createBlankFile(){
         if(!this.unloadProvider()){
             return;
         }
@@ -746,9 +750,10 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Opens a new user-selected file.
+     * Shows an open dialog and opens the selected file through the appropriate
+     * provider.
      */
-    public void openFile(){
+    public void showOpenDialog(){
         if(!this.unloadProvider()){
             return;
         }

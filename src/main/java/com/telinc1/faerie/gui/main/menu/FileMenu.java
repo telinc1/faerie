@@ -50,10 +50,10 @@ public class FileMenu extends Menu {
     void setupMenu(){
         MainWindow window = this.getMenuBar().getWindow();
 
-        this.addItem("new", KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, event -> window.createNew());
-        this.addItem("open", KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK, event -> window.openFile());
-        this.addItem("save", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK, event -> window.save(null));
-        this.addItem("saveAs", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, event -> window.saveFile());
+        this.addItem("new", KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, event -> window.createBlankFile());
+        this.addItem("open", KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK, event -> window.showOpenDialog());
+        this.addItem("save", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK, event -> window.saveProvider(null));
+        this.addItem("saveAs", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, event -> window.showSaveDialog());
     }
 
     @Override
