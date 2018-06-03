@@ -62,6 +62,16 @@ public class Preferences {
     public static final String MAIN_WINDOW_Y = "main_window_y";
 
     /**
+     * The preference key for storing the width of the {@code MainWindow}.
+     */
+    public static final String MAIN_WINDOW_WIDTH = "main_window_width";
+
+    /**
+     * The preference key for storing the height of the {@code MainWindow}.
+     */
+    public static final String MAIN_WINDOW_HEIGHT = "main_window_height";
+
+    /**
      * The name of the configuration file, relative to the directory in which
      * Faerie is launched.
      */

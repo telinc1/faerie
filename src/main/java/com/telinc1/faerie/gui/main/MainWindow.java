@@ -266,8 +266,12 @@ public class MainWindow extends JFrame {
         this.setInputEnabled(false);
         this.setContentPane(this.contentPanel);
 
-        this.setSize(760, 600);
+        this.setSize(
+            this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_WIDTH, 760),
+            this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_HEIGHT, 600)
+        );
         this.setMinimumSize(new Dimension(760, 600));
+
         this.setLocation(
             this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_X, 0),
             this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_Y, 0)
@@ -278,10 +282,14 @@ public class MainWindow extends JFrame {
             @Override
             public void windowClosing(WindowEvent event){
                 Point location = MainWindow.this.getLocation();
+                Dimension size = MainWindow.this.getSize();
+
                 Preferences preferences = MainWindow.this.getApplication().getPreferences();
 
                 preferences.set(Preferences.MAIN_WINDOW_X, location.x);
                 preferences.set(Preferences.MAIN_WINDOW_Y, location.y);
+                preferences.set(Preferences.MAIN_WINDOW_WIDTH, size.width);
+                preferences.set(Preferences.MAIN_WINDOW_HEIGHT, size.height);
 
                 MainWindow.this.getApplication().exit(0);
             }
