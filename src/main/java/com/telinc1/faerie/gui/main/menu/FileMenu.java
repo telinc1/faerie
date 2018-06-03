@@ -26,6 +26,7 @@ import com.telinc1.faerie.gui.main.MainWindow;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 
 /**
  * The "File" menu of the main application window.
@@ -54,6 +55,8 @@ public class FileMenu extends Menu {
         this.addItem("open", KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK, event -> window.showOpenDialog());
         this.addItem("save", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK, event -> window.saveProvider(null));
         this.addItem("saveAs", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, event -> window.showSaveDialog());
+        this.addSeparator();
+        this.addItem("exit", KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK, event -> window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING)));
     }
 
     @Override
