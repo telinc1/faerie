@@ -743,8 +743,13 @@ public class MainWindow extends JFrame {
             return;
         }
 
-        ConfigurationProvider provider = new ConfigurationProvider(null);
-        this.setProvider(provider);
+        try {
+            ConfigurationProvider provider = new ConfigurationProvider(null);
+            this.setProvider(provider);
+        }catch(LoadingException exception){
+            this.getApplication().getExceptionHandler().report(exception);
+            this.getApplication().getNotifier().notify(this, exception);
+        }
     }
 
     /**

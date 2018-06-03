@@ -22,18 +22,91 @@
 
 package com.telinc1.faerie.sprite.provider;
 
-public class SavingException extends RuntimeException {
-    public SavingException(){}
+import com.telinc1.faerie.util.locale.ILocalizable;
+import com.telinc1.faerie.util.notification.EnumSeverity;
 
-    public SavingException(String message){
-        super(message);
+/**
+ * A {@code SavingException} is thrown by a {@link Provider} when it cannot
+ * properly or completely save a file for any reason.
+ */
+public class SavingException extends Exception implements ILocalizable {
+    /**
+     * The exception's subkey from the "file" resource bundle.
+     */
+    private final String subkey;
+
+    /**
+     * The arguments to pass to the exception's message.
+     */
+    private final Object[] arguments;
+
+    /**
+     * Create a {@code SavingException} with no defined message.
+     */
+    public SavingException(){
+        super();
+        this.subkey = null;
+        this.arguments = new Object[0];
     }
 
-    public SavingException(String message, Throwable cause){
-        super(message, cause);
-    }
-
+    /**
+     * Create a {@code SavingException} with no defined message and known
+     * cause.
+     *
+     * @param cause the cause of the exception
+     */
     public SavingException(Throwable cause){
         super(cause);
+        this.subkey = null;
+        this.arguments = new Object[0];
+    }
+
+    /**
+     * Create a {@code SavingException} with a defined message and localizable
+     * subkey.
+     *
+     * @param message the error message of the exception
+     * @param subkey the subkey used when showing the exception to the user
+     * @param arguments the arguments to pass to the exception's message
+     */
+    public SavingException(String message, String subkey, Object... arguments){
+        super(message);
+        this.subkey = subkey;
+        this.arguments = arguments;
+    }
+
+    /**
+     * Create a {@code SavingException} with a defined message, localizable
+     * subkey, and cause.
+     *
+     * @param message the error message of the exception
+     * @param subkey the subkey used when showing the exception to the user
+     * @param cause the cause of the exception
+     * @param arguments the arguments to pass to the exception's message
+     */
+    public SavingException(String message, String subkey, Throwable cause, Object... arguments){
+        super(message, cause);
+        this.subkey = subkey;
+        this.arguments = arguments;
+    }
+
+    @Override
+    public String getResource(){
+        return "file";
+    }
+
+    @Override
+    public EnumSeverity getSeverity(){
+        return EnumSeverity.ERROR;
+    }
+
+    @Override
+    public String getSubkey(){
+        return this.subkey == null ? "save" : "save." + this.subkey;
+    }
+
+    @Override
+    public Object[] getArguments(){
+        return this.arguments;
     }
 }

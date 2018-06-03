@@ -114,11 +114,11 @@ public class ROMProvider extends Provider {
     @Override
     public void save(File file) throws SavingException{
         if(!TypeUtils.isROM(file)){
-            throw new SavingException("The file is not a recognized SNES ROM image.");
+            throw new SavingException("Unrecognized ROM format.", "rom.type");
         }
 
         if(!file.exists()){
-            throw new SavingException("The file must already exist.");
+            throw new SavingException();
         }
 
         try(RandomAccessFile rom = new RandomAccessFile(file, "rw")) {
@@ -128,7 +128,7 @@ public class ROMProvider extends Provider {
             rom.read(title);
 
             if(!Arrays.equals(ROMProvider.ROM_TITLE, title)){
-                throw new SavingException("Wrong ROM title.");
+                throw new SavingException("Wrong ROM title.", "rom.title", "found", new String(title, StandardCharsets.US_ASCII));
             }
 
             for(Sprite sprite : this.modified){
@@ -147,7 +147,7 @@ public class ROMProvider extends Provider {
                 this.writeByte(rom, 0x3F659 + index, behavior[5]);
             }
         }catch(IOException exception){
-            throw new SavingException("Error reading the ROM file.", exception);
+            throw new SavingException("Error reading the file.", "rom.write", exception);
         }
 
         this.input = file;

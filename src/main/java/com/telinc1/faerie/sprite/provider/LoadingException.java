@@ -29,7 +29,7 @@ import com.telinc1.faerie.util.notification.EnumSeverity;
  * A {@code LoadingException} is thrown by a {@link Provider}'s constructor if
  * it can't load or parse the given input {@code File}.
  */
-public class LoadingException extends RuntimeException implements ILocalizable {
+public class LoadingException extends Exception implements ILocalizable {
     /**
      * The exception's subkey from the "file" resource bundle.
      */

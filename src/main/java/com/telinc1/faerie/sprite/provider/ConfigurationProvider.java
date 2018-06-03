@@ -90,14 +90,14 @@ public class ConfigurationProvider extends Provider {
             }
 
             if(this.getParser() == null){
-                throw new LoadingException("Unknown configuration file type.", "configuration.unknown");
+                throw new LoadingException("Unknown file type.", "configuration.unknown");
             }
 
             this.sprite = this.getParser().parse();
         }catch(IOException exception){
-            throw new LoadingException("Error reading configuration file.", "configuration.io", exception);
+            throw new LoadingException("Can't read file.", "configuration.io", exception);
         }catch(ParseException exception){
-            throw new LoadingException("Malformed configuration file.", "configuration.malformed", exception, "message", exception.getLocalizedMessage());
+            throw new LoadingException("Malformed file.", "configuration.malformed", exception, "message", exception.getLocalizedMessage());
         }
     }
 
@@ -141,19 +141,19 @@ public class ConfigurationProvider extends Provider {
         }
 
         if(emitter == null){
-            throw new SavingException("The type of the configuration file isn't supported.");
+            throw new SavingException("Unsupported configuration file.", "configuration.type");
         }
 
         try {
             file.createNewFile();
         }catch(IOException | SecurityException exception){
-            throw new SavingException("The file couldn't be created.", exception);
+            throw new SavingException("Can't create file.", "configuration.create", exception);
         }
 
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             emitter.emit(writer);
         }catch(IOException | SecurityException exception){
-            throw new SavingException("The configuration file couldn't written to.", exception);
+            throw new SavingException("Can't write to file.", "configuration.io", exception);
         }
 
         this.input = file;
