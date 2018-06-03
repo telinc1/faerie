@@ -53,7 +53,7 @@ public class Notifier {
      * If the severity of the message is {@link EnumSeverity#FATAL}, the
      * application will quit with exit code 1.
      *
-     * @param source the source to display from
+     * @param source the source to handle from
      */
     public void notify(ILocalizable source){
         this.notify(this.getApplication().getWindow(), source);
@@ -66,7 +66,7 @@ public class Notifier {
      * application will quit with exit code 1.
      *
      * @param parent the frame which the dialog will belong to
-     * @param source the source to display from
+     * @param source the source to handle from
      */
     @SuppressWarnings("MagicConstant")
     public void notify(JFrame parent, ILocalizable source){

@@ -297,8 +297,7 @@ public class MainWindow extends JFrame {
             try {
                 this.loadSprite(index);
             }catch(ProvisionException exception){
-                this.getApplication().getExceptionHandler().report(exception);
-                this.getApplication().getNotifier().notify(this, exception);
+                this.getApplication().getExceptionHandler().handle(this, exception);
             }
         });
 
@@ -741,8 +740,7 @@ public class MainWindow extends JFrame {
             ConfigurationProvider provider = new ConfigurationProvider(null);
             this.setProvider(provider);
         }catch(LoadingException exception){
-            this.getApplication().getExceptionHandler().report(exception);
-            this.getApplication().getNotifier().notify(this, exception);
+            this.getApplication().getExceptionHandler().handle(this, exception);
         }
     }
 
@@ -764,14 +762,14 @@ public class MainWindow extends JFrame {
                     ConfigurationProvider provider = new ConfigurationProvider(file);
                     this.setProvider(provider);
                 }catch(LoadingException exception){
-                    this.getApplication().getNotifier().notify(this, exception);
+                    this.getApplication().getExceptionHandler().handle(this, exception);
                 }
             }else if(TypeUtils.isROM(file)){
                 try {
                     ROMProvider provider = new ROMProvider(file);
                     this.setProvider(provider);
                 }catch(LoadingException exception){
-                    this.getApplication().getNotifier().notify(this, exception);
+                    this.getApplication().getExceptionHandler().handle(this, exception);
                 }
             }else{
                 this.getApplication().getNotifier().error(this, "file", "load.type");
@@ -884,9 +882,7 @@ public class MainWindow extends JFrame {
 
             this.loadSprite(0);
         }catch(ProvisionException exception){
-            this.getApplication().getExceptionHandler().report(exception);
-            this.getApplication().getNotifier().notify(this, exception);
-
+            this.getApplication().getExceptionHandler().handle(this, exception);
             return this.setProvider(null);
         }
 

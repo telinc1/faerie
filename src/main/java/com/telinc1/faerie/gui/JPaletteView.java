@@ -39,7 +39,7 @@ public class JPaletteView extends JComponent {
     private Dimension cellSize;
 
     /**
-     * The palette to display from.
+     * The palette to handle from.
      */
     private Palette palette;
 
@@ -70,8 +70,8 @@ public class JPaletteView extends JComponent {
      * Constructs a palette view with a specific cell width and height.
      *
      * @param cellSize the size of a single cell
-     * @param firstIndex the first index of the palette to display
-     * @param regionSize the amount of the palette to display
+     * @param firstIndex the first index of the palette to handle
+     * @param regionSize the amount of the palette to handle
      * @throws IllegalArgumentException if the index is negative or either size is non-positive
      */
     public JPaletteView(Dimension cellSize, int firstIndex, Dimension regionSize){
@@ -182,9 +182,9 @@ public class JPaletteView extends JComponent {
      * A single unit on the rectangle refers to a single color from the
      * palette. Invalid colors are displayed as black.
      *
-     * @param firstIndex the new first index to display
-     * @param width the new area width to display
-     * @param height the new area height to display
+     * @param firstIndex the new first index to handle
+     * @param width the new area width to handle
+     * @param height the new area height to handle
      * @return the component, for chaining
      * @throws IllegalAccessError if the index is out of bounds or the size is non-positive
      */
@@ -193,7 +193,7 @@ public class JPaletteView extends JComponent {
     }
 
     /**
-     * Sets a new palette region to display.
+     * Sets a new palette region to handle.
      *
      * @param width the new width
      * @param height the new height
@@ -248,17 +248,19 @@ public class JPaletteView extends JComponent {
     }
 
     /**
-     * Sets a new palette to display colors from.
-     * <p>
-     * If the palette is null, the whole component will be black.
+     * Sets a new first index to handle.
      *
-     * @param palette the new palette to display, or {@code null} to display nothing
+     * @param firstIndex the new first index
      * @return the component, for chaining
+     * @throws IllegalArgumentException if the index is out of bounds
      */
-    public JPaletteView setPalette(Palette palette){
-        this.palette = palette;
-        this.repaint();
+    public JPaletteView setFirstIndex(int firstIndex){
+        if(firstIndex < 0 || firstIndex > 255){
+            throw new IllegalArgumentException("The first index must be between 0 and 255!");
+        }
 
+        this.firstIndex = firstIndex;
+        this.repaint();
         return this;
     }
 
@@ -272,19 +274,17 @@ public class JPaletteView extends JComponent {
     }
 
     /**
-     * Sets a new first index to display.
+     * Sets a new palette to handle colors from.
+     * <p>
+     * If the palette is null, the whole component will be black.
      *
-     * @param firstIndex the new first index
+     * @param palette the new palette to handle, or {@code null} to handle nothing
      * @return the component, for chaining
-     * @throws IllegalArgumentException if the index is out of bounds
      */
-    public JPaletteView setFirstIndex(int firstIndex){
-        if(firstIndex < 0 || firstIndex > 255){
-            throw new IllegalArgumentException("The first index must be between 0 and 255!");
-        }
-
-        this.firstIndex = firstIndex;
+    public JPaletteView setPalette(Palette palette){
+        this.palette = palette;
         this.repaint();
+
         return this;
     }
 }

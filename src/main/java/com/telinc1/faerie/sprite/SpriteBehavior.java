@@ -126,7 +126,7 @@ public class SpriteBehavior {
     public boolean processWhileOffscreen;
 
     /**
-     * Bit 3 of $167A, whether the sprite will automatically display shell
+     * Bit 3 of $167A, whether the sprite will automatically handle shell
      * graphics when it is stunned.
      */
     public boolean skipShellIfStunned;

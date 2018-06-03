@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Defines display data for a sprite which renders tiles in Lunar Magic.
+ * Defines handle data for a sprite which renders tiles in Lunar Magic.
  *
  * @author Telinc1
  * @since 1.0.0

@@ -25,7 +25,7 @@ package com.telinc1.faerie.sprite.display;
 import java.awt.Point;
 
 /**
- * Defines how a sprite should display in Lunar Magic.
+ * Defines how a sprite should handle in Lunar Magic.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -47,7 +47,7 @@ public abstract class DisplayData {
     protected Point position;
 
     /**
-     * Constructs new display data for a sprite with default settings.
+     * Constructs new handle data for a sprite with default settings.
      */
     protected DisplayData(){
         this.name = "Sprite";

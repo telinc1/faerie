@@ -87,7 +87,7 @@ public class Sprite {
     private String secondASMFile;
 
     /**
-     * The properties used for sprite display in Lunar Magic.
+     * The properties used for sprite handle in Lunar Magic.
      */
     private DisplayData displayData;
 
@@ -335,18 +335,18 @@ public class Sprite {
     }
 
     /**
-     * Returns the display data of the sprite.
+     * Returns the handle data of the sprite.
      *
-     * @return any {@link DisplayData} object which describes how the sprite should display in Lunar Magic
+     * @return any {@link DisplayData} object which describes how the sprite should handle in Lunar Magic
      */
     public DisplayData getDisplayData(){
         return this.displayData;
     }
 
     /**
-     * Sets new display data for the sprite.
+     * Sets new handle data for the sprite.
      *
-     * @param displayData the new display data to set
+     * @param displayData the new handle data to set
      * @return the sprite, for chaining
      */
     public Sprite setDisplayData(DisplayData displayData){

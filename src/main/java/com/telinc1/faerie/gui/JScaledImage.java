@@ -90,7 +90,7 @@ public class JScaledImage extends JComponent {
     }
 
     /**
-     * Sets a new image to display.
+     * Sets a new image to handle.
      *
      * @param image the new image to set
      * @return the component, for chaining

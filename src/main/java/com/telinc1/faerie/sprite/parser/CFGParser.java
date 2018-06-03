@@ -82,7 +82,7 @@ public class CFGParser extends Parser {
      *
      * @param sprite the sprite to parse into
      * @param scanner the input to parse
-     * @return whether the input contains display data
+     * @return whether the input contains handle data
      * @throws ParseException if the scanner has malformed data
      */
     private boolean parseConfiguration(Sprite sprite, Scanner scanner) throws ParseException{
@@ -207,14 +207,14 @@ public class CFGParser extends Parser {
     }
 
     /**
-     * Parses the display data from a CFG file.
+     * Parses the handle data from a CFG file.
      * <p>
      * This includes the name, description, tiles, and others.
      * <p>
      * This is based on the GIEPY source code, see ({@code src/mewthree/ParseCfg.c}).
      *
      * @param scanner the input to parse
-     * @return the parsed display data
+     * @return the parsed handle data
      * @throws ParseException if the scanner has malformed data
      */
     @SuppressWarnings({"HardcodedLineSeparator", "StringConcatenation"})
