@@ -53,11 +53,17 @@ public abstract class Provider {
      * If the extension of the output file isn't compatible with this provider,
      * the method should throw a {@link SavingException}. Any other exceptions
      * should also be converted to {@code SavingException}s.
+     * <p>
+     * If the method returns a non-{@code null} {@code Provider}, the handler's
+     * loaded provider should be replaced with it. This allows saving to
+     * formats handled by other providers. Note that this {@code Provider}
+     * should not be left in an invalid, undefined, or unusable state.
      *
      * @param file the file to save to
+     * @return a new {@code Provider} for the handler
      * @throws SavingException if an I/O error occurs
      */
-    public abstract void save(File file) throws SavingException;
+    public abstract Provider save(File file) throws SavingException;
 
     /**
      * Returns an array of available sprites.

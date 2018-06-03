@@ -148,7 +148,7 @@ public class ConfigurationProvider extends Provider {
     }
 
     @Override
-    public void save(File file) throws SavingException{
+    public Provider save(File file) throws SavingException{
         String extension = TypeUtils.getExtension(file);
         Emitter emitter = null;
 
@@ -157,7 +157,7 @@ public class ConfigurationProvider extends Provider {
         }
 
         if(emitter == null){
-            throw new SavingException("Unsupported configuration file.", "configuration.type");
+            throw new SavingException("Unsupported file type.", "configuration.type");
         }
 
         try {
@@ -174,6 +174,7 @@ public class ConfigurationProvider extends Provider {
 
         this.input = file;
         this.isModified = false;
+        return null;
     }
 
     @Override

@@ -112,13 +112,24 @@ public class ROMProvider extends Provider {
     }
 
     @Override
-    public void save(File file) throws SavingException{
-        if(!TypeUtils.isROM(file)){
-            throw new SavingException("Unrecognized ROM format.", "rom.type");
+    public Provider save(File file) throws SavingException{
+        if(TypeUtils.isConfiguration(file)){
+            Sprite sprite = this.getCurrentSprite();
+            this.modified.remove(sprite);
+
+            ConfigurationProvider provider = new ConfigurationProvider(file);
+            provider.setSprite(sprite);
+            provider.save(file);
+
+            return provider;
+        }
+
+        if(this.getInput() != file){
+            throw new SavingException("Different target file.", "rom.different");
         }
 
         if(!file.exists()){
-            throw new SavingException();
+            throw new SavingException("The file doesn't exist.", "rom.write");
         }
 
         try(RandomAccessFile rom = new RandomAccessFile(file, "rw")) {
@@ -152,6 +163,7 @@ public class ROMProvider extends Provider {
 
         this.input = file;
         this.modified.clear();
+        return null;
     }
 
     @Override

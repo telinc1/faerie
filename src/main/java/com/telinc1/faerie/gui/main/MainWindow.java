@@ -425,7 +425,6 @@ public class MainWindow extends JFrame {
      *
      * @return whether the provider was unloaded
      */
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean unloadProvider(){
         if(this.getProvider() == null){
             return true;
@@ -552,15 +551,17 @@ public class MainWindow extends JFrame {
             return;
         }
 
+        Provider replacement = null;
+
         try {
             if(file == null){
                 if(provider.getInput() != null){
-                    provider.save(provider.getInput());
+                    replacement = provider.save(provider.getInput());
                 }else{
                     this.saveFile();
                 }
             }else{
-                provider.save(file);
+                replacement = provider.save(file);
             }
         }catch(SavingException exception){
             this.getApplication().getExceptionHandler().report(exception);
@@ -572,6 +573,10 @@ public class MainWindow extends JFrame {
             }
 
             this.getApplication().getNotifier().error(this, "chooser", "save", "message", message);
+        }
+
+        if(replacement != null && this.unloadProvider()){
+            this.setProvider(replacement);
         }
     }
 
