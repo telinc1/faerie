@@ -68,6 +68,7 @@ import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -267,11 +268,21 @@ public class MainWindow extends JFrame {
 
         this.setSize(760, 600);
         this.setMinimumSize(new Dimension(760, 600));
+        this.setLocation(
+            this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_X, 0),
+            this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_Y, 0)
+        );
 
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent event){
+                Point location = MainWindow.this.getLocation();
+                Preferences preferences = MainWindow.this.getApplication().getPreferences();
+
+                preferences.set(Preferences.MAIN_WINDOW_X, location.x);
+                preferences.set(Preferences.MAIN_WINDOW_Y, location.y);
+
                 MainWindow.this.getApplication().exit(0);
             }
         });

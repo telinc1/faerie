@@ -52,6 +52,16 @@ public class Preferences {
     public static final String LAST_DIRECTORY = "last_directory";
 
     /**
+     * The preference key for storing the X position of the {@code MainWindow}.
+     */
+    public static final String MAIN_WINDOW_X = "main_window_x";
+
+    /**
+     * The preference key for storing the X position of the {@code MainWindow}.
+     */
+    public static final String MAIN_WINDOW_Y = "main_window_y";
+
+    /**
      * The name of the configuration file, relative to the directory in which
      * Faerie is launched.
      */
