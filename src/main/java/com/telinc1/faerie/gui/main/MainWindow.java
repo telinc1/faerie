@@ -878,17 +878,17 @@ public class MainWindow extends JFrame {
             return this;
         }
 
+        String[] availableSprites = provider.getAvailableSprites();
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(availableSprites);
+        this.spriteSelectionComboBox.setModel(model);
+        this.spriteSelectionComboBox.setSelectedIndex(0);
+
         try {
             this.loadSprite(0);
         }catch(ProvisionException exception){
             this.getApplication().getExceptionHandler().handle(this, exception);
             return this.setProvider(null);
         }
-
-        String[] availableSprites = provider.getAvailableSprites();
-        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(availableSprites);
-        this.spriteSelectionComboBox.setModel(model);
-        this.spriteSelectionComboBox.setSelectedIndex(0);
 
         if(provider.getInput() != null){
             this.setTitle(Resources.getString("main", "title.open", "path", provider.getInput().getAbsolutePath()));

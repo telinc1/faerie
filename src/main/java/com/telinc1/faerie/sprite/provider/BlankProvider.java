@@ -66,6 +66,8 @@ public class BlankProvider extends Provider {
         provider.setSprite(this.getCurrentSprite());
         provider.save(file);
 
+        this.isModified = false;
+
         return provider;
     }
 
