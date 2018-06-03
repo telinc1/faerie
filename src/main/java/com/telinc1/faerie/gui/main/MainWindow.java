@@ -284,6 +284,8 @@ public class MainWindow extends JFrame {
         this.setJMenuBar(this.menuBar);
 
         this.configurationChooser = new ConfigurationChooser(this.getApplication());
+
+        this.createBlankFile();
     }
 
     /**
