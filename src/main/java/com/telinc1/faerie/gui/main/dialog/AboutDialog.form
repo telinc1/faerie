@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.telinc1.faerie.gui.main.dialog.AboutDialog">
+  <grid id="27dc6" binding="contentPanel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="582" height="293"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="39549" class="com.telinc1.faerie.gui.JScaledImage" binding="logo">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <minimum-size width="64" height="64"/>
+            <preferred-size width="64" height="64"/>
+            <maximum-size width="64" height="64"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="968be" class="javax.swing.JTextPane">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <autoscrolls value="false"/>
+          <editable value="false"/>
+          <enabled value="true"/>
+          <focusable value="false"/>
+          <font size="16" style="1"/>
+          <opaque value="false"/>
+          <text resource-bundle="com/telinc1/faerie/locale/About" key="label.application"/>
+        </properties>
+      </component>
+      <component id="52b35" class="javax.swing.JTextPane">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <autoscrolls value="false"/>
+          <editable value="false"/>
+          <enabled value="true"/>
+          <focusable value="false"/>
+          <opaque value="false"/>
+          <text resource-bundle="com/telinc1/faerie/locale/About" key="label.information"/>
+        </properties>
+      </component>
+      <component id="5280c" class="javax.swing.JTextPane" binding="websiteGitHubTextPane" default-binding="true">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <autoscrolls value="false"/>
+          <editable value="false"/>
+          <focusable value="false"/>
+          <opaque value="false"/>
+          <text resource-bundle="com/telinc1/faerie/locale/About" key="label.link.left"/>
+        </properties>
+      </component>
+      <component id="10625" class="javax.swing.JTextPane" binding="httpsTelinc1ComProjectsTextPane" default-binding="true">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="2" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <autoscrolls value="false"/>
+          <editable value="false"/>
+          <opaque value="false"/>
+          <text resource-bundle="com/telinc1/faerie/locale/About" key="label.link.right"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

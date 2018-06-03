@@ -842,7 +842,7 @@ public class MainWindow extends JFrame {
         try {
             this.spriteClippingImage.loadImage(String.format("sprite/%02X.png", index));
         }catch(IOException exception){
-            exception.printStackTrace();
+            this.getApplication().getExceptionHandler().report(exception);
         }
     }
 

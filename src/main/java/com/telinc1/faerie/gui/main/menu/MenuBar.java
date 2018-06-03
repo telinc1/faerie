@@ -44,6 +44,11 @@ public class MenuBar extends JMenuBar {
     private FileMenu fileMenu;
 
     /**
+     * The "Help" menu of the menu bar.
+     */
+    private HelpMenu helpMenu;
+
+    /**
      * Constructs a main window menu bar.
      * <p>
      * All menus are automatically created.
@@ -54,8 +59,10 @@ public class MenuBar extends JMenuBar {
         this.parent = parent;
 
         this.fileMenu = new FileMenu(this);
+        this.helpMenu = new HelpMenu(this);
 
         this.add(this.fileMenu);
+        this.add(this.helpMenu);
     }
 
     /**
@@ -74,5 +81,15 @@ public class MenuBar extends JMenuBar {
      */
     public FileMenu getFileMenu(){
         return this.fileMenu;
+    }
+
+    /**
+     * Returns the "Help" menu.
+     *
+     * @return the {@code HelpMenu}
+     */
+    @Override
+    public HelpMenu getHelpMenu(){
+        return this.helpMenu;
     }
 }
