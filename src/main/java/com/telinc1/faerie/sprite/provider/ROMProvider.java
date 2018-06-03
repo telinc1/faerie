@@ -114,11 +114,8 @@ public class ROMProvider extends Provider {
     @Override
     public Provider save(File file) throws SavingException{
         if(TypeUtils.isConfiguration(file)){
-            Sprite sprite = this.getCurrentSprite();
-            this.modified.remove(sprite);
-
             ConfigurationProvider provider = new ConfigurationProvider(file);
-            provider.setSprite(sprite);
+            provider.setSprite(this.getCurrentSprite());
             provider.save(file);
 
             return provider;
