@@ -45,9 +45,7 @@ import com.telinc1.faerie.sprite.provider.ProvisionException;
 import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.sprite.provider.SavingException;
 import com.telinc1.faerie.util.TypeUtils;
-import com.telinc1.faerie.util.locale.LocalizedException;
 import com.telinc1.faerie.util.locale.Warning;
-import com.telinc1.faerie.util.notification.EnumSeverity;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -298,13 +296,9 @@ public class MainWindow extends JFrame {
         this.addComboBoxListener(this.spriteSelectionComboBox, index -> {
             try {
                 this.loadSprite(index);
-            }catch(RuntimeException exception){
-                this.getApplication().getNotifier().notify(this, new LocalizedException(
-                    exception,
-                    EnumSeverity.ERROR,
-                    "main", "provision",
-                    "message", exception.getMessage()
-                ));
+            }catch(ProvisionException exception){
+                this.getApplication().getExceptionHandler().report(exception);
+                this.getApplication().getNotifier().notify(this, exception);
             }
         });
 
@@ -683,7 +677,7 @@ public class MainWindow extends JFrame {
      * @throws NullPointerException if there is no active provider
      * @see Provider#loadSprite(int)
      */
-    public MainWindow loadSprite(int index) throws ProvisionException, IndexOutOfBoundsException{
+    public MainWindow loadSprite(int index) throws ProvisionException{
         this.getProvider().loadSprite(index);
         this.updateGUI();
 
@@ -890,7 +884,8 @@ public class MainWindow extends JFrame {
 
             this.loadSprite(0);
         }catch(ProvisionException exception){
-            this.getApplication().getNotifier().error(this, "main", "provision", "message", exception);
+            this.getApplication().getExceptionHandler().report(exception);
+            this.getApplication().getNotifier().notify(this, exception);
 
             return this.setProvider(null);
         }

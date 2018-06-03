@@ -125,9 +125,9 @@ public class ConfigurationProvider extends Provider {
     }
 
     @Override
-    public void loadSprite(int index) throws ProvisionException, IndexOutOfBoundsException{
+    public void loadSprite(int index) throws ProvisionException{
         if(index != 0){
-            throw new IndexOutOfBoundsException();
+            throw new ProvisionException();
         }
     }
 

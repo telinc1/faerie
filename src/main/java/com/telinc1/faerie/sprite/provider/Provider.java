@@ -76,17 +76,15 @@ public abstract class Provider {
     /**
      * Loads the given sprite into the {@code Provider}.
      * <p>
-     * The index must match the indexes from
-     * {@link Provider#getAvailableSprites()}.
+     * The index must match the indexes from {@link #getAvailableSprites()}.
      * <p>
      * Index 0 should always be valid. Negative indexes should always be
      * invalid.
      *
      * @param index the index of the sprite to load
-     * @throws ProvisionException if the sprite cannot fully load
-     * @throws IndexOutOfBoundsException if the sprite index is invalid
+     * @throws ProvisionException if the sprite is out of bounds or cannot fully load
      */
-    public abstract void loadSprite(int index) throws ProvisionException, IndexOutOfBoundsException;
+    public abstract void loadSprite(int index) throws ProvisionException;
 
     /**
      * Returns any warnings created during the provision.

@@ -160,9 +160,9 @@ public class ROMProvider extends Provider {
     }
 
     @Override
-    public void loadSprite(int index) throws ProvisionException, IndexOutOfBoundsException{
+    public void loadSprite(int index) throws ProvisionException{
         if(index < 0 || index > this.sprites.length){
-            throw new IndexOutOfBoundsException();
+            throw new ProvisionException("Index out of bounds: " + index + ".", "rom.index");
         }
 
         if(this.sprites[index] != null){
