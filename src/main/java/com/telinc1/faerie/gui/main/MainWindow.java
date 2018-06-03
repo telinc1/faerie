@@ -38,6 +38,7 @@ import com.telinc1.faerie.sprite.EnumSpriteType;
 import com.telinc1.faerie.sprite.EnumStatusHandling;
 import com.telinc1.faerie.sprite.Sprite;
 import com.telinc1.faerie.sprite.SpriteBehavior;
+import com.telinc1.faerie.sprite.provider.BlankProvider;
 import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
 import com.telinc1.faerie.sprite.provider.LoadingException;
 import com.telinc1.faerie.sprite.provider.Provider;
@@ -737,15 +738,14 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Creates and loads a new {@link ConfigurationProvider} with no loaded
-     * file.
+     * Creates and loads a new {@link BlankProvider}.
      */
     public void createBlankFile(){
         if(!this.unloadProvider()){
             return;
         }
 
-        ConfigurationProvider provider = new ConfigurationProvider(null);
+        BlankProvider provider = new BlankProvider();
         this.setProvider(provider);
     }
 

@@ -74,12 +74,7 @@ public class ConfigurationProvider extends Provider {
     public ConfigurationProvider(File input){
         super();
         this.input = input;
-        this.sprite = null;
         this.isModified = false;
-
-        if(this.getInput() == null){
-            this.sprite = new Sprite();
-        }
     }
 
     @Override
