@@ -162,7 +162,7 @@ public class ROMProvider extends Provider {
     @Override
     public void loadSprite(int index) throws ProvisionException{
         if(index < 0 || index > this.sprites.length){
-            throw new ProvisionException("Index out of bounds: " + index + ".", "rom.index");
+            throw new ProvisionException("Index out of bounds: " + index + ".", "index");
         }
 
         if(this.sprites[index] != null){

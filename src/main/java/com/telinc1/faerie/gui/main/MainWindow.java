@@ -736,12 +736,8 @@ public class MainWindow extends JFrame {
             return;
         }
 
-        try {
-            ConfigurationProvider provider = new ConfigurationProvider(null);
-            this.setProvider(provider);
-        }catch(LoadingException exception){
-            this.getApplication().getExceptionHandler().handle(this, exception);
-        }
+        ConfigurationProvider provider = new ConfigurationProvider(null);
+        this.setProvider(provider);
     }
 
     /**
@@ -758,12 +754,8 @@ public class MainWindow extends JFrame {
             File file = this.getConfigurationChooser().getSelectedFile();
 
             if(TypeUtils.isConfiguration(file)){
-                try {
-                    ConfigurationProvider provider = new ConfigurationProvider(file);
-                    this.setProvider(provider);
-                }catch(LoadingException exception){
-                    this.getApplication().getExceptionHandler().handle(this, exception);
-                }
+                ConfigurationProvider provider = new ConfigurationProvider(file);
+                this.setProvider(provider);
             }else if(TypeUtils.isROM(file)){
                 try {
                     ROMProvider provider = new ROMProvider(file);
@@ -869,30 +861,30 @@ public class MainWindow extends JFrame {
 
         this.setTitle(Resources.getString("main", "title"));
 
-        if(this.getProvider() == null){
+        if(provider == null){
             this.setInputEnabled(false);
             return this;
         }
 
         try {
-            String[] availableSprites = this.getProvider().getAvailableSprites();
-            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(availableSprites);
-            this.spriteSelectionComboBox.setModel(model);
-            this.spriteSelectionComboBox.setSelectedIndex(0);
-
             this.loadSprite(0);
         }catch(ProvisionException exception){
             this.getApplication().getExceptionHandler().handle(this, exception);
             return this.setProvider(null);
         }
 
-        if(this.getProvider().getInput() != null){
-            this.setTitle(Resources.getString("main", "title.open", "path", this.getProvider().getInput().getAbsolutePath()));
+        String[] availableSprites = provider.getAvailableSprites();
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(availableSprites);
+        this.spriteSelectionComboBox.setModel(model);
+        this.spriteSelectionComboBox.setSelectedIndex(0);
+
+        if(provider.getInput() != null){
+            this.setTitle(Resources.getString("main", "title.open", "path", provider.getInput().getAbsolutePath()));
         }else{
             this.setTitle(Resources.getString("main", "title"));
         }
 
-        for(Warning warning : this.getProvider().getWarnings()){
+        for(Warning warning : provider.getWarnings()){
             this.getApplication().getNotifier().notify(this, warning);
         }
 

@@ -70,34 +70,15 @@ public class ConfigurationProvider extends Provider {
      * Constructs a {@code ConfigurationProvider} for the given {@code File}.
      *
      * @param input the input file to the provider
-     * @throws LoadingException if the file is unreadable or malformed
      */
-    public ConfigurationProvider(File input) throws LoadingException{
+    public ConfigurationProvider(File input){
         super();
         this.input = input;
+        this.sprite = null;
         this.isModified = false;
 
         if(this.getInput() == null){
             this.sprite = new Sprite();
-            return;
-        }
-
-        try(FileReader reader = new FileReader(input)) {
-            String extension = TypeUtils.getExtension(this.getInput());
-
-            if("cfg".equalsIgnoreCase(extension)){
-                this.parser = new CFGParser(reader);
-            }
-
-            if(this.getParser() == null){
-                throw new LoadingException("Unknown file type.", "configuration.unknown");
-            }
-
-            this.sprite = this.getParser().parse();
-        }catch(IOException exception){
-            throw new LoadingException("Can't read file.", "configuration.io", exception);
-        }catch(ParseException exception){
-            throw new LoadingException("Malformed file.", "configuration.malformed", exception, "message", exception.getLocalizedMessage());
         }
     }
 
@@ -117,7 +98,7 @@ public class ConfigurationProvider extends Provider {
 
     @Override
     public String[] getAvailableSprites(){
-        if(this.getCurrentSprite().getDisplayData() != null){
+        if(this.getCurrentSprite() != null && this.getCurrentSprite().getDisplayData() != null){
             return new String[]{this.getCurrentSprite().getDisplayData().getName()};
         }
 
@@ -127,8 +108,43 @@ public class ConfigurationProvider extends Provider {
     @Override
     public void loadSprite(int index) throws ProvisionException{
         if(index != 0){
-            throw new ProvisionException();
+            throw new ProvisionException("Index out of bounds: " + index + ".", "index");
         }
+
+        File input = this.getInput();
+
+        if(input == null){
+            return;
+        }
+
+        try(FileReader reader = new FileReader(input)) {
+            String extension = TypeUtils.getExtension(input);
+
+            if("cfg".equalsIgnoreCase(extension)){
+                this.parser = new CFGParser(reader);
+            }
+
+            if(this.getParser() == null){
+                throw new ProvisionException("Unknown file type.", "configuration.type");
+            }
+
+            this.sprite = this.getParser().parse();
+        }catch(IOException exception){
+            throw new ProvisionException("Can't read file.", "configuration.io", exception);
+        }catch(ParseException exception){
+            throw new ProvisionException("Malformed file.", "configuration.malformed", exception, "message", exception.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * Sets a new pre-loaded sprite for the {@code ConfigurationProvider}.
+     *
+     * @param sprite the new {@code Sprite} to set
+     * @return the {@code ConfigurationProvider}, for chaining
+     */
+    public ConfigurationProvider setSprite(Sprite sprite){
+        this.sprite = sprite;
+        return this;
     }
 
     @Override
