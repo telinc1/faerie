@@ -30,7 +30,7 @@ import com.telinc1.faerie.gui.main.MainWindow;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
@@ -48,7 +48,7 @@ import java.util.ResourceBundle;
  * @author Telinc1
  * @since 1.0.0
  */
-public class AboutDialog extends JFrame {
+public class AboutDialog extends JDialog {
     /**
      * The {@code MainWindow} to which this {@code AboutDialog} belongs.
      */
@@ -66,7 +66,7 @@ public class AboutDialog extends JFrame {
      * opened.
      */
     public AboutDialog(MainWindow window){
-        super(Resources.getString("about", "title"));
+        super(window, Resources.getString("about", "title"), true);
         this.window = window;
 
         this.$$$setupUI$$$();
@@ -74,7 +74,7 @@ public class AboutDialog extends JFrame {
 
         this.setContentPane(this.contentPanel);
 
-        this.setSize(310, 215);
+        this.setSize(330, 215);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
 
