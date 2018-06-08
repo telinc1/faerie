@@ -104,6 +104,8 @@ public class JSONParser extends Parser {
                         ((TileDisplayData)displayData).getTiles().add(spriteTile);
                     }
                 }
+            }else{
+                displayData = new TileDisplayData();
             }
 
             if(displayData != null){
