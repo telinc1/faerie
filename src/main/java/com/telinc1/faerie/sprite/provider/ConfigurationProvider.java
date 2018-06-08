@@ -27,6 +27,7 @@ import com.telinc1.faerie.sprite.emitter.CFGEmitter;
 import com.telinc1.faerie.sprite.emitter.Emitter;
 import com.telinc1.faerie.sprite.emitter.JSONEmitter;
 import com.telinc1.faerie.sprite.parser.CFGParser;
+import com.telinc1.faerie.sprite.parser.JSONParser;
 import com.telinc1.faerie.sprite.parser.ParseException;
 import com.telinc1.faerie.sprite.parser.Parser;
 import com.telinc1.faerie.util.TypeUtils;
@@ -118,6 +119,8 @@ public class ConfigurationProvider extends Provider {
 
             if("cfg".equalsIgnoreCase(extension)){
                 this.parser = new CFGParser(reader);
+            }else if("json".equalsIgnoreCase(extension)){
+                this.parser = new JSONParser(reader);
             }
 
             if(this.getParser() == null){
