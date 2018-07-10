@@ -69,6 +69,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.dnd.DropTarget;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -276,6 +277,8 @@ public class MainWindow extends JFrame {
             this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_X, 0),
             this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_Y, 0)
         );
+
+        new DropTarget(this.contentPanel, new MainWindowDropListener(this));
 
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
@@ -783,23 +786,33 @@ public class MainWindow extends JFrame {
 
         if(result == JFileChooser.APPROVE_OPTION){
             File file = this.getConfigurationChooser().getSelectedFile();
-
-            if(TypeUtils.isConfiguration(file)){
-                ConfigurationProvider provider = new ConfigurationProvider(file);
-                this.setProvider(provider);
-            }else if(TypeUtils.isROM(file)){
-                try {
-                    ROMProvider provider = new ROMProvider(file);
-                    this.setProvider(provider);
-                }catch(LoadingException exception){
-                    this.getApplication().getExceptionHandler().handle(this, exception);
-                }
-            }else{
-                this.getApplication().getNotifier().error(this, "file", "load.type");
-            }
+            this.openFile(file);
         }
 
         this.getConfigurationChooser().setSelectedFile(null);
+    }
+
+    /**
+     * Opens a {@code File} through an appropriate provider.
+     */
+    public void openFile(File file){
+        if(!this.unloadProvider()){
+            return;
+        }
+
+        if(TypeUtils.isConfiguration(file)){
+            ConfigurationProvider provider = new ConfigurationProvider(file);
+            this.setProvider(provider);
+        }else if(TypeUtils.isROM(file)){
+            try {
+                ROMProvider provider = new ROMProvider(file);
+                this.setProvider(provider);
+            }catch(LoadingException exception){
+                this.getApplication().getExceptionHandler().handle(this, exception);
+            }
+        }else{
+            this.getApplication().getNotifier().error(this, "file", "load.type");
+        }
     }
 
     /**
