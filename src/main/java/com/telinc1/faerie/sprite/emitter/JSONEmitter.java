@@ -69,7 +69,7 @@ public class JSONEmitter extends Emitter {
         $1656.addProperty("Object Clipping", behavior.objectClipping);
         $1656.addProperty("Can be jumped on", behavior.canBeJumpedOn);
         $1656.addProperty("Dies when jumped on", behavior.diesWhenJumpedOn);
-        $1656.addProperty("Hop in/kick shell", behavior.hopInShells);
+        $1656.addProperty("Hop in /kick shell", behavior.hopInShells);
         $1656.addProperty("Disappears in cloud of smoke", behavior.disappearInSmoke);
         json.add("$1656", $1656);
 
@@ -90,7 +90,7 @@ public class JSONEmitter extends Emitter {
 
         JsonObject $167A = new JsonObject();
         $167A.addProperty("Don't disable cliping when starkilled", behavior.processIfDead);
-        $167A.addProperty("Invincible to star/cape/fire/bounce blk.", behavior.invincibleToPlayer);
+        $167A.addProperty("Invincible to star/cape/fire/bounce blk", behavior.invincibleToPlayer);
         $167A.addProperty("Process when off screen", behavior.processWhileOffscreen);
         $167A.addProperty("Don't change into shell when stunned", behavior.skipShellIfStunned);
         $167A.addProperty("Can't be kicked like shell", behavior.disableKicking);
@@ -114,8 +114,8 @@ public class JSONEmitter extends Emitter {
         $190F.addProperty("Make platform passable from below", behavior.platformPassableFromBelow);
         $190F.addProperty("Don't erase when goal passed", behavior.ignoreGoal);
         $190F.addProperty("Can't be killed by sliding", behavior.disableSlideKilling);
-        $190F.addProperty("Takes 5 fireballs to kill", behavior.takesFiveFireballs);
-        $190F.addProperty("Can be jumped on with upwards Y speed", behavior.canBeJumpedOnFromBelow);
+        $190F.addProperty("Take 5 fireballs to kill", behavior.takesFiveFireballs);
+        $190F.addProperty("Can't be jumped on with upwards Y speed", behavior.canBeJumpedOnFromBelow);
         $190F.addProperty("Death frame two tiles high", behavior.tallDeathFrame);
         $190F.addProperty("Don't turn into a coin with silver POW", behavior.ignoreSilverPSwitch);
         $190F.addProperty("Don't get stuck in walls (carryable sprites)", behavior.escapeWalls);
