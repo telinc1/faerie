@@ -24,6 +24,7 @@ package com.telinc1.faerie.display;
 
 import com.telinc1.faerie.util.TypeUtils;
 
+import javax.swing.event.EventListenerList;
 import java.awt.Color;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -44,10 +45,16 @@ public class Palette {
     private int[] colors;
 
     /**
+     * The list of all registered event listeners.
+     */
+    private EventListenerList listenerList;
+
+    /**
      * Constructs an empty (pure black) color palette.
      */
     public Palette(){
         this.colors = new int[512];
+        this.listenerList = new EventListenerList();
     }
 
     /**
@@ -63,14 +70,20 @@ public class Palette {
     }
 
     /**
-     * Returns the SNES color at the given index.
-     *
-     * @param index the index to get
-     * @return the 5-bit SNES RGB color
-     * @throws ArrayIndexOutOfBoundsException if the index is outside the palette
+     * Adds an {@code UpdateListener} which is called whenever the palette's
+     * internal color array changes.
      */
-    public int getSNESColor(int index){
-        return this.colors[index * 2];
+    public void addUpdateListener(UpdateListener listener){
+        this.listenerList.add(UpdateListener.class, listener);
+    }
+
+    /**
+     * Removes an {@code UpdateListener} which was previously added.
+     *
+     * @see #addUpdateListener(UpdateListener)
+     */
+    public void removeUpdateListener(UpdateListener listener){
+        this.listenerList.remove(UpdateListener.class, listener);
     }
 
     /**
@@ -94,11 +107,24 @@ public class Palette {
                     palette[i * 3] & 0xFF,
                     palette[i * 3 + 1] & 0xFF,
                     palette[i * 3 + 2] & 0xFF
-                ));
+                ), true);
             }
+
+            this.firePaletteUpdate();
         }
 
         return this;
+    }
+
+    /**
+     * Returns the SNES color at the given index.
+     *
+     * @param index the index to get
+     * @return the 5-bit SNES RGB color
+     * @throws ArrayIndexOutOfBoundsException if the index is outside the palette
+     */
+    public int getSNESColor(int index){
+        return this.colors[index * 2];
     }
 
     /**
@@ -106,16 +132,43 @@ public class Palette {
      *
      * @param index the index to set
      * @param color the RGB {@link Color} to set the index to
+     * @param quiet whether to suppress the {@link UpdateEvent}
      * @return the palette, for chaining
      * @throws ArrayIndexOutOfBoundsException if the index is outside the palette
      */
-    public Palette setColor(int index, Color color){
-        return this.setSNESColor(
+    private Palette setColor(int index, Color color, boolean quiet){
+        this.setSNESColor(
             index,
             ((color.getRed() >> 3) & 31)
                 | (((color.getGreen() >> 3) & 31) << 5)
                 | (((color.getBlue() >> 3) & 31) << 10)
         );
+
+        if(quiet){
+            return this;
+        }
+
+        return this.firePaletteUpdate();
+    }
+
+    /**
+     * Notifies all {@link UpdateListener}s that a change to the palette's
+     * internal color array has taken place.
+     *
+     * @return the {@code Palette}, for chaining
+     */
+    private Palette firePaletteUpdate(){
+        UpdateListener[] listeners = this.listenerList.getListeners(UpdateListener.class);
+
+        if(listeners.length > 0){
+            UpdateEvent event = new UpdateEvent(this);
+
+            for(UpdateListener listener : listeners){
+                listener.onUpdate(event);
+            }
+        }
+
+        return this;
     }
 
     /**
@@ -127,8 +180,38 @@ public class Palette {
      * @throws ArrayIndexOutOfBoundsException if the index is outside the palette
      */
     public Palette setSNESColor(int index, int color){
+        return this.setSNESColor(index, color, false);
+    }
+
+    /**
+     * Sets the SNES color at the given index.
+     *
+     * @param index the index to set
+     * @param color the 5-bit SNES RGB color to set the index to
+     * @param quiet whether to suppress the {@link UpdateEvent}
+     * @return the palette, for chaining
+     * @throws ArrayIndexOutOfBoundsException if the index is outside the palette
+     */
+    private Palette setSNESColor(int index, int color, boolean quiet){
         this.colors[index * 2] = color & 0x7FFF;
-        return this;
+
+        if(quiet){
+            return this;
+        }
+
+        return this.firePaletteUpdate();
+    }
+
+    /**
+     * Sets the RGB color at the given index.
+     *
+     * @param index the index to set
+     * @param color the RGB {@link Color} to set the index to
+     * @return the palette, for chaining
+     * @throws ArrayIndexOutOfBoundsException if the index is outside the palette
+     */
+    public Palette setColor(int index, Color color){
+        return this.setColor(index, color, false);
     }
 
     /**
@@ -154,8 +237,10 @@ public class Palette {
             }
 
             for(int i = 0; i < 256; i++){
-                this.setSNESColor(i, (palette[i * 2] & 0xFF) | ((palette[i * 2 + 1] & 0xFF) << 8));
+                this.setSNESColor(i, (palette[i * 2] & 0xFF) | ((palette[i * 2 + 1] & 0xFF) << 8), true);
             }
+
+            this.firePaletteUpdate();
         }
 
         return this;
@@ -178,8 +263,10 @@ public class Palette {
             }
 
             for(int i = 0; i < 256; i++){
-                this.setSNESColor(i, (palette[i * 2] & 0xFF) | ((palette[i * 2 + 1] & 0xFF) << 8));
+                this.setSNESColor(i, (palette[i * 2] & 0xFF) | ((palette[i * 2 + 1] & 0xFF) << 8), true);
             }
+
+            this.firePaletteUpdate();
         }
 
         return this;

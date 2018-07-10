@@ -23,6 +23,7 @@
 package com.telinc1.faerie.gui;
 
 import com.telinc1.faerie.display.Palette;
+import com.telinc1.faerie.display.UpdateListener;
 
 import javax.swing.JComponent;
 import java.awt.Color;
@@ -55,6 +56,11 @@ public class JPaletteView extends JComponent {
      * displayed as black.
      */
     private Dimension regionSize;
+
+    /**
+     * An {@code UpdateListener} which will repaint this {@code JPaletteView}.
+     */
+    private final UpdateListener updateListener;
 
     /**
      * Constructs a palette view.
@@ -90,6 +96,9 @@ public class JPaletteView extends JComponent {
         this.cellSize = cellSize;
         this.firstIndex = firstIndex;
         this.regionSize = regionSize;
+
+        this.updateListener = event -> this.repaint();
+
         this.updateSize();
     }
 
@@ -282,9 +291,14 @@ public class JPaletteView extends JComponent {
      * @return the component, for chaining
      */
     public JPaletteView setPalette(Palette palette){
-        this.palette = palette;
-        this.repaint();
+        if(this.getPalette() != null){
+            this.getPalette().removeUpdateListener(this.updateListener);
+        }
 
+        this.palette = palette;
+        this.palette.addUpdateListener(this.updateListener);
+
+        this.repaint();
         return this;
     }
 }
