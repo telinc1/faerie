@@ -28,10 +28,13 @@ import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.gui.chooser.filter.CFGFilter;
 import com.telinc1.faerie.gui.chooser.filter.ConfigurationFilter;
 import com.telinc1.faerie.gui.chooser.filter.EditableFilter;
+import com.telinc1.faerie.gui.chooser.filter.IConfigurationFilter;
 import com.telinc1.faerie.gui.chooser.filter.JSONFilter;
 import com.telinc1.faerie.gui.chooser.filter.ROMFilter;
+import com.telinc1.faerie.util.TypeUtils;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 import java.awt.Component;
 import java.io.File;
 
@@ -186,6 +189,33 @@ public class ConfigurationChooser extends JFileChooser {
      */
     public ROMFilter getROMFilter(){
         return this.romFilter;
+    }
+
+    /**
+     * Returns the selected {@link File} with the correct extension.
+     *
+     * @see JFileChooser#getSelectedFile()
+     */
+    public File getActualFile(){
+        File selected = this.getSelectedFile();
+
+        if(selected.isDirectory()){
+            return selected;
+        }
+
+        String extension = TypeUtils.getExtension(selected);
+
+        if(!extension.isEmpty()){
+            return selected;
+        }
+
+        FileFilter filter = this.getFileFilter();
+
+        if(!(filter instanceof IConfigurationFilter)){
+            return selected;
+        }
+
+        return this.getFileSystemView().createFileObject(selected.getAbsolutePath() + "." + ((IConfigurationFilter)filter).getExtension());
     }
 
     @Override

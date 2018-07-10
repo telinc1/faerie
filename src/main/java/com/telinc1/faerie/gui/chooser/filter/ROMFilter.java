@@ -34,7 +34,7 @@ import java.io.File;
  * @author Telinc1
  * @since 1.0.0
  */
-public class ROMFilter extends FileFilter {
+public class ROMFilter extends FileFilter implements IConfigurationFilter {
     @Override
     public boolean accept(File file){
         if(file.isDirectory()){
@@ -47,5 +47,10 @@ public class ROMFilter extends FileFilter {
     @Override
     public String getDescription(){
         return Resources.getString("chooser", "format.rom");
+    }
+
+    @Override
+    public String getExtension(){
+        return TypeUtils.TYPE_SMC_ROM;
     }
 }

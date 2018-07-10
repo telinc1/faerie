@@ -514,7 +514,7 @@ public class MainWindow extends JFrame {
         }
 
         if(this.getConfigurationChooser().showSave(this) == JFileChooser.APPROVE_OPTION){
-            this.saveProvider(this.getConfigurationChooser().getSelectedFile());
+            this.saveProvider(this.getConfigurationChooser().getActualFile());
         }
 
         this.getConfigurationChooser().setSelectedFile(null);
