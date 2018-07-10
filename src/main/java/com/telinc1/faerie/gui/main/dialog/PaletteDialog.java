@@ -25,6 +25,7 @@ package com.telinc1.faerie.gui.main.dialog;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.telinc1.faerie.Resources;
+import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.JPaletteView;
 import com.telinc1.faerie.gui.main.MainWindow;
 
@@ -32,10 +33,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * The dialog which is displayed from the main window to show the loaded
@@ -52,6 +58,7 @@ public class PaletteDialog extends JDialog {
 
     private JPanel contentPanel;
     private JPaletteView paletteView;
+    private JTextPane colorNAPCTextPane; // what in fuckenings intellij
 
     /**
      * Construct a Palette dialog, including all of its inner components.
@@ -63,10 +70,12 @@ public class PaletteDialog extends JDialog {
         super(window, Resources.getString("palette", "title"), true);
         this.window = window;
 
+        this.setType(Type.UTILITY);
+
         this.$$$setupUI$$$();
+        this.configureUIComponents();
 
         this.setContentPane(this.contentPanel);
-
         this.setResizable(false);
         this.pack();
         this.setLocationRelativeTo(null);
@@ -76,6 +85,15 @@ public class PaletteDialog extends JDialog {
         URL iconURL = Resources.class.getResource(Resources.PACKAGE + "/images/application.png");
         ImageIcon icon = new ImageIcon(iconURL);
         this.setIconImage(icon.getImage());
+    }
+
+    private void createUIComponents(){
+        this.paletteView = new JPaletteView();
+        this.paletteView
+            .setPalette(this.getWindow().getApplication().getPalette())
+            .setCellSize(16, 16)
+            .setFirstIndex(0x0)
+            .setRegionSize(16, 16);
     }
 
     /**
@@ -88,17 +106,56 @@ public class PaletteDialog extends JDialog {
     private void $$$setupUI$$$(){
         createUIComponents();
         contentPanel = new JPanel();
-        contentPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        contentPanel.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPanel.add(paletteView, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(256, 256), new Dimension(256, 256), new Dimension(256, 256), 0, false));
+        colorNAPCTextPane = new JTextPane();
+        colorNAPCTextPane.setEditable(false);
+        colorNAPCTextPane.setFocusable(false);
+        colorNAPCTextPane.setMargin(new Insets(0, 3, 0, 3));
+        colorNAPCTextPane.setOpaque(false);
+        colorNAPCTextPane.setText(ResourceBundle.getBundle("com/telinc1/faerie/locale/Palette").getString("label.initial"));
+        contentPanel.add(colorNAPCTextPane, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(256, -1), new Dimension(256, -1), new Dimension(256, -1), 0, false));
     }
 
-    private void createUIComponents(){
-        this.paletteView = new JPaletteView();
-        this.paletteView
-            .setPalette(this.getWindow().getApplication().getPalette())
-            .setCellSize(16, 16)
-            .setFirstIndex(0x0)
-            .setRegionSize(16, 16);
+    /**
+     * Configures UI components after they have been created.
+     */
+    private void configureUIComponents(){
+        MouseAdapter paletteAdapter = new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent event){
+                PaletteDialog.this.colorNAPCTextPane.setText(Resources.getString("palette", "label.initial"));
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent event){
+                JPaletteView paletteView = PaletteDialog.this.paletteView;
+                Palette palette = paletteView.getPalette();
+
+                int x = event.getX() / paletteView.getCellSize().width;
+                int y = event.getY() / paletteView.getCellSize().height;
+                int index = x + y * paletteView.getRegionSize().width;
+
+                Color pc = palette.getColor(index);
+                int snes = palette.getSNESColor(index);
+
+                PaletteDialog.this.colorNAPCTextPane.setText(Resources.getString(
+                    "palette", "label.color",
+                    "color", String.format("%02X", index),
+                    "pc", String.format("%06X", pc.getRGB() & 0xFFFFFF),
+                    "red", pc.getRed(),
+                    "green", pc.getGreen(),
+                    "blue", pc.getBlue(),
+                    "snes", String.format("%04X", snes),
+                    "snes_red", snes & 0x1F,
+                    "snes_green", (snes >> 5) & 0x1F,
+                    "snes_blue", (snes >> 10) & 0x1F
+                ));
+            }
+        };
+
+        this.paletteView.addMouseListener(paletteAdapter);
+        this.paletteView.addMouseMotionListener(paletteAdapter);
     }
 
     /**
