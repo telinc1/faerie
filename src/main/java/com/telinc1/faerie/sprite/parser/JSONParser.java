@@ -166,7 +166,7 @@ public class JSONParser extends Parser {
         behavior.objectClipping = (byte)(this.getInt($1656, "Object Clipping") & 0x1F);
         behavior.canBeJumpedOn = this.getBoolean($1656, "Can be jumped on");
         behavior.diesWhenJumpedOn = this.getBoolean($1656, "Dies when jumped on");
-        behavior.hopInShells = this.getBoolean($1656, "Hop in/kick shell");
+        behavior.hopInShells = this.getBoolean($1656, "Hop in /kick shell");
         behavior.disappearInSmoke = this.getBoolean($1656, "Disappears in cloud of smoke");
     }
 
@@ -223,7 +223,7 @@ public class JSONParser extends Parser {
         }
 
         behavior.processIfDead = this.getBoolean($167A, "Don't disable cliping when starkilled");
-        behavior.invincibleToPlayer = this.getBoolean($167A, "Invincible to star/cape/fire/bounce blk.");
+        behavior.invincibleToPlayer = this.getBoolean($167A, "Invincible to star/cape/fire/bounce blk");
         behavior.processWhileOffscreen = this.getBoolean($167A, "Process when off screen");
         behavior.skipShellIfStunned = this.getBoolean($167A, "Don't change into shell when stunned");
         behavior.disableKicking = this.getBoolean($167A, "Can't be kicked like shell");
@@ -271,8 +271,8 @@ public class JSONParser extends Parser {
         behavior.platformPassableFromBelow = this.getBoolean($190F, "Make platform passable from below");
         behavior.ignoreGoal = this.getBoolean($190F, "Don't erase when goal passed");
         behavior.disableSlideKilling = this.getBoolean($190F, "Can't be killed by sliding");
-        behavior.takesFiveFireballs = this.getBoolean($190F, "Takes 5 fireballs to kill");
-        behavior.canBeJumpedOnFromBelow = this.getBoolean($190F, "Can be jumped on with upwards Y speed");
+        behavior.takesFiveFireballs = this.getBoolean($190F, "Take 5 fireballs to kill");
+        behavior.canBeJumpedOnFromBelow = this.getBoolean($190F, "Can't be jumped on with upwards Y speed");
         behavior.tallDeathFrame = this.getBoolean($190F, "Death frame two tiles high");
         behavior.ignoreSilverPSwitch = this.getBoolean($190F, "Don't turn into a coin with silver POW");
         behavior.escapeWalls = this.getBoolean($190F, "Don't get stuck in walls (carryable sprites)");
