@@ -26,8 +26,8 @@ import com.telinc1.faerie.Application;
 import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.util.locale.ILocalizable;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import java.awt.Component;
 
 /**
  * The {@code Notifier} handles the creation and management of message dialogs.
@@ -60,45 +60,6 @@ public class Notifier {
     }
 
     /**
-     * Shows a notification dialog to the user.
-     * <p>
-     * If the severity of the message is {@link EnumSeverity#FATAL}, the
-     * application will quit with exit code 1.
-     *
-     * @param parent the frame which the dialog will belong to
-     * @param source the source to handle from
-     */
-    @SuppressWarnings("MagicConstant")
-    public void notify(JFrame parent, ILocalizable source){
-        String title = Resources.getString(
-            source.getResource(),
-            source.getSeverity().getKey() + "." + source.getSubkey() + ".title",
-            source.getArguments()
-        );
-
-        String content = Resources.getString(
-            source.getResource(),
-            source.getSeverity().getKey() + "." + source.getSubkey() + ".content",
-            source.getArguments()
-        );
-
-        JOptionPane.showMessageDialog(parent, content, title, source.getSeverity().getMessageType());
-
-        if(source.getSeverity() == EnumSeverity.FATAL){
-            this.getApplication().exit(1);
-        }
-    }
-
-    /**
-     * Returns the application used by the {@code Notifier}.
-     *
-     * @return the {@link Application} which the {@code Notifier} serves
-     */
-    public Application getApplication(){
-        return this.application;
-    }
-
-    /**
      * Shows an information dialog.
      *
      * @param resource the bundle to look in
@@ -117,8 +78,47 @@ public class Notifier {
      * @param subkey the base key to look for
      * @param arguments the arguments to format the message with
      */
-    public void info(JFrame parent, String resource, String subkey, Object... arguments){
+    public void info(Component parent, String resource, String subkey, Object... arguments){
         this.notify(parent, this.createMessage(EnumSeverity.INFO, resource, subkey, arguments));
+    }
+
+    /**
+     * Returns the application used by the {@code Notifier}.
+     *
+     * @return the {@link Application} which the {@code Notifier} serves
+     */
+    public Application getApplication(){
+        return this.application;
+    }
+
+    /**
+     * Shows a notification dialog to the user.
+     * <p>
+     * If the severity of the message is {@link EnumSeverity#FATAL}, the
+     * application will quit with exit code 1.
+     *
+     * @param parent the frame which the dialog will belong to
+     * @param source the source to handle from
+     */
+    @SuppressWarnings("MagicConstant")
+    public void notify(Component parent, ILocalizable source){
+        String title = Resources.getString(
+            source.getResource(),
+            source.getSeverity().getKey() + "." + source.getSubkey() + ".title",
+            source.getArguments()
+        );
+
+        String content = Resources.getString(
+            source.getResource(),
+            source.getSeverity().getKey() + "." + source.getSubkey() + ".content",
+            source.getArguments()
+        );
+
+        JOptionPane.showMessageDialog(parent, content, title, source.getSeverity().getMessageType());
+
+        if(source.getSeverity() == EnumSeverity.FATAL){
+            this.getApplication().exit(1);
+        }
     }
 
     /**
@@ -173,7 +173,7 @@ public class Notifier {
      * @param subkey the base key to look for
      * @param arguments the arguments to format the message with
      */
-    public void warn(JFrame parent, String resource, String subkey, Object... arguments){
+    public void warn(Component parent, String resource, String subkey, Object... arguments){
         this.notify(parent, this.createMessage(EnumSeverity.WARNING, resource, subkey, arguments));
     }
 
@@ -196,7 +196,7 @@ public class Notifier {
      * @param subkey the base key to look for
      * @param arguments the arguments to format the message with
      */
-    public void error(JFrame parent, String resource, String subkey, Object... arguments){
+    public void error(Component parent, String resource, String subkey, Object... arguments){
         this.notify(parent, this.createMessage(EnumSeverity.ERROR, resource, subkey, arguments));
     }
 
@@ -219,7 +219,7 @@ public class Notifier {
      * @param subkey the base key to look for
      * @param arguments the arguments to format the message with
      */
-    public void fatal(JFrame parent, String resource, String subkey, Object... arguments){
+    public void fatal(Component parent, String resource, String subkey, Object... arguments){
         this.notify(parent, this.createMessage(EnumSeverity.FATAL, resource, subkey, arguments));
     }
 }

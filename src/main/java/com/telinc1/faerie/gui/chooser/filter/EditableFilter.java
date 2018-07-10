@@ -35,7 +35,7 @@ import java.io.File;
  * @author Telinc1
  * @since 1.0.0
  */
-public class EditableFilter extends FileFilter implements IConfigurationFilter {
+public class EditableFilter extends FileFilter implements IApplicationFilter {
     @Override
     public boolean accept(File file){
         if(file.isDirectory()){

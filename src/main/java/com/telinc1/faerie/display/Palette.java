@@ -22,8 +22,12 @@
 
 package com.telinc1.faerie.display;
 
+import com.telinc1.faerie.util.TypeUtils;
+
 import java.awt.Color;
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -179,5 +183,32 @@ public class Palette {
         }
 
         return this;
+    }
+
+    /**
+     * Attempts to load the given file into the internal color array.
+     *
+     * @param file the data to load
+     * @return the palette, for chaining
+     * @throws IOException if an I/O error occurs or the file is invalid
+     */
+    public Palette loadFile(File file) throws IOException{
+        if(!TypeUtils.isPalette(file)){
+            throw new IOException("The file is not a palette file.");
+        }
+
+        try(FileInputStream stream = new FileInputStream(file)) {
+            String extension = TypeUtils.getExtension(file);
+
+            if(extension.equalsIgnoreCase(TypeUtils.TYPE_RGB_PALETTE)){
+                return this.loadPALFile(stream);
+            }else if(extension.equalsIgnoreCase(TypeUtils.TYPE_TPL_PALETTE)){
+                return this.loadTPLFile(stream);
+            }else if(extension.equalsIgnoreCase(TypeUtils.TYPE_SNES_PALETTE)){
+                return this.loadMW3File(stream);
+            }else{
+                throw new IOException("The file is not a palette file.");
+            }
+        }
     }
 }

@@ -22,15 +22,36 @@
 
 package com.telinc1.faerie.gui.chooser.filter;
 
+import com.telinc1.faerie.Resources;
+import com.telinc1.faerie.util.TypeUtils;
+
+import javax.swing.filechooser.FileFilter;
+import java.io.File;
+
 /**
- * This interface denotes that a {@link javax.swing.filechooser.FileFilter} is
- * to be used with the
- * {@link com.telinc1.faerie.gui.chooser.ConfigurationChooser}.
+ * The {@code PaletteFilter} is a {@link FileFilter} for all supported palette
+ * files.
+ *
+ * @author Telinc1
+ * @since 1.0.0
  */
-public interface IConfigurationFilter {
-    /**
-     * Returns the default extension of this filter's file, without a leading
-     * period.
-     */
-    String getExtension();
+public class PaletteFilter extends FileFilter implements IApplicationFilter {
+    @Override
+    public boolean accept(File file){
+        if(file.isDirectory()){
+            return true;
+        }
+
+        return TypeUtils.isPalette(file);
+    }
+
+    @Override
+    public String getDescription(){
+        return Resources.getString("chooser", "format.palette");
+    }
+
+    @Override
+    public String getExtension(){
+        return TypeUtils.TYPE_RGB_PALETTE;
+    }
 }

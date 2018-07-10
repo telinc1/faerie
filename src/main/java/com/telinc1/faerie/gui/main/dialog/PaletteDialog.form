@@ -52,7 +52,7 @@
                   <text value=""/>
                 </properties>
               </component>
-              <component id="e9f56" class="javax.swing.JButton">
+              <component id="e9f56" class="javax.swing.JButton" binding="importButton">
                 <constraints/>
                 <properties>
                   <actionCommand resource-bundle="com/telinc1/faerie/locale/Palette" key="button.import"/>

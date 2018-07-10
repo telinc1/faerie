@@ -105,12 +105,7 @@ public class Application {
         }
 
         this.palette = new Palette();
-
-        try {
-            this.getPalette().loadMW3File(Resources.getResource("data/generic.mw3"));
-        }catch(IOException exception){
-            throw new LocalizedException(exception, "core", "launch.palette");
-        }
+        this.loadDefaultPalette();
 
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.getResource("data/sprites/list.txt")))) {
             String line;
@@ -209,5 +204,16 @@ public class Application {
         }
 
         System.exit(status);
+    }
+
+    /**
+     * Loads the default colors into the application's internal palette.
+     */
+    public void loadDefaultPalette(){
+        try {
+            this.getPalette().loadMW3File(Resources.getResource("data/generic.mw3"));
+        }catch(IOException exception){
+            throw new LocalizedException(exception, "core", "launch.palette");
+        }
     }
 }

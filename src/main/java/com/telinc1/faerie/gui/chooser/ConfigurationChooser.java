@@ -23,34 +23,24 @@
 package com.telinc1.faerie.gui.chooser;
 
 import com.telinc1.faerie.Application;
-import com.telinc1.faerie.Preferences;
 import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.gui.chooser.filter.CFGFilter;
 import com.telinc1.faerie.gui.chooser.filter.ConfigurationFilter;
 import com.telinc1.faerie.gui.chooser.filter.EditableFilter;
-import com.telinc1.faerie.gui.chooser.filter.IConfigurationFilter;
 import com.telinc1.faerie.gui.chooser.filter.JSONFilter;
 import com.telinc1.faerie.gui.chooser.filter.ROMFilter;
-import com.telinc1.faerie.util.TypeUtils;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import java.awt.Component;
-import java.io.File;
 
 /**
- * This is a {@link JFileChooser} which allows the user to select any supported
- * configuration format (CFG and JSON for now) as well as, optionally, ROMs.
+ * This is an {@link ApplicationChooser} which allows the user to select any
+ * supported configuration format (CFG and JSON for now) as well as,
+ * optionally, ROMs.
  *
  * @author Telinc1
  * @since 1.0.0
  */
-public class ConfigurationChooser extends JFileChooser {
-    /**
-     * The {@code Application} of this chooser.
-     */
-    private final Application application;
-
+public class ConfigurationChooser extends ApplicationChooser {
     /**
      * The {@link java.io.FileFilter} for editable files.
      */
@@ -80,14 +70,7 @@ public class ConfigurationChooser extends JFileChooser {
      * Creates a new {@code ConfigurationChooser}.
      */
     public ConfigurationChooser(Application application){
-        super();
-        this.application = application;
-
-        String directory = this.getApplication().getPreferences().get(Preferences.LAST_DIRECTORY);
-
-        if(directory != null){
-            this.setCurrentDirectory(this.getFileSystemView().createFileObject(directory));
-        }
+        super(application);
 
         this.editableFilter = new EditableFilter();
         this.configurationFilter = new ConfigurationFilter();
@@ -140,13 +123,6 @@ public class ConfigurationChooser extends JFileChooser {
     }
 
     /**
-     * Returns the {@link Application} of this chooser.
-     */
-    public Application getApplication(){
-        return this.application;
-    }
-
-    /**
      * Returns the filter for editable files.
      *
      * @return the {@link java.io.FileFilter} for editable files
@@ -189,63 +165,5 @@ public class ConfigurationChooser extends JFileChooser {
      */
     public ROMFilter getROMFilter(){
         return this.romFilter;
-    }
-
-    /**
-     * Returns the selected {@link File} with the correct extension.
-     *
-     * @see JFileChooser#getSelectedFile()
-     */
-    public File getActualFile(){
-        File selected = this.getSelectedFile();
-
-        if(selected.isDirectory()){
-            return selected;
-        }
-
-        String extension = TypeUtils.getExtension(selected);
-
-        if(!extension.isEmpty()){
-            return selected;
-        }
-
-        FileFilter filter = this.getFileFilter();
-
-        if(!(filter instanceof IConfigurationFilter)){
-            return selected;
-        }
-
-        return this.getFileSystemView().createFileObject(selected.getAbsolutePath() + "." + ((IConfigurationFilter)filter).getExtension());
-    }
-
-    @Override
-    public void setCurrentDirectory(File directory){
-        super.setCurrentDirectory(directory);
-
-        if(directory == null || this.getApplication() == null){
-            return;
-        }
-
-        this.getApplication().getPreferences().set(
-            Preferences.LAST_DIRECTORY,
-            directory.getAbsolutePath()
-        );
-    }
-
-    @Override
-    public void setSelectedFile(File file){
-        if(file == null){
-            this.getApplication().getPreferences().set(
-                Preferences.LAST_DIRECTORY,
-                this.getCurrentDirectory().getAbsolutePath()
-            );
-        }else{
-            this.getApplication().getPreferences().set(
-                Preferences.LAST_DIRECTORY,
-                file.getAbsolutePath()
-            );
-        }
-
-        super.setSelectedFile(file);
     }
 }

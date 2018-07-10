@@ -29,28 +29,29 @@ import javax.swing.filechooser.FileFilter;
 import java.io.File;
 
 /**
- * The {@code CFGFilter} is a {@link FileFilter} for CFG configuration files.
+ * The {@code MW3Filter} is a {@link FileFilter} for Mario World custom palette
+ * files containing only SNES (5-bit) RGB values.
  *
  * @author Telinc1
  * @since 1.0.0
  */
-public class CFGFilter extends FileFilter implements IApplicationFilter {
+public class MW3Filter extends FileFilter implements IApplicationFilter {
     @Override
     public boolean accept(File file){
         if(file.isDirectory()){
             return true;
         }
 
-        return TypeUtils.getExtension(file).equals(TypeUtils.TYPE_CFG);
+        return TypeUtils.getExtension(file).equalsIgnoreCase(TypeUtils.TYPE_SNES_PALETTE);
     }
 
     @Override
     public String getDescription(){
-        return Resources.getString("chooser", "format.cfg");
+        return Resources.getString("chooser", "format.snesPalette");
     }
 
     @Override
     public String getExtension(){
-        return TypeUtils.TYPE_CFG;
+        return TypeUtils.TYPE_SNES_PALETTE;
     }
 }

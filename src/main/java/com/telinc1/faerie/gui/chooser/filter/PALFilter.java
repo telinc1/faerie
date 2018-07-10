@@ -29,28 +29,29 @@ import javax.swing.filechooser.FileFilter;
 import java.io.File;
 
 /**
- * The {@code CFGFilter} is a {@link FileFilter} for CFG configuration files.
+ * The {@code PALFilter} is a {@link FileFilter} for YY-CHR PAL files
+ * with PC (8-bit) RGB color values.
  *
  * @author Telinc1
  * @since 1.0.0
  */
-public class CFGFilter extends FileFilter implements IApplicationFilter {
+public class PALFilter extends FileFilter implements IApplicationFilter {
     @Override
     public boolean accept(File file){
         if(file.isDirectory()){
             return true;
         }
 
-        return TypeUtils.getExtension(file).equals(TypeUtils.TYPE_CFG);
+        return TypeUtils.getExtension(file).equalsIgnoreCase(TypeUtils.TYPE_RGB_PALETTE);
     }
 
     @Override
     public String getDescription(){
-        return Resources.getString("chooser", "format.cfg");
+        return Resources.getString("chooser", "format.rgbPalette");
     }
 
     @Override
     public String getExtension(){
-        return TypeUtils.TYPE_CFG;
+        return TypeUtils.TYPE_RGB_PALETTE;
     }
 }

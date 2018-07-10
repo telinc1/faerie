@@ -22,35 +22,15 @@
 
 package com.telinc1.faerie.gui.chooser.filter;
 
-import com.telinc1.faerie.Resources;
-import com.telinc1.faerie.util.TypeUtils;
-
-import javax.swing.filechooser.FileFilter;
-import java.io.File;
-
 /**
- * The {@code CFGFilter} is a {@link FileFilter} for CFG configuration files.
- *
- * @author Telinc1
- * @since 1.0.0
+ * This interface denotes that a {@link javax.swing.filechooser.FileFilter} is
+ * to be used with the
+ * {@link com.telinc1.faerie.gui.chooser.ApplicationChooser}.
  */
-public class CFGFilter extends FileFilter implements IApplicationFilter {
-    @Override
-    public boolean accept(File file){
-        if(file.isDirectory()){
-            return true;
-        }
-
-        return TypeUtils.getExtension(file).equals(TypeUtils.TYPE_CFG);
-    }
-
-    @Override
-    public String getDescription(){
-        return Resources.getString("chooser", "format.cfg");
-    }
-
-    @Override
-    public String getExtension(){
-        return TypeUtils.TYPE_CFG;
-    }
+public interface IApplicationFilter {
+    /**
+     * Returns the default extension of this filter's file, without a leading
+     * period.
+     */
+    String getExtension();
 }

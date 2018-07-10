@@ -29,28 +29,29 @@ import javax.swing.filechooser.FileFilter;
 import java.io.File;
 
 /**
- * The {@code CFGFilter} is a {@link FileFilter} for CFG configuration files.
+ * The {@code TPLFilter} is a {@link FileFilter} for Tile Layer Pro SNES
+ * palette files with SNES (5-bit) RGB color values.
  *
  * @author Telinc1
  * @since 1.0.0
  */
-public class CFGFilter extends FileFilter implements IApplicationFilter {
+public class TPLFilter extends FileFilter implements IApplicationFilter {
     @Override
     public boolean accept(File file){
         if(file.isDirectory()){
             return true;
         }
 
-        return TypeUtils.getExtension(file).equals(TypeUtils.TYPE_CFG);
+        return TypeUtils.getExtension(file).equalsIgnoreCase(TypeUtils.TYPE_TPL_PALETTE);
     }
 
     @Override
     public String getDescription(){
-        return Resources.getString("chooser", "format.cfg");
+        return Resources.getString("chooser", "format.tplPalette");
     }
 
     @Override
     public String getExtension(){
-        return TypeUtils.TYPE_CFG;
+        return TypeUtils.TYPE_TPL_PALETTE;
     }
 }
