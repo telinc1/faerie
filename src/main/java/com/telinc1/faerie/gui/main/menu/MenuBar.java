@@ -44,6 +44,11 @@ public class MenuBar extends JMenuBar {
     private FileMenu fileMenu;
 
     /**
+     * The "View" menu of the menu bar.
+     */
+    private ViewMenu viewMenu;
+
+    /**
      * The "Help" menu of the menu bar.
      */
     private HelpMenu helpMenu;
@@ -59,9 +64,11 @@ public class MenuBar extends JMenuBar {
         this.parent = parent;
 
         this.fileMenu = new FileMenu(this);
+        this.viewMenu = new ViewMenu(this);
         this.helpMenu = new HelpMenu(this);
 
         this.add(this.fileMenu);
+        this.add(this.viewMenu);
         this.add(this.helpMenu);
     }
 
@@ -81,6 +88,15 @@ public class MenuBar extends JMenuBar {
      */
     public FileMenu getFileMenu(){
         return this.fileMenu;
+    }
+
+    /**
+     * Returns the "View" menu.
+     *
+     * @return the {@code ViewMenu}
+     */
+    public ViewMenu getViewMenu(){
+        return this.viewMenu;
     }
 
     /**
