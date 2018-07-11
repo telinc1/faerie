@@ -28,6 +28,7 @@ import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.util.locale.LocalizedException;
 import com.telinc1.faerie.util.locale.Warning;
 import com.telinc1.faerie.util.notification.Notifier;
+import org.apache.commons.cli.ParseException;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -44,9 +45,9 @@ import java.io.InputStreamReader;
  */
 public class Application {
     /**
-     * The command line arguments given to the application.
+     * The command line argument store for the application.
      */
-    private final String[] args;
+    private final Arguments arguments;
 
     /**
      * The preference store for the application.
@@ -79,10 +80,16 @@ public class Application {
      * @param args the command line arguments given to the application
      */
     private Application(String[] args){
-        this.args = args;
+        this.arguments = new Arguments(args);
         this.preferences = new Preferences(this);
         this.notifier = new Notifier(this);
         this.exceptionHandler = new ExceptionHandler(this);
+
+        try {
+            this.getArguments().parse();
+        }catch(ParseException exception){
+            this.getNotifier().fatal("core", "launch.arguments", "help", this.getArguments().getHelp());
+        }
 
         try {
             Thread.setDefaultUncaughtExceptionHandler(this.exceptionHandler);
@@ -123,11 +130,16 @@ public class Application {
 
     /**
      * Returns the {@link Notifier} for the application.
-     *
-     * @return the {@code Notifier} instance for displaying messages
      */
     public Notifier getNotifier(){
         return this.notifier;
+    }
+
+    /**
+     * Return the command line {@code Arguments} store.
+     */
+    public Arguments getArguments(){
+        return this.arguments;
     }
 
     /**
@@ -173,15 +185,6 @@ public class Application {
      */
     public static void main(String[] args){
         Application application = new Application(args);
-    }
-
-    /**
-     * Returns the command line arguments passed to the application.
-     *
-     * @return the array of command line arguments
-     */
-    public String[] getArgs(){
-        return this.args;
     }
 
     /**
