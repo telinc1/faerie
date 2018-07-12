@@ -20,8 +20,9 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.telinc1.faerie;
+package com.telinc1.faerie.preferences;
 
+import com.telinc1.faerie.Application;
 import com.telinc1.faerie.util.locale.Warning;
 
 import java.io.BufferedWriter;
@@ -37,50 +38,19 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * The {@code Preferences} class loads, manages, and stores all preferences
- * for the application.
+ * The {@code FlatFileStore} class implements a persistent INI-like flat file
+ * storage for application preferences, stored in the same directory as the
+ * application itself.
+ *
+ * @author Telinc1
+ * @since 1.0.0
  */
-public class Preferences {
-    /**
-     * The preference key for storing the scrolling speed in scroll panes.
-     */
-    public static final String SCROLL_SPEED = "scroll_speed";
-
-    /**
-     * The preference key for storing the last used directory in file choosers.
-     */
-    public static final String LAST_DIRECTORY = "last_directory";
-
-    /**
-     * The preference key for storing the X position of the {@code MainWindow}.
-     */
-    public static final String MAIN_WINDOW_X = "main_window_x";
-
-    /**
-     * The preference key for storing the X position of the {@code MainWindow}.
-     */
-    public static final String MAIN_WINDOW_Y = "main_window_y";
-
-    /**
-     * The preference key for storing the width of the {@code MainWindow}.
-     */
-    public static final String MAIN_WINDOW_WIDTH = "main_window_width";
-
-    /**
-     * The preference key for storing the height of the {@code MainWindow}.
-     */
-    public static final String MAIN_WINDOW_HEIGHT = "main_window_height";
-
+public class FlatFileStore extends PreferenceStore {
     /**
      * The name of the configuration file, relative to the directory in which
      * Faerie is launched.
      */
     private static final String FILE_NAME = "faerie.ini";
-
-    /**
-     * The {@code Application} which this class backs.
-     */
-    private final Application application;
 
     /**
      * All of the preferences stored in this object.
@@ -93,18 +63,30 @@ public class Preferences {
     private File file;
 
     /**
-     * Construct a new {@code Preferences} manager for an {@link Application}.
+     * Construct a new {@code FlatFileStore} manager for an {@link Application}.
      */
-    Preferences(Application application){
-        this.application = application;
+    public FlatFileStore(Application application){
+        super(application);
         this.preferences = new HashMap<>();
     }
 
-    /**
-     * Loads the preferences from a given {@code File}.
-     *
-     * @return any {@link Warning}s created while reading the file
-     */
+    @Override
+    public boolean has(String key){
+        return this.preferences.containsKey(key);
+    }
+
+    @Override
+    public String get(String key){
+        return this.preferences.get(key);
+    }
+
+    @Override
+    public FlatFileStore set(String key, String value){
+        this.preferences.put(key, value);
+        return this;
+    }
+
+    @Override
     public Warning load(){
         File file = this.getFile();
 
@@ -144,13 +126,6 @@ public class Preferences {
     }
 
     /**
-     * Returns the {@link Application} backed by these {@code Preferences}.
-     */
-    public Application getApplication(){
-        return this.application;
-    }
-
-    /**
      * Returns the {@link File} which stores preferences, or {@code null} if
      * it isn't accessible.
      */
@@ -164,7 +139,7 @@ public class Preferences {
                     path = file.getParent();
                 }
 
-                this.file = new File(path + "/" + Preferences.FILE_NAME);
+                this.file = new File(path + "/" + FlatFileStore.FILE_NAME);
             }catch(NullPointerException | URISyntaxException | SecurityException exception){
                 return null;
             }
@@ -173,85 +148,7 @@ public class Preferences {
         return this.file;
     }
 
-    /**
-     * Retrieves the value for a key. If the key doesn't exist, it
-     * will be set to a default (fallback) value.
-     *
-     * @return the {@code String} for the key, or the {@code fallback} if
-     * it doesn't exist
-     */
-    public String get(String key, String fallback){
-        if(this.has(key)){
-            return this.get(key);
-        }
-
-        this.set(key, fallback);
-        return fallback;
-    }
-
-    /**
-     * Retrieves the value for a key. If the key doesn't exist, it
-     * will be set to a default (fallback) value.
-     *
-     * @return the {@code int} for the key, or the {@code fallback} if
-     * it doesn't exist
-     */
-    public int get(String key, int fallback){
-        if(this.has(key)){
-            String value = this.get(key);
-
-            try {
-                return Integer.valueOf(value);
-            }catch(NumberFormatException exception){
-                // ignore and drop down to the fallback
-            }
-        }
-
-        this.set(key, fallback);
-        return fallback;
-    }
-
-    /**
-     * Checks if a key exists in the preferences.
-     */
-    public boolean has(String key){
-        return this.preferences.containsKey(key);
-    }
-
-    /**
-     * Retrieves the value for a key.
-     *
-     * @return the {@code String} for the key, or {@code null} if it isn't set
-     */
-    public String get(String key){
-        return this.preferences.get(key);
-    }
-
-    /**
-     * Sets the value of a key.
-     *
-     * @return the {@code Preferences}, for chaining
-     */
-    public Preferences set(String key, String value){
-        this.preferences.put(key, value);
-        return this;
-    }
-
-    /**
-     * Sets the integer value of a key.
-     *
-     * @return the {@code Preferences}, for chaining
-     */
-    public Preferences set(String key, int value){
-        this.preferences.put(key, Integer.toString(value));
-        return this;
-    }
-
-    /**
-     * Stores the preferences to a given {@code File}.
-     *
-     * @return any {@link Warning}s created while writing the file
-     */
+    @Override
     public Warning store(){
         File file = this.getFile();
 

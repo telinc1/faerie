@@ -25,7 +25,6 @@ package com.telinc1.faerie.gui.main;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.telinc1.faerie.Application;
-import com.telinc1.faerie.Preferences;
 import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.gui.DecimalFormatter;
 import com.telinc1.faerie.gui.GraphicalInterface;
@@ -34,6 +33,7 @@ import com.telinc1.faerie.gui.JPaletteView;
 import com.telinc1.faerie.gui.JScaledImage;
 import com.telinc1.faerie.gui.chooser.ConfigurationChooser;
 import com.telinc1.faerie.gui.main.menu.MenuBar;
+import com.telinc1.faerie.preferences.PreferenceStore;
 import com.telinc1.faerie.sprite.EnumSpriteSubType;
 import com.telinc1.faerie.sprite.EnumSpriteType;
 import com.telinc1.faerie.sprite.EnumStatusHandling;
@@ -256,14 +256,14 @@ public class MainWindow extends JFrame {
         this.setContentPane(this.contentPanel);
 
         this.setSize(
-            this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_WIDTH, 760),
-            this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_HEIGHT, 600)
+            this.getApplication().getPreferences().get(PreferenceStore.MAIN_WINDOW_WIDTH, 760),
+            this.getApplication().getPreferences().get(PreferenceStore.MAIN_WINDOW_HEIGHT, 600)
         );
         this.setMinimumSize(new Dimension(760, 600));
 
         this.setLocation(
-            this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_X, 0),
-            this.getApplication().getPreferences().get(Preferences.MAIN_WINDOW_Y, 0)
+            this.getApplication().getPreferences().get(PreferenceStore.MAIN_WINDOW_X, 0),
+            this.getApplication().getPreferences().get(PreferenceStore.MAIN_WINDOW_Y, 0)
         );
 
         new DropTarget(this.contentPanel, new MainWindowDropListener(this));
@@ -275,12 +275,12 @@ public class MainWindow extends JFrame {
                 Point location = MainWindow.this.getLocation();
                 Dimension size = MainWindow.this.getSize();
 
-                Preferences preferences = MainWindow.this.getApplication().getPreferences();
+                PreferenceStore preferences = MainWindow.this.getApplication().getPreferences();
 
-                preferences.set(Preferences.MAIN_WINDOW_X, location.x);
-                preferences.set(Preferences.MAIN_WINDOW_Y, location.y);
-                preferences.set(Preferences.MAIN_WINDOW_WIDTH, size.width);
-                preferences.set(Preferences.MAIN_WINDOW_HEIGHT, size.height);
+                preferences.set(PreferenceStore.MAIN_WINDOW_X, location.x);
+                preferences.set(PreferenceStore.MAIN_WINDOW_Y, location.y);
+                preferences.set(PreferenceStore.MAIN_WINDOW_WIDTH, size.width);
+                preferences.set(PreferenceStore.MAIN_WINDOW_HEIGHT, size.height);
 
                 MainWindow.this.getApplication().exit(0);
             }
@@ -301,7 +301,7 @@ public class MainWindow extends JFrame {
      */
     private void configureUIComponents(){
         this.spriteScrollPane.getVerticalScrollBar().setUnitIncrement(
-            this.getApplication().getPreferences().get(Preferences.SCROLL_SPEED, 14)
+            this.getApplication().getPreferences().get(PreferenceStore.SCROLL_SPEED, 14)
         );
 
         this.addComboBoxListener(this.spriteSelectionComboBox, index -> {

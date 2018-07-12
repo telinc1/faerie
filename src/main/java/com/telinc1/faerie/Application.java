@@ -24,6 +24,8 @@ package com.telinc1.faerie;
 
 import com.telinc1.faerie.cli.CommandLineInterface;
 import com.telinc1.faerie.gui.GraphicalInterface;
+import com.telinc1.faerie.preferences.FlatFileStore;
+import com.telinc1.faerie.preferences.PreferenceStore;
 import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.util.locale.LocalizedException;
 import com.telinc1.faerie.util.locale.Warning;
@@ -50,7 +52,7 @@ public class Application {
     /**
      * The preference store for the application.
      */
-    private final Preferences preferences;
+    private final PreferenceStore preferences;
 
     /**
      * The application's {@link Notifier}.
@@ -74,7 +76,7 @@ public class Application {
      */
     private Application(String[] args){
         this.arguments = new Arguments(args);
-        this.preferences = new Preferences(this);
+        this.preferences = new FlatFileStore(this);
         this.notifier = new Notifier(this);
         this.exceptionHandler = new ExceptionHandler(this);
 
@@ -134,18 +136,11 @@ public class Application {
     }
 
     /**
-     * Returns the {@code Preferences} object which manages this application.
-     */
-    public Preferences getPreferences(){
-        return this.preferences;
-    }
-
-    /**
      * Cleanly exits out of the application with the a status code.
      */
     public void exit(int status){
         if(status == 0){
-            Preferences preferences = this.getPreferences();
+            PreferenceStore preferences = this.getPreferences();
             Warning warning = preferences.store();
 
             if(warning != null){
@@ -160,6 +155,13 @@ public class Application {
         }
 
         System.exit(status);
+    }
+
+    /**
+     * Returns the {@code PreferenceStore} object which manages this application.
+     */
+    public PreferenceStore getPreferences(){
+        return this.preferences;
     }
 
     /**

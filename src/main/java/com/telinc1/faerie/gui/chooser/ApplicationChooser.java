@@ -23,8 +23,8 @@
 package com.telinc1.faerie.gui.chooser;
 
 import com.telinc1.faerie.Application;
-import com.telinc1.faerie.Preferences;
 import com.telinc1.faerie.gui.chooser.filter.IApplicationFilter;
+import com.telinc1.faerie.preferences.PreferenceStore;
 import com.telinc1.faerie.util.TypeUtils;
 
 import javax.swing.JFileChooser;
@@ -50,7 +50,7 @@ abstract class ApplicationChooser extends JFileChooser {
     protected ApplicationChooser(Application application){
         this.application = application;
 
-        String directory = this.getApplication().getPreferences().get(Preferences.LAST_DIRECTORY);
+        String directory = this.getApplication().getPreferences().get(PreferenceStore.LAST_DIRECTORY);
 
         if(directory != null){
             this.setCurrentDirectory(this.getFileSystemView().createFileObject(directory));
@@ -73,7 +73,7 @@ abstract class ApplicationChooser extends JFileChooser {
         }
 
         this.getApplication().getPreferences().set(
-            Preferences.LAST_DIRECTORY,
+            PreferenceStore.LAST_DIRECTORY,
             directory.getAbsolutePath()
         );
     }
@@ -109,12 +109,12 @@ abstract class ApplicationChooser extends JFileChooser {
     public void setSelectedFile(File file){
         if(file == null){
             this.getApplication().getPreferences().set(
-                Preferences.LAST_DIRECTORY,
+                PreferenceStore.LAST_DIRECTORY,
                 this.getCurrentDirectory().getAbsolutePath()
             );
         }else{
             this.getApplication().getPreferences().set(
-                Preferences.LAST_DIRECTORY,
+                PreferenceStore.LAST_DIRECTORY,
                 file.getAbsolutePath()
             );
         }
