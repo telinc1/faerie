@@ -86,8 +86,10 @@ public class MainWindowDropListener implements DropTargetListener {
                 List<File> files = (List<File>)transferable.getTransferData(flavor);
 
                 if(!files.isEmpty()){
-                    this.getWindow().getInterface().openFile(files.get(0));
-                    event.dropComplete(true);
+                    if(this.getWindow().getInterface().prepareToLoad()){
+                        this.getWindow().getInterface().openFile(files.get(0));
+                        event.dropComplete(true);
+                    }
 
                     return;
                 }

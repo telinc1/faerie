@@ -72,7 +72,6 @@ public class FileMenu extends Menu {
             File file = window.showOpenDialog();
 
             if(file != null){
-                ui.setProvider(null);
                 ui.openFile(file);
             }
         });

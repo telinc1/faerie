@@ -121,10 +121,6 @@ public class GraphicalInterface extends UserInterface {
 
     @Override
     public void openFile(File file){
-        if(!this.unloadProvider()){
-            return;
-        }
-
         if(TypeUtils.isConfiguration(file)){
             ConfigurationProvider provider = new ConfigurationProvider(file);
             this.setProvider(provider);
@@ -201,6 +197,7 @@ public class GraphicalInterface extends UserInterface {
         super.setProvider(provider);
 
         if(this.getProvider() == null){
+            this.getWindow().updateGUI();
             return this;
         }
 
