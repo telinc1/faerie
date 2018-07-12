@@ -63,7 +63,7 @@
                   <minimumSize width="30" height="30"/>
                   <opaque value="true"/>
                   <preferredSize width="30" height="30"/>
-                  <toolTipText resource-bundle="com/telinc1/faerie/locale/Palette" key="button.reload"/>
+                  <toolTipText resource-bundle="com/telinc1/faerie/locale/Palette" key="button.import"/>
                 </properties>
               </component>
             </children>
