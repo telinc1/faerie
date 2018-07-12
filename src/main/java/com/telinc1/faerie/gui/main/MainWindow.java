@@ -448,9 +448,10 @@ public class MainWindow extends JFrame {
         ConfigurationChooser chooser = this.getConfigurationChooser();
 
         int result = chooser.showOpen(this);
-        chooser.setSelectedFile(null);
+        File file = chooser.getSelectedFile();
 
-        return result == JFileChooser.APPROVE_OPTION ? chooser.getSelectedFile() : null;
+        chooser.setSelectedFile(null);
+        return result == JFileChooser.APPROVE_OPTION ? file : null;
     }
 
     /**
@@ -460,9 +461,10 @@ public class MainWindow extends JFrame {
         ConfigurationChooser chooser = this.getConfigurationChooser();
 
         int result = chooser.showSave(this);
-        chooser.setSelectedFile(null);
+        File file = chooser.getActualFile();
 
-        return result == JFileChooser.APPROVE_OPTION ? chooser.getActualFile() : null;
+        chooser.setSelectedFile(null);
+        return result == JFileChooser.APPROVE_OPTION ? file : null;
     }
 
     /**

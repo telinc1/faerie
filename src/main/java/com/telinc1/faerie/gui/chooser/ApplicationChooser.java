@@ -86,7 +86,7 @@ abstract class ApplicationChooser extends JFileChooser {
     public File getActualFile(){
         File selected = this.getSelectedFile();
 
-        if(selected.isDirectory()){
+        if(selected == null || selected.isDirectory()){
             return selected;
         }
 
