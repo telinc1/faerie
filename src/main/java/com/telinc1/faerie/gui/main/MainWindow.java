@@ -318,7 +318,7 @@ public class MainWindow extends JFrame {
                 return;
             }
 
-            this.startModification().setType(EnumSpriteType.fromInteger(index));
+            this.getInterface().startModification().setType(EnumSpriteType.fromInteger(index));
             this.updateGUI();
         });
 
@@ -327,7 +327,7 @@ public class MainWindow extends JFrame {
                 return;
             }
 
-            this.startModification().setSubtype(EnumSpriteSubType.fromInteger(index));
+            this.getInterface().startModification().setSubtype(EnumSpriteSubType.fromInteger(index));
             this.updateGUI();
         });
 
@@ -336,7 +336,7 @@ public class MainWindow extends JFrame {
                 return;
             }
 
-            this.startModification().setActsLike(value);
+            this.getInterface().startModification().setActsLike(value);
         });
 
         this.addTextFieldListener(this.firstASMTextField, text -> {
@@ -344,7 +344,7 @@ public class MainWindow extends JFrame {
                 return;
             }
 
-            this.startModification().setFirstASMFile(text);
+            this.getInterface().startModification().setFirstASMFile(text);
         });
 
         this.addTextFieldListener(this.secondASMTextField, text -> {
@@ -352,7 +352,7 @@ public class MainWindow extends JFrame {
                 return;
             }
 
-            this.startModification().setSecondASMFile(text);
+            this.getInterface().startModification().setSecondASMFile(text);
         });
 
         for(Field field : this.getClass().getDeclaredFields()){
@@ -375,7 +375,7 @@ public class MainWindow extends JFrame {
                             return;
                         }
 
-                        bit.setBoolean(this.startModification().getBehavior(), checkBox.isSelected());
+                        bit.setBoolean(this.getInterface().modifyBehavior(), checkBox.isSelected());
                     }catch(IllegalAccessException e){
                         e.printStackTrace();
                     }
@@ -385,16 +385,16 @@ public class MainWindow extends JFrame {
             }
         }
 
-        this.addComboBoxListener(this.objectClippingComboBox, this::setObjectClipping);
-        this.addComboBoxListener(this.spriteClippingComboBox, this::setSpriteClipping);
-        this.addComboBoxListener(this.paletteComboBox, this::setSpritePalette);
+        this.addComboBoxListener(this.objectClippingComboBox, index -> this.getInterface().setObjectClipping(index));
+        this.addComboBoxListener(this.spriteClippingComboBox, index -> this.getInterface().setSpriteClipping(index));
+        this.addComboBoxListener(this.paletteComboBox, index -> this.getInterface().setSpritePalette(index));
 
         HexadecimalFormatter.apply(this.firstPropertyTextField, 0x0, 0xFF, value -> {
             if(this.getProvider().getCurrentSprite().getFirstPropertyByte() == value){
                 return;
             }
 
-            this.startModification().setFirstPropertyByte(value);
+            this.getInterface().startModification().setFirstPropertyByte(value);
         });
 
         HexadecimalFormatter.apply(this.secondPropertyTextField, 0x0, 0x3F, value -> {
@@ -402,7 +402,7 @@ public class MainWindow extends JFrame {
                 return;
             }
 
-            this.startModification().setSecondPropertyByte(value);
+            this.getInterface().startModification().setSecondPropertyByte(value);
         });
 
         this.addComboBoxListener(this.statusOverrideComboBox, index -> {
@@ -412,7 +412,7 @@ public class MainWindow extends JFrame {
                 return;
             }
 
-            this.startModification().setStatusHandling(handling);
+            this.getInterface().startModification().setStatusHandling(handling);
         });
 
         HexadecimalFormatter.apply(this.uniqueByteTextField, 0x0, 0xFF, value -> {
@@ -420,7 +420,7 @@ public class MainWindow extends JFrame {
                 return;
             }
 
-            this.startModification().setUniqueByte(value);
+            this.getInterface().startModification().setUniqueByte(value);
         });
 
         DecimalFormatter.apply(this.extraByteAmountTextField, 0x0, 0xFF, value -> {
@@ -428,7 +428,7 @@ public class MainWindow extends JFrame {
                 return;
             }
 
-            this.startModification().setExtraBytes(value);
+            this.getInterface().startModification().setExtraBytes(value);
         });
     }
 
@@ -648,9 +648,9 @@ public class MainWindow extends JFrame {
             }
         }
 
-        this.setObjectClipping(behavior.objectClipping);
-        this.setSpriteClipping(behavior.spriteClipping);
-        this.setSpritePalette(behavior.palette);
+        this.updateObjectClipping();
+        this.updateSpriteClipping();
+        this.updatePalette();
 
         this.firstPropertyTextField.setValue(sprite.getFirstPropertyByte());
         this.secondPropertyTextField.setValue(sprite.getSecondPropertyByte());
@@ -662,17 +662,11 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Sets the object clipping of the active sprite and updates the fields
-     * related to it.
-     *
-     * @param index the new object clipping
+     * Updates the components in the window related to the object clipping to
+     * display the current object clipping of the loaded sprite.
      */
-    private void setObjectClipping(int index){
-        index = Math.max(Math.min(index, 0xF), 0x0);
-
-        if(this.getProvider() != null && this.getProvider().getCurrentSprite().getBehavior().objectClipping != index){
-            this.modifyBehavior().objectClipping = (byte)index;
-        }
+    public void updateObjectClipping(){
+        int index = this.getProvider().getCurrentSprite().getBehavior().objectClipping;
 
         this.objectClippingComboBox.setSelectedIndex(index);
 
@@ -684,17 +678,11 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Sets the sprite clipping of the active sprite and updates the fields
-     * related to it.
-     *
-     * @param index the new sprite clipping
+     * Updates the components in the window related to the sprite clipping to
+     * display the current object clipping of the loaded sprite.
      */
-    private void setSpriteClipping(int index){
-        index = Math.max(Math.min(index, 0x3F), 0x0);
-
-        if(this.getProvider() != null && this.getProvider().getCurrentSprite().getBehavior().spriteClipping != index){
-            this.modifyBehavior().spriteClipping = (byte)index;
-        }
+    public void updateSpriteClipping(){
+        int index = this.getProvider().getCurrentSprite().getBehavior().spriteClipping;
 
         this.spriteClippingComboBox.setSelectedIndex(index);
 
@@ -706,37 +694,11 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Starts a modification on the current sprite's.
-     *
-     * @return the {@link Sprite} which can be modified
-     * @throws NullPointerException if there is no active provider
+     * Updates the components in the window related to the palette to display
+     * the current palette of the loaded sprite.
      */
-    private Sprite startModification(){
-        return this.getProvider().startModification();
-    }
-
-    /**
-     * Starts a modification on the current sprite's behavior.
-     *
-     * @return the {@link SpriteBehavior} which can be modified
-     * @throws NullPointerException if there is no active provider
-     */
-    private SpriteBehavior modifyBehavior(){
-        return this.getProvider().startModification().getBehavior();
-    }
-
-    /**
-     * Sets the palette of the active sprite and updates the fields related to
-     * it.
-     *
-     * @param palette the new palette
-     */
-    private void setSpritePalette(int palette){
-        palette = Math.max(Math.min(palette, 0x7), 0x0);
-
-        if(this.getProvider() != null && this.getProvider().getCurrentSprite().getBehavior().palette != palette){
-            this.modifyBehavior().palette = (byte)palette;
-        }
+    public void updatePalette(){
+        int palette = this.getProvider().getCurrentSprite().getBehavior().palette;
 
         this.paletteComboBox.setSelectedIndex(palette);
         this.paletteView.setFirstIndex(0x80 + palette * 0x10);

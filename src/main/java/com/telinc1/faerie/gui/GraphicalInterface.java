@@ -28,6 +28,8 @@ import com.telinc1.faerie.UserInterface;
 import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.main.MainWindow;
 import com.telinc1.faerie.notification.Notifier;
+import com.telinc1.faerie.sprite.Sprite;
+import com.telinc1.faerie.sprite.SpriteBehavior;
 import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
 import com.telinc1.faerie.sprite.provider.LoadingException;
 import com.telinc1.faerie.sprite.provider.Provider;
@@ -108,6 +110,74 @@ public class GraphicalInterface extends UserInterface {
         }catch(IOException exception){
             throw new LocalizedException(exception, "core", "launch.palette");
         }
+    }
+
+    /**
+     * Starts a modification on the current sprite.
+     *
+     * @return the {@link Sprite} which can be modified
+     * @throws NullPointerException if there is no active provider
+     */
+    public Sprite startModification(){
+        return this.getProvider().startModification();
+    }
+
+    /**
+     * Starts a modification on the current sprite's behavior.
+     *
+     * @return the {@link SpriteBehavior} which can be modified
+     * @throws NullPointerException if there is no active provider
+     */
+    public SpriteBehavior modifyBehavior(){
+        return this.getProvider().startModification().getBehavior();
+    }
+
+    /**
+     * Sets the object clipping of the active sprite and updates the fields
+     * related to it in the GUI.
+     *
+     * @param index the new object clipping
+     */
+    public void setObjectClipping(int index){
+        index = Math.max(Math.min(index, 0xF), 0x0);
+
+        if(this.getProvider() != null && this.getProvider().getCurrentSprite().getBehavior().objectClipping != index){
+            this.modifyBehavior().objectClipping = (byte)index;
+        }
+
+        this.getWindow().updateObjectClipping();
+    }
+
+    /**
+     * Sets the sprite clipping of the active sprite and updates the fields
+     * related to it in the GUI.
+     *
+     * @param index the new sprite clipping
+     */
+    public void setSpriteClipping(int index){
+        index = Math.max(Math.min(index, 0x3F), 0x0);
+
+        if(this.getProvider() != null && this.getProvider().getCurrentSprite().getBehavior().spriteClipping != index){
+            this.modifyBehavior().spriteClipping = (byte)index;
+        }
+
+        this.getWindow().updateSpriteClipping();
+    }
+
+    /**
+     * Sets the palette of the active sprite and updates the fields related to
+     * it in the GUI.
+     *
+     * @param palette the new palette
+     */
+    public void setSpritePalette(int palette){
+        palette = Math.max(Math.min(palette, 0x7), 0x0);
+
+        if(this.getProvider() != null && this.getProvider().getCurrentSprite().getBehavior().palette != palette){
+            this.modifyBehavior().palette = (byte)palette;
+        }
+
+        this.getWindow().updatePalette();
     }
 
     /**
