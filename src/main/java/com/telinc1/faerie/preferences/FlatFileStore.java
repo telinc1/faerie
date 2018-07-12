@@ -63,7 +63,7 @@ public class FlatFileStore extends PreferenceStore {
     private File file;
 
     /**
-     * Construct a new {@code FlatFileStore} manager for an {@link Application}.
+     * Construct a new {@code FlatFileStore} for an {@code Application}.
      */
     public FlatFileStore(Application application){
         super(application);

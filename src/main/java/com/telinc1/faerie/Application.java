@@ -25,6 +25,7 @@ package com.telinc1.faerie;
 import com.telinc1.faerie.cli.CommandLineInterface;
 import com.telinc1.faerie.gui.GraphicalInterface;
 import com.telinc1.faerie.preferences.FlatFileStore;
+import com.telinc1.faerie.preferences.NullStore;
 import com.telinc1.faerie.preferences.PreferenceStore;
 import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.util.locale.LocalizedException;
@@ -76,9 +77,6 @@ public class Application {
      */
     private Application(String[] args){
         this.arguments = new Arguments(args);
-        this.preferences = new FlatFileStore(this);
-        this.notifier = new Notifier(this);
-        this.exceptionHandler = new ExceptionHandler(this);
 
         try {
             this.getArguments().parse();
@@ -86,6 +84,15 @@ public class Application {
             this.getArguments().printFormattedHelp();
             this.exit(1);
         }
+
+        if(this.getArguments().isCold()){
+            this.preferences = new NullStore(this);
+        }else{
+            this.preferences = new FlatFileStore(this);
+        }
+
+        this.notifier = new Notifier(this);
+        this.exceptionHandler = new ExceptionHandler(this);
 
         if(this.getArguments().isHeadless()){
             this.userInterface = new CommandLineInterface(this);
@@ -139,18 +146,15 @@ public class Application {
      * Cleanly exits out of the application with the a status code.
      */
     public void exit(int status){
-        if(status == 0){
-            PreferenceStore preferences = this.getPreferences();
-            Warning warning = preferences.store();
+        if(status == 0 && this.getPreferences() != null){
+            Warning warning = this.getPreferences().store();
 
             if(warning != null){
                 this.getNotifier().notify(warning);
             }
         }
 
-        UserInterface window = this.getUserInterface();
-
-        if(window != null && !window.stop() && status == 0){
+        if(this.getUserInterface() != null && !this.getUserInterface().stop() && status == 0){
             return;
         }
 
@@ -158,7 +162,9 @@ public class Application {
     }
 
     /**
-     * Returns the {@code PreferenceStore} object which manages this application.
+     * Returns the {@code PreferenceStore} object which manages this
+     * application. If called too early in the initialization sequence, this
+     * could be {@code null}.
      */
     public PreferenceStore getPreferences(){
         return this.preferences;
@@ -166,8 +172,6 @@ public class Application {
 
     /**
      * Returns the {@link ExceptionHandler} for the application.
-     *
-     * @return the {@code ExceptionHandler} for unhandled exceptions
      */
     public ExceptionHandler getExceptionHandler(){
         return this.exceptionHandler;

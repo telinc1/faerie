@@ -58,6 +58,11 @@ public class Arguments {
     private boolean headless;
 
     /**
+     * Stores the value of the "cold" command line option.
+     */
+    private boolean cold;
+
+    /**
      * Constructs an {@code Arguments} store and creates the default options.
      *
      * @param input the input to the {@code Arguments} parser
@@ -68,6 +73,7 @@ public class Arguments {
         this.options = new Options();
         this.options.addOption("h", "help", false, "display this message");
         this.options.addOption("H", "headless", false, "disable the graphical interface and operate on a single file");
+        this.options.addOption("c", "cold", false, "disable preference storage");
     }
 
     /**
@@ -90,6 +96,7 @@ public class Arguments {
 
         this.printHelp = line.hasOption("help");
         this.headless = line.hasOption("headless") || this.printHelp;
+        this.cold = line.hasOption("cold");
     }
 
     /**
@@ -119,5 +126,13 @@ public class Arguments {
      */
     public boolean isHeadless(){
         return this.headless;
+    }
+
+    /**
+     * Returns whether the application should run in cold mode, i.e. disable
+     * preference storage.
+     */
+    public boolean isCold(){
+        return this.cold;
     }
 }
