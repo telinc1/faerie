@@ -309,7 +309,7 @@ public class MainWindow extends JFrame {
                 this.getProvider().loadSprite(index);
                 this.updateInput();
             }catch(ProvisionException exception){
-                this.getApplication().getExceptionHandler().handle(this, exception);
+                this.getApplication().getExceptionHandler().handle(exception);
             }
         });
 

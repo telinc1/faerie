@@ -127,7 +127,7 @@ public class GraphicalInterface extends UserInterface {
                 ROMProvider provider = new ROMProvider(file);
                 this.setProvider(provider);
             }catch(LoadingException exception){
-                this.getApplication().getExceptionHandler().handle(this.getWindow(), exception);
+                this.getApplication().getExceptionHandler().handle(exception);
             }
         }else{
             this.getNotifier().error(this.getWindow(), "file", "load.type");

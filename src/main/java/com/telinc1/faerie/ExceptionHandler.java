@@ -24,7 +24,6 @@ package com.telinc1.faerie;
 
 import com.telinc1.faerie.util.locale.ILocalizable;
 
-import javax.swing.JFrame;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -66,36 +65,20 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     /**
      * Shows a detailed string representation of an exception and reports it.
-     *
      * If the {@link Throwable} is {@link ILocalizable}, it will directly be
      * displayed as a notification. If not, it will be shown as a fatal error.
      *
      * @param throwable the {@link Throwable} to handle
      */
     public void handle(Throwable throwable){
-        // this.handle(this.getApplication().getUserInterface(), throwable);
-        this.handle(null, throwable);
-    }
-
-    /**
-     * Shows a detailed string representation of an exception and reports it.
-     * <p>
-     * If the {@link Throwable} is {@link ILocalizable}, it will directly be
-     * displayed as a notification. If not, it will be shown as a fatal error.
-     *
-     * @param parent the {@code JFrame} which directly or indirectly produced
-     * this exception
-     * @param throwable the {@link Throwable} to handle
-     */
-    public void handle(JFrame parent, Throwable throwable){
         this.report(throwable);
 
         if(throwable instanceof ILocalizable){
-            this.getApplication().getUserInterface().getNotifier().notify(parent, (ILocalizable)throwable);
+            this.getApplication().getUserInterface().getNotifier().notify((ILocalizable)throwable);
             return;
         }
 
-        this.getApplication().getUserInterface().getNotifier().fatal(parent, "core", "exception", throwable);
+        this.getApplication().getUserInterface().getNotifier().fatal("core", "exception", throwable);
     }
 
     /**
