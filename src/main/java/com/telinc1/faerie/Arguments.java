@@ -22,6 +22,11 @@
 
 package com.telinc1.faerie;
 
+import com.telinc1.faerie.cli.CommandLineInterface;
+import com.telinc1.faerie.gui.GraphicalInterface;
+import com.telinc1.faerie.preferences.FlatFileStore;
+import com.telinc1.faerie.preferences.NullStore;
+import com.telinc1.faerie.preferences.PreferenceStore;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -134,5 +139,21 @@ public class Arguments {
      */
     public boolean isCold(){
         return this.cold;
+    }
+
+    /**
+     * Creates an appropriate {@code PreferenceStore} for an
+     * {@code Application} according to the given arguments.
+     */
+    public PreferenceStore createPreferenceStore(Application application){
+        return this.isCold() ? new NullStore(application) : new FlatFileStore(application);
+    }
+
+    /**
+     * Creates an appropriate {@code UserInterface} for an
+     * {@code Application} according to the given arguments.
+     */
+    public UserInterface createUserInterface(Application application){
+        return this.isHeadless() ? new CommandLineInterface(application) : new GraphicalInterface(application);
     }
 }

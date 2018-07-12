@@ -22,10 +22,6 @@
 
 package com.telinc1.faerie;
 
-import com.telinc1.faerie.cli.CommandLineInterface;
-import com.telinc1.faerie.gui.GraphicalInterface;
-import com.telinc1.faerie.preferences.FlatFileStore;
-import com.telinc1.faerie.preferences.NullStore;
 import com.telinc1.faerie.preferences.PreferenceStore;
 import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.util.locale.LocalizedException;
@@ -85,20 +81,10 @@ public class Application {
             this.exit(1);
         }
 
-        if(this.getArguments().isCold()){
-            this.preferences = new NullStore(this);
-        }else{
-            this.preferences = new FlatFileStore(this);
-        }
-
+        this.preferences = this.getArguments().createPreferenceStore(this);
         this.notifier = new Notifier(this);
         this.exceptionHandler = new ExceptionHandler(this);
-
-        if(this.getArguments().isHeadless()){
-            this.userInterface = new CommandLineInterface(this);
-        }else{
-            this.userInterface = new GraphicalInterface(this);
-        }
+        this.userInterface = this.getArguments().createUserInterface(this);
 
         try {
             Thread.setDefaultUncaughtExceptionHandler(this.exceptionHandler);
