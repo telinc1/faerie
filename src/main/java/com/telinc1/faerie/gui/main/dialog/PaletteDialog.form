@@ -33,13 +33,11 @@
                   <focusable value="false"/>
                   <icon value="com/telinc1/faerie/images/buttons/refresh.png"/>
                   <iconTextGap value="0"/>
-                  <label value=""/>
                   <margin top="0" left="0" bottom="0" right="0"/>
                   <maximumSize width="30" height="30"/>
                   <minimumSize width="30" height="30"/>
                   <opaque value="true"/>
                   <preferredSize width="30" height="30"/>
-                  <text value=""/>
                   <toolTipText resource-bundle="com/telinc1/faerie/locale/Palette" key="button.reload"/>
                 </properties>
               </component>
@@ -60,13 +58,11 @@
                   <focusable value="false"/>
                   <icon value="com/telinc1/faerie/images/buttons/palette_import.png"/>
                   <iconTextGap value="0"/>
-                  <label value=""/>
                   <margin top="0" left="0" bottom="0" right="0"/>
                   <maximumSize width="30" height="30"/>
                   <minimumSize width="30" height="30"/>
                   <opaque value="true"/>
                   <preferredSize width="30" height="30"/>
-                  <text value=""/>
                   <toolTipText resource-bundle="com/telinc1/faerie/locale/Palette" key="button.reload"/>
                 </properties>
               </component>

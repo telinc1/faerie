@@ -56,7 +56,8 @@ public class Notifier {
      * @param source the source to handle from
      */
     public void notify(ILocalizable source){
-        this.notify(this.getApplication().getWindow(), source);
+        // this.notify(this.getApplication().getUserInterface(), source);
+        this.notify(null, source);
     }
 
     /**
@@ -67,7 +68,8 @@ public class Notifier {
      * @param arguments the arguments to format the message with
      */
     public void info(String resource, String subkey, Object... arguments){
-        this.info(this.getApplication().getWindow(), resource, subkey, arguments);
+        // this.info(this.getApplication().getUserInterface(), resource, subkey, arguments);
+        this.info(null, resource, subkey, arguments);
     }
 
     /**
@@ -162,7 +164,8 @@ public class Notifier {
      * @param arguments the arguments to format the message with
      */
     public void warn(String resource, String subkey, Object... arguments){
-        this.warn(this.getApplication().getWindow(), resource, subkey, arguments);
+        // this.warn(this.getApplication().getUserInterface(), resource, subkey, arguments);
+        this.warn(null, resource, subkey, arguments);
     }
 
     /**
@@ -185,7 +188,8 @@ public class Notifier {
      * @param arguments the arguments to format the message with
      */
     public void error(String resource, String subkey, Object... arguments){
-        this.error(this.getApplication().getWindow(), resource, subkey, arguments);
+        // this.error(this.getApplication().getUserInterface(), resource, subkey, arguments);
+        this.error(null, resource, subkey, arguments);
     }
 
     /**
@@ -208,7 +212,8 @@ public class Notifier {
      * @param arguments the arguments to format the message with
      */
     public void fatal(String resource, String subkey, Object... arguments){
-        this.fatal(this.getApplication().getWindow(), resource, subkey, arguments);
+        // this.fatal(this.getApplication().getUserInterface(), resource, subkey, arguments);
+        this.fatal(null, resource, subkey, arguments);
     }
 
     /**

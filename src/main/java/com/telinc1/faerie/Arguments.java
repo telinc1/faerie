@@ -29,9 +29,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 /**
  * The {@code Arguments} class uses Apache's Commons CLI library to manage and
  * parse command line arguments and flags given to the application.
@@ -103,16 +100,11 @@ public class Arguments {
     }
 
     /**
-     * Returns the help message for the application.
+     * Prints the help message for the application.
      */
-    public String getHelp(){
+    public void printFormattedHelp(){
         HelpFormatter helpFormatter = new HelpFormatter();
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        helpFormatter.printHelp(printWriter, helpFormatter.getWidth(), "faerie", null, this.options, 1, 3, null);
-
-        return stringWriter.toString();
+        helpFormatter.printHelp("faerie", this.options);
     }
 
     /**

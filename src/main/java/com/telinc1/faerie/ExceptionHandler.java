@@ -73,7 +73,8 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
      * @param throwable the {@link Throwable} to handle
      */
     public void handle(Throwable throwable){
-        this.handle(this.getApplication().getWindow(), throwable);
+        // this.handle(this.getApplication().getUserInterface(), throwable);
+        this.handle(null, throwable);
     }
 
     /**

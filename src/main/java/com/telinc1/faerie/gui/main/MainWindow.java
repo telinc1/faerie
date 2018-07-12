@@ -28,6 +28,7 @@ import com.telinc1.faerie.Application;
 import com.telinc1.faerie.Preferences;
 import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.gui.DecimalFormatter;
+import com.telinc1.faerie.gui.GraphicalInterface;
 import com.telinc1.faerie.gui.HexadecimalFormatter;
 import com.telinc1.faerie.gui.JPaletteView;
 import com.telinc1.faerie.gui.JScaledImage;
@@ -38,15 +39,9 @@ import com.telinc1.faerie.sprite.EnumSpriteType;
 import com.telinc1.faerie.sprite.EnumStatusHandling;
 import com.telinc1.faerie.sprite.Sprite;
 import com.telinc1.faerie.sprite.SpriteBehavior;
-import com.telinc1.faerie.sprite.provider.BlankProvider;
-import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
-import com.telinc1.faerie.sprite.provider.LoadingException;
 import com.telinc1.faerie.sprite.provider.Provider;
 import com.telinc1.faerie.sprite.provider.ProvisionException;
 import com.telinc1.faerie.sprite.provider.ROMProvider;
-import com.telinc1.faerie.sprite.provider.SavingException;
-import com.telinc1.faerie.util.TypeUtils;
-import com.telinc1.faerie.util.locale.Warning;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -59,7 +54,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -84,32 +78,28 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 /**
- * The main Faerie editor window.
+ * This class implements a Swing-based graphical user interface which allows
+ * the user to edit multiple sprites in any succession.
  *
  * @author Telinc1
  * @since 1.0.0
  */
 public class MainWindow extends JFrame {
     /**
-     * The parent application of the window.
+     * The {@code GraphicalInterface} which owns and uses this window.
      */
-    private Application application;
+    private final GraphicalInterface graphicalInterface;
 
     /**
      * The menu bar which the window displays.
      */
-    private MenuBar menuBar;
+    private final MenuBar menuBar;
 
     /**
      * The {@link JFileChooser} used for all opening and saving operations in
      * the menu.
      */
-    private ConfigurationChooser configurationChooser;
-
-    /**
-     * The currently loaded sprite provider.
-     */
-    private Provider provider;
+    private final ConfigurationChooser configurationChooser;
 
     private JPanel contentPanel;
     private JTabbedPane tabbedPane;
@@ -251,15 +241,13 @@ public class MainWindow extends JFrame {
     private JPaletteView paletteView;
 
     /**
-     * Construct an application window, including all of its inner components.
-     * <p>
-     * The title and sizes are automatically set.
-     * <p>
-     * Note that the window is not opened.
+     * Construct a graphical window, including all of its inner components. The
+     * title and sizes are automatically set. Note that the window is not
+     * opened.
      */
-    public MainWindow(Application application){
+    public MainWindow(GraphicalInterface graphicalInterface){
         super(Resources.getString("main", "title"));
-        this.application = application;
+        this.graphicalInterface = graphicalInterface;
 
         this.$$$setupUI$$$();
         this.configureUIComponents();
@@ -306,8 +294,6 @@ public class MainWindow extends JFrame {
         this.setJMenuBar(this.menuBar);
 
         this.configurationChooser = new ConfigurationChooser(this.getApplication());
-
-        this.createBlankFile();
     }
 
     /**
@@ -320,7 +306,8 @@ public class MainWindow extends JFrame {
 
         this.addComboBoxListener(this.spriteSelectionComboBox, index -> {
             try {
-                this.loadSprite(index);
+                this.getProvider().loadSprite(index);
+                this.updateInput();
             }catch(ProvisionException exception){
                 this.getApplication().getExceptionHandler().handle(this, exception);
             }
@@ -446,54 +433,6 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Unloads the current provider, first making sure all changes are saved.
-     *
-     * @return whether the provider was unloaded
-     */
-    public boolean unloadProvider(){
-        if(this.getProvider() == null){
-            return true;
-        }
-
-        if(!this.getProvider().isModified()){
-            this.setProvider(null);
-            return true;
-        }
-
-        String[] options = new String[]{
-            Resources.getString("main", "dialog.option.yes"),
-            Resources.getString("main", "dialog.option.no"),
-            Resources.getString("main", "dialog.option.cancel")
-        };
-
-        int option = JOptionPane.showOptionDialog(
-            this,
-            Resources.getString("main", "dialog.unsaved.content"),
-            Resources.getString("main", "dialog.unsaved.title"),
-            JOptionPane.YES_NO_CANCEL_OPTION,
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            options,
-            options[2]
-        );
-
-        if(option == -1 || option == 2){
-            return false;
-        }
-
-        if(option == 0){
-            if(this.getProvider().getInput() != null){
-                this.getConfigurationChooser().setSelectedFile(this.getProvider().getInput());
-            }
-
-            this.showSaveDialog();
-        }
-
-        this.setProvider(null);
-        return true;
-    }
-
-    /**
      * Returns the {@link JFileChooser} for the File menu.
      *
      * @return the shared file chooser used for opening and saving
@@ -503,21 +442,27 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Shows a save dialog and saves the current provider to the selected file.
+     * Shows an open dialog and returns the selected file, if any.
      */
-    public void showSaveDialog(){
-        Provider provider = this.getProvider();
+    public File showOpenDialog(){
+        ConfigurationChooser chooser = this.getConfigurationChooser();
 
-        if(provider == null){
-            this.getApplication().getNotifier().error(this, "chooser", "save.blank");
-            return;
-        }
+        int result = chooser.showOpen(this);
+        chooser.setSelectedFile(null);
 
-        if(this.getConfigurationChooser().showSave(this) == JFileChooser.APPROVE_OPTION){
-            this.saveProvider(this.getConfigurationChooser().getActualFile());
-        }
+        return result == JFileChooser.APPROVE_OPTION ? chooser.getSelectedFile() : null;
+    }
 
-        this.getConfigurationChooser().setSelectedFile(null);
+    /**
+     * Shows a save dialog and returns the selected file, if any.
+     */
+    public File showSaveDialog(){
+        ConfigurationChooser chooser = this.getConfigurationChooser();
+
+        int result = chooser.showSave(this);
+        chooser.setSelectedFile(null);
+
+        return result == JFileChooser.APPROVE_OPTION ? chooser.getActualFile() : null;
     }
 
     /**
@@ -557,55 +502,6 @@ public class MainWindow extends JFrame {
             .setFirstIndex(0x80)
             .setRegionSize(8, 1);
         this.paletteView.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-    }
-
-    /**
-     * Saves the current provider to the given file.
-     * <p>
-     * If a {@code null} {@code file} parameter is provided, the currently
-     * opened file will be save in-place. If no file is currently open, a file
-     * chooser will be shown to the user.
-     *
-     * @param file the file to save to
-     */
-    public void saveProvider(File file){
-        Provider provider = this.getProvider();
-
-        if(provider == null){
-            this.getApplication().getNotifier().error(this, "chooser", "save.blank");
-            return;
-        }
-
-        Provider replacement = null;
-
-        try {
-            if(file == null){
-                File input = provider.getInput();
-
-                if(input != null){
-                    replacement = provider.save(input);
-                }else{
-                    this.showSaveDialog();
-                    return;
-                }
-            }else{
-                replacement = provider.save(file);
-            }
-        }catch(SavingException exception){
-            this.getApplication().getExceptionHandler().report(exception);
-
-            String message = exception.getMessage();
-
-            if(exception.getCause() != null){
-                message += " (" + exception.getCause().getClass().getName() + ")";
-            }
-
-            this.getApplication().getNotifier().error(this, "chooser", "save", "message", message);
-        }
-
-        if(replacement != null && this.unloadProvider()){
-            this.setProvider(replacement);
-        }
     }
 
     /**
@@ -701,22 +597,24 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Loads the given sprite into the provider and updates all of the user
-     * input elements to show its properties.
+     * Updates all of the user input elements to show the currently loaded
+     * sprite's properties.
      *
-     * @param index the sprite index to load
      * @return the window, for chaining
-     * @throws NullPointerException if there is no active provider
-     * @see Provider#loadSprite(int)
      */
-    public MainWindow loadSprite(int index) throws ProvisionException{
-        this.getProvider().loadSprite(index);
+    public MainWindow updateInput(){
+        Provider provider = this.getProvider();
+
+        if(provider == null){
+            return this.updateGUI();
+        }
+
         this.updateGUI();
 
-        Sprite sprite = this.getProvider().getCurrentSprite();
+        Sprite sprite = provider.getCurrentSprite();
         SpriteBehavior behavior = sprite.getBehavior();
 
-        this.spriteSelectionComboBox.setSelectedIndex(index);
+        this.spriteSelectionComboBox.setSelectedIndex(provider.getLoadedIndex());
 
         this.typeComboBox.setSelectedIndex(sprite.getType().ordinal());
         this.subtypeComboBox.setSelectedIndex(sprite.getSubType().ordinal());
@@ -759,60 +657,6 @@ public class MainWindow extends JFrame {
         this.extraByteAmountTextField.setValue(sprite.getExtraBytes());
 
         return this;
-    }
-
-    /**
-     * Creates and loads a new {@link BlankProvider}.
-     */
-    public void createBlankFile(){
-        if(!this.unloadProvider()){
-            return;
-        }
-
-        BlankProvider provider = new BlankProvider();
-        this.setProvider(provider);
-    }
-
-    /**
-     * Shows an open dialog and opens the selected file through the appropriate
-     * provider.
-     */
-    public void showOpenDialog(){
-        if(!this.unloadProvider()){
-            return;
-        }
-
-        int result = this.getConfigurationChooser().showOpen(this);
-
-        if(result == JFileChooser.APPROVE_OPTION){
-            File file = this.getConfigurationChooser().getSelectedFile();
-            this.openFile(file);
-        }
-
-        this.getConfigurationChooser().setSelectedFile(null);
-    }
-
-    /**
-     * Opens a {@code File} through an appropriate provider.
-     */
-    public void openFile(File file){
-        if(!this.unloadProvider()){
-            return;
-        }
-
-        if(TypeUtils.isConfiguration(file)){
-            ConfigurationProvider provider = new ConfigurationProvider(file);
-            this.setProvider(provider);
-        }else if(TypeUtils.isROM(file)){
-            try {
-                ROMProvider provider = new ROMProvider(file);
-                this.setProvider(provider);
-            }catch(LoadingException exception){
-                this.getApplication().getExceptionHandler().handle(this, exception);
-            }
-        }else{
-            this.getApplication().getNotifier().error(this, "file", "load.type");
-        }
     }
 
     /**
@@ -880,62 +724,6 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Returns the current sprite provider used by the window.
-     *
-     * @return a nullable {@link Provider}
-     */
-    public Provider getProvider(){
-        return this.provider;
-    }
-
-    /**
-     * Sets a new sprite provider for the window.
-     * <p>
-     * If the provider is set to a null value, the interface will be wholly
-     * disabled and no file will be editable.
-     * <p>
-     * If the provider is non-null, the interface will be updated according to
-     * its settings and the first sprite from it will be loaded.
-     *
-     * @param provider the new provider
-     * @return the window, for chaining
-     */
-    public MainWindow setProvider(Provider provider){
-        this.provider = provider;
-
-        this.setTitle(Resources.getString("main", "title"));
-
-        if(provider == null){
-            this.setInputEnabled(false);
-            return this;
-        }
-
-        String[] availableSprites = provider.getAvailableSprites();
-        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(availableSprites);
-        this.spriteSelectionComboBox.setModel(model);
-        this.spriteSelectionComboBox.setSelectedIndex(0);
-
-        try {
-            this.loadSprite(0);
-        }catch(ProvisionException exception){
-            this.getApplication().getExceptionHandler().handle(this, exception);
-            return this.setProvider(null);
-        }
-
-        if(provider.getInput() != null){
-            this.setTitle(Resources.getString("main", "title.open", "path", provider.getInput().getAbsolutePath()));
-        }else{
-            this.setTitle(Resources.getString("main", "title"));
-        }
-
-        for(Warning warning : provider.getWarnings()){
-            this.getApplication().getNotifier().notify(this, warning);
-        }
-
-        return this;
-    }
-
-    /**
      * Sets the palette of the active sprite and updates the fields related to
      * it.
      *
@@ -959,12 +747,22 @@ public class MainWindow extends JFrame {
      */
     public MainWindow updateGUI(){
         Provider provider = this.getProvider();
+
+        this.setTitle(Resources.getString("main", "title"));
         this.setInputEnabled(false);
 
         if(provider == null){
             return this;
         }
 
+        if(provider.getInput() != null){
+            this.setTitle(Resources.getString("main", "title.open", "path", provider.getInput().getAbsolutePath()));
+        }
+
+        String[] availableSprites = provider.getAvailableSprites();
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(availableSprites);
+        this.spriteSelectionComboBox.setModel(model);
+        this.spriteSelectionComboBox.setSelectedIndex(0);
         this.spriteSelectionComboBox.setEnabled(provider.getAvailableSprites().length > 1);
 
         Sprite sprite = provider.getCurrentSprite();
@@ -1013,22 +811,33 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Returns the menu bar for the application window.
-     *
-     * @return an instance of {@link MenuBar} which represents the
-     * menu bar
+     * Returns the {@code GraphicalInterface} which owns and uses this window.
      */
-    public MenuBar getMenu(){
-        return this.menuBar;
+    public GraphicalInterface getInterface(){
+        return this.graphicalInterface;
     }
 
     /**
-     * Returns the parent application of the window.
-     *
-     * @return the {@code Application} hosting the window
+     * Returns the {@code Application} which owns this window's
+     * {@link GraphicalInterface}.
      */
     public Application getApplication(){
-        return this.application;
+        return this.getInterface().getApplication();
+    }
+
+    /**
+     * Returns the currently loaded {@code Provider} of the interface which
+     * owns the window.
+     */
+    public Provider getProvider(){
+        return this.getInterface().getProvider();
+    }
+
+    /**
+     * Returns the menu bar for the application window.
+     */
+    public MenuBar getMenu(){
+        return this.menuBar;
     }
 
     /**

@@ -22,8 +22,9 @@
 
 package com.telinc1.faerie;
 
+import com.telinc1.faerie.cli.CommandLineInterface;
 import com.telinc1.faerie.display.Palette;
-import com.telinc1.faerie.gui.main.MainWindow;
+import com.telinc1.faerie.gui.GraphicalInterface;
 import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.util.locale.LocalizedException;
 import com.telinc1.faerie.util.locale.Warning;
@@ -38,7 +39,7 @@ import java.io.InputStreamReader;
 
 /**
  * This is the main class of Faerie, responsible for opening the main program
- * window and reading command line arguments (if any).
+ * userInterface and reading command line arguments (if any).
  *
  * @author Telinc1
  * @since 1.0.0
@@ -65,9 +66,9 @@ public class Application {
     private final ExceptionHandler exceptionHandler;
 
     /**
-     * The main program window.
+     * The main program userInterface.
      */
-    private final MainWindow window;
+    private final UserInterface userInterface;
 
     /**
      * The currently loaded palette.
@@ -88,7 +89,14 @@ public class Application {
         try {
             this.getArguments().parse();
         }catch(ParseException exception){
-            this.getNotifier().fatal("core", "launch.arguments", "help", this.getArguments().getHelp());
+            this.getArguments().printFormattedHelp();
+            this.exit(1);
+        }
+
+        if(this.getArguments().isHeadless()){
+            this.userInterface = new CommandLineInterface(this);
+        }else{
+            this.userInterface = new GraphicalInterface(this);
         }
 
         try {
@@ -104,11 +112,13 @@ public class Application {
             this.getNotifier().notify(preferenceWarning);
         }
 
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }catch(ReflectiveOperationException | UnsupportedLookAndFeelException exception){
-            this.getExceptionHandler().report(exception);
-            this.getNotifier().warn("core", "launch.lookAndFeel", exception);
+        if(!this.getArguments().isHeadless()){
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            }catch(ReflectiveOperationException | UnsupportedLookAndFeelException exception){
+                this.getExceptionHandler().report(exception);
+                this.getNotifier().warn("core", "launch.lookAndFeel", exception);
+            }
         }
 
         this.palette = new Palette();
@@ -124,8 +134,7 @@ public class Application {
             throw new LocalizedException(exception, "core", "launch.sprites");
         }
 
-        this.window = new MainWindow(this);
-        this.getWindow().setVisible(true);
+        this.getUserInterface().start();
     }
 
     /**
@@ -159,35 +168,6 @@ public class Application {
     }
 
     /**
-     * Returns the main program window.
-     * <p>
-     * Note that this can be null if the application hasn't fully initialized.
-     *
-     * @return the main {@link MainWindow} of the application
-     */
-    public MainWindow getWindow(){
-        return this.window;
-    }
-
-    /**
-     * Returns the {@link ExceptionHandler} for the application.
-     *
-     * @return the {@code ExceptionHandler} for unhandled exceptions
-     */
-    public ExceptionHandler getExceptionHandler(){
-        return this.exceptionHandler;
-    }
-
-    /**
-     * Creates and starts the application by opening the main window.
-     *
-     * @param args the command line arguments given to the application
-     */
-    public static void main(String[] args){
-        Application application = new Application(args);
-    }
-
-    /**
      * Cleanly exits out of the application with the a status code.
      */
     public void exit(int status){
@@ -200,13 +180,39 @@ public class Application {
             }
         }
 
-        MainWindow window = this.getWindow();
+        UserInterface window = this.getUserInterface();
 
-        if(window != null && !window.unloadProvider() && status == 0){
+        if(window != null && !window.stop() && status == 0){
             return;
         }
 
         System.exit(status);
+    }
+
+    /**
+     * Returns the {@link ExceptionHandler} for the application.
+     *
+     * @return the {@code ExceptionHandler} for unhandled exceptions
+     */
+    public ExceptionHandler getExceptionHandler(){
+        return this.exceptionHandler;
+    }
+
+    /**
+     * Returns the main program user interface. This can be {@code null} if the
+     * application hasn't been fully initialized.
+     */
+    public UserInterface getUserInterface(){
+        return this.userInterface;
+    }
+
+    /**
+     * Creates and starts the application by opening the main user interface.
+     *
+     * @param args the command line arguments given to the application
+     */
+    public static void main(String[] args){
+        Application application = new Application(args);
     }
 
     /**

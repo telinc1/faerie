@@ -116,6 +116,23 @@ public class Resources {
     }
 
     /**
+     * Retrieves an array of strings from a resource bundle.
+     *
+     * @param source the name of the bundle to look in
+     * @param keys the array of keys to retrieve
+     * @return an array of strings from the bundle
+     */
+    public static String[] getStrings(String source, String... keys){
+        String[] strings = new String[keys.length];
+
+        for(int i = 0; i < keys.length; i++){
+            strings[i] = Resources.getString(source, keys[i]);
+        }
+
+        return strings;
+    }
+
+    /**
      * Retrieves or loads the given resource bundle.
      *
      * @param name the lowercase name of the bundle to look for

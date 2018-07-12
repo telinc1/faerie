@@ -227,13 +227,11 @@ public class PaletteDialog extends JDialog {
         reloadButton.setFocusable(false);
         reloadButton.setIcon(new ImageIcon(getClass().getResource("/com/telinc1/faerie/images/buttons/refresh.png")));
         reloadButton.setIconTextGap(0);
-        reloadButton.setLabel("");
         reloadButton.setMargin(new Insets(0, 0, 0, 0));
         reloadButton.setMaximumSize(new Dimension(30, 30));
         reloadButton.setMinimumSize(new Dimension(30, 30));
         reloadButton.setOpaque(true);
         reloadButton.setPreferredSize(new Dimension(30, 30));
-        reloadButton.setText("");
         reloadButton.setToolTipText(ResourceBundle.getBundle("com/telinc1/faerie/locale/Palette").getString("button.reload"));
         panel2.add(reloadButton);
         final JLabel label1 = new JLabel();
@@ -248,13 +246,11 @@ public class PaletteDialog extends JDialog {
         importButton.setFocusable(false);
         importButton.setIcon(new ImageIcon(getClass().getResource("/com/telinc1/faerie/images/buttons/palette_import.png")));
         importButton.setIconTextGap(0);
-        importButton.setLabel("");
         importButton.setMargin(new Insets(0, 0, 0, 0));
         importButton.setMaximumSize(new Dimension(30, 30));
         importButton.setMinimumSize(new Dimension(30, 30));
         importButton.setOpaque(true);
         importButton.setPreferredSize(new Dimension(30, 30));
-        importButton.setText("");
         importButton.setToolTipText(ResourceBundle.getBundle("com/telinc1/faerie/locale/Palette").getString("button.reload"));
         panel2.add(importButton);
         colorNAPCTextPane = new JTextPane();

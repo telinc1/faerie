@@ -22,11 +22,14 @@
 
 package com.telinc1.faerie.gui.main.menu;
 
+import com.telinc1.faerie.gui.GraphicalInterface;
 import com.telinc1.faerie.gui.main.MainWindow;
+import com.telinc1.faerie.sprite.provider.BlankProvider;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 /**
  * The "File" menu of the main application window.
@@ -51,9 +54,30 @@ public class FileMenu extends Menu {
     void setupMenu(){
         MainWindow window = this.getMenuBar().getWindow();
 
-        this.addItem("new", KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, event -> window.createBlankFile());
-        this.addItem("open", KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK, event -> window.showOpenDialog());
-        this.addItem("save", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK, event -> window.saveProvider(null));
+        this.addItem("new", KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, event -> {
+            GraphicalInterface ui = window.getInterface();
+
+            if(ui.unloadProvider()){
+                ui.setProvider(new BlankProvider());
+            }
+        });
+
+        this.addItem("open", KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK, event -> {
+            GraphicalInterface ui = window.getInterface();
+
+            if(!ui.prepareToLoad()){
+                return;
+            }
+
+            File file = window.showOpenDialog();
+
+            if(file != null){
+                ui.setProvider(null);
+                ui.openFile(file);
+            }
+        });
+
+        this.addItem("save", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK, event -> window.getInterface().saveProvider(null));
         this.addItem("saveAs", KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, event -> window.showSaveDialog());
         this.addSeparator();
         this.addItem("exit", KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK, event -> window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING)));
