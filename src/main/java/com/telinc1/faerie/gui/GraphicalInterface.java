@@ -25,6 +25,7 @@ package com.telinc1.faerie.gui;
 import com.telinc1.faerie.Application;
 import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.UserInterface;
+import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.main.MainWindow;
 import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
 import com.telinc1.faerie.sprite.provider.LoadingException;
@@ -33,12 +34,14 @@ import com.telinc1.faerie.sprite.provider.ProvisionException;
 import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.sprite.provider.SavingException;
 import com.telinc1.faerie.util.TypeUtils;
+import com.telinc1.faerie.util.locale.LocalizedException;
 import com.telinc1.faerie.util.locale.Warning;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * This class manages the {@link MainWindow}, a Swing-based graphical user
@@ -51,20 +54,31 @@ public class GraphicalInterface extends UserInterface {
     /**
      * The {@code MainWindow} owned and used by the interface.
      */
-    private final MainWindow window;
+    private MainWindow window;
+
+    /**
+     * The currently loaded palette.
+     */
+    private Palette palette;
 
     /**
      * Creates a new {@code GraphicalInterface} for the given application.
      */
     public GraphicalInterface(Application application){
         super(application);
+    }
 
+    @Override
+    public void init(){
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }catch(ReflectiveOperationException | UnsupportedLookAndFeelException exception){
             this.getApplication().getExceptionHandler().report(exception);
             this.getApplication().getNotifier().warn("core", "launch.lookAndFeel", exception);
         }
+
+        this.palette = new Palette();
+        this.loadDefaultPalette();
 
         this.window = new MainWindow(this);
     }
@@ -79,6 +93,24 @@ public class GraphicalInterface extends UserInterface {
      */
     public MainWindow getWindow(){
         return this.window;
+    }
+
+    /**
+     * Loads the default colors into the interfaces's internal palette.
+     */
+    public void loadDefaultPalette(){
+        try {
+            this.getPalette().loadMW3File(Resources.getResource("data/generic.mw3"));
+        }catch(IOException exception){
+            throw new LocalizedException(exception, "core", "launch.palette");
+        }
+    }
+
+    /**
+     * Returns the currently loaded {@code Palette}.
+     */
+    public Palette getPalette(){
+        return this.palette;
     }
 
     @Override

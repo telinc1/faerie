@@ -23,7 +23,6 @@
 package com.telinc1.faerie;
 
 import com.telinc1.faerie.cli.CommandLineInterface;
-import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.GraphicalInterface;
 import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.util.locale.LocalizedException;
@@ -69,11 +68,6 @@ public class Application {
     private final UserInterface userInterface;
 
     /**
-     * The currently loaded palette.
-     */
-    private final Palette palette;
-
-    /**
      * Construct and initialize the application.
      *
      * @param args the command line arguments given to the application
@@ -110,8 +104,7 @@ public class Application {
             this.getNotifier().notify(preferenceWarning);
         }
 
-        this.palette = new Palette();
-        this.loadDefaultPalette();
+        this.getUserInterface().init();
 
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.getResource("data/sprites/list.txt")))) {
             String line;
@@ -145,15 +138,6 @@ public class Application {
      */
     public Preferences getPreferences(){
         return this.preferences;
-    }
-
-    /**
-     * Returns the currently loaded {@link Palette}.
-     *
-     * @return the currently loaded palette
-     */
-    public Palette getPalette(){
-        return this.palette;
     }
 
     /**
@@ -202,16 +186,5 @@ public class Application {
      */
     public static void main(String[] args){
         Application application = new Application(args);
-    }
-
-    /**
-     * Loads the default colors into the application's internal palette.
-     */
-    public void loadDefaultPalette(){
-        try {
-            this.getPalette().loadMW3File(Resources.getResource("data/generic.mw3"));
-        }catch(IOException exception){
-            throw new LocalizedException(exception, "core", "launch.palette");
-        }
     }
 }

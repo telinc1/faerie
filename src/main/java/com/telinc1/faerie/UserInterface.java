@@ -51,7 +51,15 @@ public abstract class UserInterface {
     }
 
     /**
-     * Initializes all of the user interface's functionality and starts it.
+     * Initializes all of the user interface's specific components. At this
+     * point, the exception handler, the notifier, and the preference store
+     * have been initialized and can be reliably used.
+     */
+    public abstract void init();
+
+    /**
+     * Starts the user interface after the entire application has been
+     * initialized.
      */
     public abstract void start();
 

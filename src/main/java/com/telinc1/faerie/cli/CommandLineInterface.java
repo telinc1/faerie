@@ -41,6 +41,11 @@ public class CommandLineInterface extends UserInterface {
     }
 
     @Override
+    public void init(){
+
+    }
+
+    @Override
     public void start(){
 
     }

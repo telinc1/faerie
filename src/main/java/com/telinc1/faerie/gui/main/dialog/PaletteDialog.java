@@ -112,15 +112,6 @@ public class PaletteDialog extends JDialog {
         return this.window;
     }
 
-    private void createUIComponents(){
-        this.paletteView = new JPaletteView();
-        this.paletteView
-            .setPalette(this.getWindow().getApplication().getPalette())
-            .setCellSize(16, 16)
-            .setFirstIndex(0x0)
-            .setRegionSize(16, 16);
-    }
-
     /**
      * Configures UI components after they have been created.
      */
@@ -171,7 +162,7 @@ public class PaletteDialog extends JDialog {
             );
 
             if(result == 0){
-                this.getWindow().getApplication().loadDefaultPalette();
+                this.getWindow().getInterface().loadDefaultPalette();
             }
         });
 
@@ -182,7 +173,7 @@ public class PaletteDialog extends JDialog {
                 File file = this.getPaletteChooser().getSelectedFile();
 
                 try {
-                    this.getWindow().getApplication().getPalette().loadFile(file);
+                    this.getWindow().getInterface().getPalette().loadFile(file);
                 }catch(IOException exception){
                     this.getWindow().getApplication().getNotifier().notify(this, new LocalizedException(
                         exception,
@@ -251,7 +242,7 @@ public class PaletteDialog extends JDialog {
         importButton.setMinimumSize(new Dimension(30, 30));
         importButton.setOpaque(true);
         importButton.setPreferredSize(new Dimension(30, 30));
-        importButton.setToolTipText(ResourceBundle.getBundle("com/telinc1/faerie/locale/Palette").getString("button.reload"));
+        importButton.setToolTipText(ResourceBundle.getBundle("com/telinc1/faerie/locale/Palette").getString("button.import"));
         panel2.add(importButton);
         colorNAPCTextPane = new JTextPane();
         colorNAPCTextPane.setEditable(false);
@@ -262,6 +253,15 @@ public class PaletteDialog extends JDialog {
         panel1.add(colorNAPCTextPane, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_SOUTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(256, -1), new Dimension(256, -1), new Dimension(256, -1), 0, false));
         paletteView.setAlignmentY(0.0f);
         contentPanel.add(paletteView, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(256, 256), new Dimension(256, 256), new Dimension(256, 256), 0, false));
+    }
+
+    private void createUIComponents(){
+        this.paletteView = new JPaletteView();
+        this.paletteView
+            .setPalette(this.getWindow().getInterface().getPalette())
+            .setCellSize(16, 16)
+            .setFirstIndex(0x0)
+            .setRegionSize(16, 16);
     }
 
     /** @noinspection ALL */

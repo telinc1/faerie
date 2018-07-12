@@ -497,7 +497,7 @@ public class MainWindow extends JFrame {
         // Create palette image.
         this.paletteView = new JPaletteView();
         this.paletteView
-            .setPalette(this.getApplication().getPalette())
+            .setPalette(this.getInterface().getPalette())
             .setCellSize(16, 16)
             .setFirstIndex(0x80)
             .setRegionSize(8, 1);
