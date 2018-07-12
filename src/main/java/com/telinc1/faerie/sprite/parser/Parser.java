@@ -30,7 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Parses a sprite configuration file into an actual sprite.
+ * A {@code Parser} parses a GIEPY-compatible configuration file for an
+ * individual sprite into data the application can work with.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -58,17 +59,13 @@ public abstract class Parser {
 
     /**
      * Returns the input to the parser.
-     *
-     * @return the input to the parser
      */
     public Reader getInput(){
         return this.input;
     }
 
     /**
-     * Returns the list of warnings created during the parsing.
-     *
-     * @return any {@link List} of arbitrary {@link Warning} objects
+     * Returns a list of warnings created during the parsing.
      */
     public List<Warning> getWarnings(){
         return this.warnings;

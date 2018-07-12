@@ -22,7 +22,6 @@
 
 package com.telinc1.faerie;
 
-import com.telinc1.faerie.notification.Notifier;
 import com.telinc1.faerie.sprite.provider.Provider;
 import com.telinc1.faerie.sprite.provider.ProvisionException;
 import com.telinc1.faerie.util.locale.Warning;
@@ -30,7 +29,10 @@ import com.telinc1.faerie.util.locale.Warning;
 import java.io.File;
 
 /**
- * This is the base class for all possible user interfaces of the application.
+ * The {@code UserInterface} class is the base for all of the application's
+ * user interfaces. Its primary job is to manage {@link Provider}s and allow
+ * the user to interact with them. It also controls core components such as
+ * the {@link Notifier}.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -57,6 +59,59 @@ public abstract class UserInterface {
     public UserInterface(Application application){
         this.application = application;
         this.notifier = this.createNotifier();
+    }
+
+    /**
+     * Loads a new provider into the interface. The first sprite of the
+     * provider is automatically loaded and all warnings are shown.
+     *
+     * This method should be overridden by any subclasses which want to update
+     * visually when the provider changes.
+     *
+     * @param provider the new provider
+     * @return whether the provider could be loaded
+     */
+    public boolean setProvider(Provider provider){
+        if(provider == null){
+            this.provider = null;
+            return true;
+        }
+
+        try {
+            provider.loadSprite(0);
+        }catch(ProvisionException exception){
+            this.getApplication().getExceptionHandler().handle(exception);
+            return false;
+        }
+
+        for(Warning warning : provider.getWarnings()){
+            this.getNotifier().notify(warning);
+        }
+
+        this.provider = provider;
+        return true;
+    }
+
+    /**
+     * Returns the {@code Application} which owns this user interface.
+     */
+    public Application getApplication(){
+        return this.application;
+    }
+
+    /**
+     * Returns the {@code Notifier} for the user interface.
+     */
+    public Notifier getNotifier(){
+        return this.notifier;
+    }
+
+    /**
+     * Returns the current sprite provider loaded by the interface, or
+     * {@code null} if no provider is loaded.
+     */
+    public Provider getProvider(){
+        return this.provider;
     }
 
     /**
@@ -103,60 +158,6 @@ public abstract class UserInterface {
      * @return whether the provider was unloaded
      */
     public abstract boolean unloadProvider();
-
-    /**
-     * Returns the {@code Application} which owns this user interface.
-     */
-    public Application getApplication(){
-        return this.application;
-    }
-
-    /**
-     * Returns the {@code Notifier} for the user interface.
-     */
-    public Notifier getNotifier(){
-        return this.notifier;
-    }
-
-    /**
-     * Returns the current sprite provider loaded by the interface.
-     *
-     * @return a nullable {@link Provider}
-     */
-    public Provider getProvider(){
-        return this.provider;
-    }
-
-    /**
-     * Loads a new provider into the interface. The first sprite of the
-     * provider is automatically loaded and all warnings are shown.
-     *
-     * This method should be overridden by any subclasses which want to update
-     * visually when the provider changes.
-     *
-     * @param provider the new provider
-     * @return whether the provider could be loaded
-     */
-    public boolean setProvider(Provider provider){
-        if(provider == null){
-            this.provider = null;
-            return true;
-        }
-
-        try {
-            provider.loadSprite(0);
-        }catch(ProvisionException exception){
-            this.getApplication().getExceptionHandler().handle(exception);
-            return false;
-        }
-
-        for(Warning warning : provider.getWarnings()){
-            this.getNotifier().notify(warning);
-        }
-
-        this.provider = provider;
-        return true;
-    }
 
     /**
      * Cleans up anything created by the interface before quitting the

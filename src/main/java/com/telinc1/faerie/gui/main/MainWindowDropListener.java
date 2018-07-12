@@ -22,7 +22,7 @@
 
 package com.telinc1.faerie.gui.main;
 
-import com.telinc1.faerie.notification.EnumSeverity;
+import com.telinc1.faerie.util.EnumSeverity;
 import com.telinc1.faerie.util.locale.LocalizedException;
 
 import java.awt.datatransfer.DataFlavor;
@@ -39,7 +39,7 @@ import java.util.List;
 
 /**
  * This class handles drag and drop events for the entire content panel of the
- * main Faerie window.
+ * main application window.
  *
  * @author Telinc1
  * @since 1.0.0

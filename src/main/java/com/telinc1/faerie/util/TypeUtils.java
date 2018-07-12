@@ -25,12 +25,13 @@ package com.telinc1.faerie.util;
 import java.io.File;
 
 /**
- * Contains various methods for dealing with file extensions.
+ * The {@code TypeUtils} static class contains various methods for dealing with
+ * file extensions.
  *
  * @author Telinc1
  * @since 1.0.0
  */
-public class TypeUtils {
+public final class TypeUtils {
     /**
      * The file extension of a CFG configuration file.
      */

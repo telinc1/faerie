@@ -23,7 +23,8 @@
 package com.telinc1.faerie.util;
 
 /**
- * Specifies a lower and an upper bound for an integer.
+ * The {@code Bounds} storage class specifies a lower and an upper bound for
+ * an integer.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -73,8 +74,6 @@ public class Bounds {
 
     /**
      * Returns the lower bound of the integer.
-     *
-     * @return the lower bound
      */
     public int getMin(){
         return this.min;
@@ -93,8 +92,6 @@ public class Bounds {
 
     /**
      * Returns the upper bound of the integer.
-     *
-     * @return the upper bound
      */
     public int getMax(){
         return this.max;

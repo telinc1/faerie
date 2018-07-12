@@ -20,9 +20,9 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.telinc1.faerie.notification;
+package com.telinc1.faerie;
 
-import com.telinc1.faerie.Application;
+import com.telinc1.faerie.util.EnumSeverity;
 import com.telinc1.faerie.util.locale.ILocalizable;
 
 /**

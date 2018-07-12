@@ -23,7 +23,7 @@
 package com.telinc1.faerie.util.locale;
 
 import com.telinc1.faerie.gui.DialogNotifier;
-import com.telinc1.faerie.notification.EnumSeverity;
+import com.telinc1.faerie.util.EnumSeverity;
 
 /**
  * The {@code ILocalizable} interface can be implemented by a class to allow it

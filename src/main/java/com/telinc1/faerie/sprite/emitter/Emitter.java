@@ -28,7 +28,8 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Writes a sprite to a configuration file.
+ * An {@code Emitter} writes an individual sprite to a configuration file
+ * insertable with GIEPY.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -40,9 +41,7 @@ public abstract class Emitter {
     private Sprite sprite;
 
     /**
-     * Constructs an emitter for the given sprite.
-     *
-     * @param sprite the sprite to write
+     * Constructs an emitter for a given {@code Sprite}.
      */
     public Emitter(Sprite sprite){
         this.sprite = sprite;
@@ -50,8 +49,6 @@ public abstract class Emitter {
 
     /**
      * Returns the sprite which this emitter will write.
-     *
-     * @return the sprite which this emitter will write
      */
     public Sprite getSprite(){
         return this.sprite;

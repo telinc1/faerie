@@ -22,7 +22,7 @@
 
 package com.telinc1.faerie.util.locale;
 
-import com.telinc1.faerie.notification.EnumSeverity;
+import com.telinc1.faerie.util.EnumSeverity;
 
 /**
  * A {@code Warning} is a localizable message which can be created during the

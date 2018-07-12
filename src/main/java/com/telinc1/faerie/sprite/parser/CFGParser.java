@@ -73,12 +73,11 @@ public class CFGParser extends Parser {
     }
 
     /**
-     * Parses the configuration part of a CFG file.
+     * Parses the configuration part of a CFG file. This includes the type,
+     * subtype, ASM files, property bytes, and others.
      * <p>
-     * This includes the type, subtype, ASM files, property bytes, and others.
-     * <p>
-     * This is almost directly ported over from the GIEPY source code, see
-     * ({@code src/mewthree/ParseCfg.c}).
+     * This method is almost directly ported over from the GIEPY source code,
+     * see {@code src/mewthree/ParseCfg.c}.
      *
      * @param sprite the sprite to parse into
      * @param scanner the input to parse
@@ -207,11 +206,11 @@ public class CFGParser extends Parser {
     }
 
     /**
-     * Parses the handle data from a CFG file.
+     * Parses the display data from a CFG file. This includes the name,
+     * description, tiles, and others.
      * <p>
-     * This includes the name, description, tiles, and others.
-     * <p>
-     * This is based on the GIEPY source code, see ({@code src/mewthree/ParseCfg.c}).
+     * This method is based on the GIEPY source code, see
+     * {@code src/mewthree/ParseCfg.c}.
      *
      * @param scanner the input to parse
      * @return the parsed handle data

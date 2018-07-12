@@ -22,7 +22,7 @@
 
 package com.telinc1.faerie.sprite.provider;
 
-import com.telinc1.faerie.notification.EnumSeverity;
+import com.telinc1.faerie.util.EnumSeverity;
 import com.telinc1.faerie.util.locale.ILocalizable;
 
 /**

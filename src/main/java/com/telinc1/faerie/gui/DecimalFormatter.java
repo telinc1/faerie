@@ -30,12 +30,16 @@ import java.text.ParseException;
 import java.util.function.Consumer;
 
 /**
- * Formats decimal numbers into strings.
+ * The {@code DecimalFormatter} is a formatter for {@link JFormattedTextField}s
+ * which will format decimal integers into {@code String}s and vice-versa.
  *
  * @author Telinc1
  * @since 1.0.0
  */
 public class DecimalFormatter extends JFormattedTextField.AbstractFormatter {
+    /**
+     * The bounds of the integer.
+     */
     private Bounds bounds;
 
     /**
@@ -46,16 +50,14 @@ public class DecimalFormatter extends JFormattedTextField.AbstractFormatter {
     }
 
     /**
-     * Creates a decimal formatter with the given bounds.
-     *
-     * @param bounds the bounds of the integer
+     * Creates a decimal formatter with specific bounds.
      */
     public DecimalFormatter(Bounds bounds){
         this.bounds = bounds;
     }
 
     /**
-     * Creates a decimal formatter with the given bounds.
+     * Creates a decimal formatter with specific bounds.
      *
      * @param min the lower bound
      * @param max the upper bound
@@ -84,10 +86,9 @@ public class DecimalFormatter extends JFormattedTextField.AbstractFormatter {
     }
 
     /**
-     * Adds a property listener to the given {@code JFormattedField}.
-     * <p>
-     * The given {@code Consumer} will receive the formatted integer value from
-     * the field, not the {@link java.beans.PropertyChangeEvent}.
+     * Adds a property listener to the given {@code JFormattedField}. The given
+     * {@code Consumer} will receive the formatted integer value from the
+     * field, not the {@link java.beans.PropertyChangeEvent}.
      *
      * @param field the field to add the listener to
      * @param listener the consumer to call with the integer value
@@ -106,8 +107,6 @@ public class DecimalFormatter extends JFormattedTextField.AbstractFormatter {
 
     /**
      * Returns the formatter's bounds.
-     *
-     * @return the {@link Bounds} of the formatter
      */
     public Bounds getBounds(){
         return this.bounds;

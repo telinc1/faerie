@@ -22,14 +22,18 @@
 
 package com.telinc1.faerie.sprite.provider;
 
+import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.sprite.EnumSpriteSubType;
 import com.telinc1.faerie.sprite.EnumSpriteType;
 import com.telinc1.faerie.sprite.Sprite;
 import com.telinc1.faerie.util.TypeUtils;
+import com.telinc1.faerie.util.locale.LocalizedException;
 import com.telinc1.faerie.util.locale.Warning;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -108,6 +112,29 @@ public class ROMProvider extends Provider {
             }
         }catch(IOException exception){
             throw new LoadingException("Error reading the ROM file.", "rom.read", exception);
+        }
+    }
+
+    /**
+     * Reads the internal data file to populate the internal list of sprite
+     * names.
+     *
+     * @throws LocalizedException a localized {@link IOException} if the
+     * internal data file can't be read into the list
+     * @see ROMProvider#NAMES
+     * @see ROMProvider#getAvailableSprites()
+     */
+    public static void populateSpriteList(){
+        ROMProvider.NAMES.clear();
+
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.getResource("data/sprites/list.txt")))) {
+            String line;
+
+            while((line = reader.readLine()) != null){
+                ROMProvider.NAMES.add(line);
+            }
+        }catch(IOException exception){
+            throw new LocalizedException(exception, "core", "launch.sprites");
         }
     }
 

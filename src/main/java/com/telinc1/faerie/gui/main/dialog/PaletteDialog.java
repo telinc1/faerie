@@ -29,7 +29,7 @@ import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.JPaletteView;
 import com.telinc1.faerie.gui.chooser.PaletteChooser;
 import com.telinc1.faerie.gui.main.MainWindow;
-import com.telinc1.faerie.notification.EnumSeverity;
+import com.telinc1.faerie.util.EnumSeverity;
 import com.telinc1.faerie.util.locale.LocalizedException;
 
 import javax.swing.ImageIcon;

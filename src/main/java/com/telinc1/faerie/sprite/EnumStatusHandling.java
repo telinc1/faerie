@@ -23,7 +23,8 @@
 package com.telinc1.faerie.sprite;
 
 /**
- * Defines the way a custom sprite treats its status.
+ * Defines the way a custom sprite treats its status as described by its second
+ * property byte.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -96,8 +97,6 @@ public enum EnumStatusHandling {
 
     /**
      * Returns the bits which identify the handling.
-     *
-     * @return an integer in the range [0; 3] which identifies this handling
      */
     public int getBits(){
         return this.bits;

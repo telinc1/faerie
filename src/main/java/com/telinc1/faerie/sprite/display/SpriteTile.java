@@ -25,7 +25,8 @@ package com.telinc1.faerie.sprite.display;
 import java.awt.Point;
 
 /**
- * Defines a single tile used by a sprite.
+ * A {@code SpriteTile} represents a specific tile from Lunar Magic's internal
+ * sprite Map16 data. It's the building block of {@code TileDisplayData}.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -34,7 +35,7 @@ public class SpriteTile {
     /**
      * The position of the tile relative to the top left of the sprite.
      */
-    private Point position;
+    private final Point position;
 
     /**
      * The sprite Map16 tile number for the tile.
@@ -54,9 +55,8 @@ public class SpriteTile {
     }
 
     /**
-     * Returns the position of the tile.
-     *
-     * @return the position of the tile relative to the sprite's top right corner
+     * Returns the position of the tile relative to the sprite's top right
+     * corner. This is a mutable live object.
      */
     public Point getPosition(){
         return this.position;

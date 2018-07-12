@@ -31,7 +31,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 
 /**
- * {@code JPaletteView} provides displays a rectangular part of palette.
+ * {@code JPaletteView} is a Swing component which displays a rectangular
+ * region of a 256-color SNES palette. It will automatically listen for updates
+ * to the palettes and repaint itself if they happen.
+ *
+ * @author Telinc1
+ * @since 1.0.0
  */
 public class JPaletteView extends JComponent {
     /**
@@ -63,10 +68,8 @@ public class JPaletteView extends JComponent {
     private final UpdateListener updateListener;
 
     /**
-     * Constructs a palette view.
-     * <p>
-     * The cells will be 16x16 and only the first color of the palette will be
-     * shown. This can be changed later.
+     * Constructs a palette view with 16x16 cells and a 1x1 display area at the
+     * very top left of the palette. This can be changed later.
      */
     public JPaletteView(){
         this(new Dimension(16, 16), 0, new Dimension(1, 1));
@@ -121,24 +124,46 @@ public class JPaletteView extends JComponent {
     }
 
     /**
-     * Returns the size of a single cell.
-     * <p>
-     * The returned object is live. If you modify it directly, make sure to
-     * call {@link JPaletteView#updateSize()} afterwards.
+     * Returns the palette displayed by the {@code PaletteView}. It can be
+     * {@code null}.
+     */
+    public Palette getPalette(){
+        return this.palette;
+    }
+
+    /**
+     * Sets a new palette to display colors from. If the palette is
+     * {@code null}, the whole component will be rendered as black.
+     * The {@link #updateListener} will be automatically added to
+     * non-{@code null} palettes.
+     *
+     * @param palette the new palette to display, or {@code null}
+     * @return the component, for chaining
+     */
+    public JPaletteView setPalette(Palette palette){
+        if(this.getPalette() != null){
+            this.getPalette().removeUpdateListener(this.updateListener);
+        }
+
+        this.palette = palette;
+
+        if(this.getPalette() != null){
+            this.getPalette().addUpdateListener(this.updateListener);
+        }
+
+        this.repaint();
+        return this;
+    }
+
+    /**
+     * Returns the size of a single cell. The returned object is mutable and
+     * live. If you modify it directly, make sure to call {@link #updateSize()}
+     * afterwards.
      *
      * @return the size of a single cell
      */
     public Dimension getCellSize(){
         return this.cellSize;
-    }
-
-    /**
-     * Returns the current region size of the {@code PaletteView}.
-     *
-     * @return the region size
-     */
-    public Dimension getRegionSize(){
-        return this.regionSize;
     }
 
     /**
@@ -186,19 +211,37 @@ public class JPaletteView extends JComponent {
     }
 
     /**
-     * Updates the region displayed by the {@code PaletteView}.
-     * <p>
-     * A single unit on the rectangle refers to a single color from the
-     * palette. Invalid colors are displayed as black.
-     *
-     * @param firstIndex the new first index to handle
-     * @param width the new area width to handle
-     * @param height the new area height to handle
-     * @return the component, for chaining
-     * @throws IllegalAccessError if the index is out of bounds or the size is non-positive
+     * Returns the first index displayed by the palette view. This is the index
+     * displayed at the very top left of the rectangular region.
      */
-    public JPaletteView setRegion(int firstIndex, int width, int height){
-        return this.setFirstIndex(firstIndex).setRegionSize(width, height);
+    public int getFirstIndex(){
+        return this.firstIndex;
+    }
+
+    /**
+     * Sets a new first index to handle.
+     *
+     * @param firstIndex the new first index
+     * @return the component, for chaining
+     * @throws IllegalArgumentException if the index is out of bounds
+     */
+    public JPaletteView setFirstIndex(int firstIndex){
+        if(firstIndex < 0 || firstIndex > 255){
+            throw new IllegalArgumentException("The first index must be between 0 and 255!");
+        }
+
+        this.firstIndex = firstIndex;
+        this.repaint();
+        return this;
+    }
+
+    /**
+     * Returns the current region size of the {@code PaletteView}.
+     *
+     * @return the region size
+     */
+    public Dimension getRegionSize(){
+        return this.regionSize;
     }
 
     /**
@@ -215,6 +258,21 @@ public class JPaletteView extends JComponent {
 
         this.getRegionSize().setSize(width, height);
         return this.updateSize();
+    }
+
+    /**
+     * Updates the region displayed by the {@code PaletteView}. A single unit
+     * on the rectangle refers to a single color from the palette. Invalid
+     * colors are displayed as black.
+     *
+     * @param firstIndex the new first index to handle
+     * @param width the new area width to handle
+     * @param height the new area height to handle
+     * @return the component, for chaining
+     * @throws IllegalAccessError if the index is out of bounds or the size is non-positive
+     */
+    public JPaletteView setRegion(int firstIndex, int width, int height){
+        return this.setFirstIndex(firstIndex).setRegionSize(width, height);
     }
 
     @Override
@@ -245,63 +303,5 @@ public class JPaletteView extends JComponent {
                 }
             }
         }
-    }
-
-    /**
-     * Returns the palette displayed by the {@code PaletteView}.
-     *
-     * @return a nullable {@link Palette} which provides the colors
-     */
-    public Palette getPalette(){
-        return this.palette;
-    }
-
-    /**
-     * Sets a new first index to handle.
-     *
-     * @param firstIndex the new first index
-     * @return the component, for chaining
-     * @throws IllegalArgumentException if the index is out of bounds
-     */
-    public JPaletteView setFirstIndex(int firstIndex){
-        if(firstIndex < 0 || firstIndex > 255){
-            throw new IllegalArgumentException("The first index must be between 0 and 255!");
-        }
-
-        this.firstIndex = firstIndex;
-        this.repaint();
-        return this;
-    }
-
-    /**
-     * Returns the first index displayed by the palette view.
-     *
-     * @return the first index displayed
-     */
-    public int getFirstIndex(){
-        return this.firstIndex;
-    }
-
-    /**
-     * Sets a new palette to handle colors from.
-     * <p>
-     * If the palette is null, the whole component will be black.
-     *
-     * @param palette the new palette to handle, or {@code null} to handle nothing
-     * @return the component, for chaining
-     */
-    public JPaletteView setPalette(Palette palette){
-        if(this.getPalette() != null){
-            this.getPalette().removeUpdateListener(this.updateListener);
-        }
-
-        this.palette = palette;
-
-        if(this.getPalette() != null){
-            this.getPalette().addUpdateListener(this.updateListener);
-        }
-
-        this.repaint();
-        return this;
     }
 }

@@ -23,8 +23,8 @@
 package com.telinc1.faerie.cli;
 
 import com.telinc1.faerie.Application;
+import com.telinc1.faerie.Notifier;
 import com.telinc1.faerie.UserInterface;
-import com.telinc1.faerie.notification.Notifier;
 
 import java.io.File;
 

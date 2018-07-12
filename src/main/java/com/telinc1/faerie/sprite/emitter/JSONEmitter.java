@@ -38,7 +38,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Emits a JSON configuration file.
+ * The {@code CFGEmitter} emits a GIEPY-compatible JSON file.
  *
  * @author Telinc1
  * @since 1.0.0

@@ -28,14 +28,16 @@ import com.telinc1.faerie.util.locale.Warning;
 import java.io.File;
 
 /**
- * A {@code Provider}'s main job is to provide the main application window with
- * sprites.
- * <p>
- * It is given a {@link java.io.File} which it has to use to provide a list of
- * available sprites. It's also the {@code Provider}'s responsibility to manage
- * which sprite is currently being edited, to track changes to it, and to
- * ultimately save those changes to a {@code File} (be it the original one or
- * another one).
+ * A {@code Provider} serves as a repository of one or many sprites within a
+ * given file. {@code Provider}s have to load a file of a given format and
+ * parse it into a {@link Sprite} which can be used by the rest of the
+ * application, specifically the
+ * {@link com.telinc1.faerie.UserInterface UserInterface}. The {@code Provider}
+ * tracks which sprites have been loaded and what changes have been made to
+ * them.
+ *
+ * @author Telinc1
+ * @since 1.0.0
  */
 public abstract class Provider {
     /**
@@ -46,18 +48,19 @@ public abstract class Provider {
     public abstract File getInput();
 
     /**
-     * Saves every available sprite to the given file.
-     * <p>
-     * If the file doesn't exist, this method should create it.
+     * Saves every available sprite to the given file. If the file doesn't
+     * exist, it should be created if possible.
      * <p>
      * If the extension of the output file isn't compatible with this provider,
-     * the method should throw a {@link SavingException}. Any other exceptions
-     * should also be converted to {@code SavingException}s.
+     * a {@link SavingException} should be thrown. Any other exceptions should
+     * also be converted to {@link SavingException}s.
      * <p>
-     * If the method returns a non-{@code null} {@code Provider}, the handler's
-     * loaded provider should be replaced with it. This allows saving to
-     * formats handled by other providers. Note that this {@code Provider}
-     * should not be left in an invalid, undefined, or unusable state.
+     * If the method returns a non-{@code null} {@code Provider}, the
+     * interface's loaded provider should be replaced with it. This allows
+     * saving to formats handled by other providers. Note that this
+     * {@code Provider} should not be left in an invalid, undefined, or
+     * unusable state after the save even if the method doesn't return
+     * {@code null}.
      *
      * @param file the file to save to
      * @return a new {@code Provider} for the handler
@@ -66,11 +69,10 @@ public abstract class Provider {
     public abstract Provider save(File file) throws SavingException;
 
     /**
-     * Returns an array of available sprites.
-     * <p>
-     * Each {@code String} is displayed directly to the user in the combo box
-     * at the top of the main window. The indexes of this array should match
-     * the indexes used by {@link Provider#loadSprite(int)}.
+     * Returns an array of available sprites. Each returned {@code String}
+     * should be human-readable. The indexes of this array should match the
+     * indexes used by {@link #loadSprite(int)} but do not have to represent
+     * all possible sprites.
      * <p>
      * There must always be at least one sprite available. If no sprites are
      * available, the constructor should throw a {@link LoadingException}.
@@ -80,12 +82,9 @@ public abstract class Provider {
     public abstract String[] getAvailableSprites();
 
     /**
-     * Loads the given sprite into the {@code Provider}.
-     * <p>
-     * The index must match the indexes from {@link #getAvailableSprites()}.
-     * <p>
-     * Index 0 should always be valid. Negative indexes should always be
-     * invalid.
+     * Loads the given sprite into the {@code Provider}. The index must match
+     * the indexes from {@link #getAvailableSprites()}. Index {@code 0} should
+     * always be valid. Negative indexes should always be invalid.
      *
      * @param index the index of the sprite to load
      * @throws ProvisionException if the sprite is out of bounds or cannot fully load
@@ -93,26 +92,23 @@ public abstract class Provider {
     public abstract void loadSprite(int index) throws ProvisionException;
 
     /**
-     * Returns any warnings created during the provision.
-     *
-     * @return an array of {@link Warning}s which were created
+     * Returns any {@code Warning}s created during the provision.
      */
     public abstract Warning[] getWarnings();
 
     /**
-     * Returns the currently loaded sprite index.
-     * <p>
-     * The integer returned by this method has to be valid according to
-     * {@link Provider#loadSprite(int)}.
+     * Returns the index of the currently loaded sprite. The integer returned
+     * by this method has to be valid according to {@link #loadSprite(int)}.
      *
-     * @return the loaded index
+     * @see #loadSprite(int)
+     * @see #getCurrentSprite()
      */
     public abstract int getLoadedIndex();
 
     /**
-     * Returns the currently loaded sprite.
-     * <p>
-     * The returned object should not be modified in any way.
+     * Returns the currently loaded sprite. The returned object could be
+     * mutable but should be treated as read-only. Do not modify it to ensure
+     * the correct behavior of the application.
      *
      * @return the currently loaded sprite
      * @see Provider#startModification()
@@ -121,20 +117,19 @@ public abstract class Provider {
 
     /**
      * Returns the currently loaded sprite and prepares the {@code Provider}
-     * for changes to it.
-     * <p>
-     * Unlike {@link Provider#getCurrentSprite()}, the returned object should
-     * be safely modifiable. There should be no risk of undefined behavior or
-     * discarding of changes.
+     * for changes to be made to it. Unlike {@link #getCurrentSprite()}, the
+     * returned mutable object should be completely safe to modify with no
+     * resulting unexpected behavior or discarded changes.
      *
      * @return the currently loaded sprite
      */
     public abstract Sprite startModification();
 
     /**
-     * Checks whether any sprite available in the provider has been modified.
+     * Checks whether any of the sprites available in the provider have been
+     * modified.
      *
-     * @return whether the provider has been modified
+     * @see #startModification()
      */
     public abstract boolean isModified();
 }

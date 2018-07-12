@@ -25,15 +25,15 @@ package com.telinc1.faerie.sprite.parser;
 import com.telinc1.faerie.Resources;
 
 /**
- * Signals that the configuration file for a sprite was malformed or had
- * invalid data.
+ * A {@code ParseException} is thrown when a configuration file for a sprite is
+ * malformed or has invalid data.
  *
  * @author Telinc1
  * @since 1.0.0
  */
 public class ParseException extends Exception {
     /**
-     * The subkey from the "parse" bundle to use for the message.
+     * The subkey from the {@code parse} bundle to use for the message.
      */
     private final String subkey;
 
@@ -45,10 +45,10 @@ public class ParseException extends Exception {
     /**
      * Constructs a {@code ParseException} with an optional cause.
      * <p>
-     * The messaged will be taken from the "parse" resource bundle.
+     * The messages will be taken from the {@code parse} resource bundle.
      *
      * @param message the internal message of the exception
-     * @param subkey the key for the exception message from "parse"
+     * @param subkey the key for the exception message from {@code parse}
      * @param cause the cause of the exception
      * @param arguments the arguments for the message
      */

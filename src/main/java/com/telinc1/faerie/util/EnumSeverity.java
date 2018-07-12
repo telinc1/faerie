@@ -20,50 +20,43 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.telinc1.faerie.notification;
+package com.telinc1.faerie.util;
 
 import javax.swing.JOptionPane;
 
 /**
  * {@code EnumSeverity} contains the possible severities of a localized
- * message.
- * <p>
- * The severity of a message determines its icon and the key of its title and
- * message.
+ * message. The severity of a message determines its presentation, localization
+ * key, and fatality.
  *
  * @author Telinc1
  * @since 1.0.0
  */
 public enum EnumSeverity {
     /**
-     * Defines an information message.
-     * <p>
-     * Information messages are used to report general success or other pieces
-     * of information which the user should know.
+     * Defines an information message. Information messages are used to report
+     * general success or other pieces of information which the user should
+     * know.
      */
     INFO("info", JOptionPane.INFORMATION_MESSAGE),
 
     /**
-     * Defines a warning.
-     * <p>
-     * Warnings are unexpected events which don't normally affect the
-     * application but should still be known.
+     * Defines a warning. Warnings are unexpected events which don't normally
+     * affect the application but should still be known.
      */
     WARNING("warning", JOptionPane.WARNING_MESSAGE),
 
     /**
-     * Defines an error.
-     * <p>
-     * Errors are unexpected events which affect the user's workflow or the
-     * application's stability, but are nonetheless recoverable.
+     * Defines an error. Errors are unexpected events which affect the user's
+     * workflow or the application's stability, but are nonetheless
+     * recoverable.
      */
     ERROR("error", JOptionPane.ERROR_MESSAGE),
 
     /**
-     * Defines a fatal error.
-     * <p>
-     * Fatal errors affect the application's stability to an unrecoverable
-     * degree. The application will automatically quit after one is triggered.
+     * Defines a fatal error. Fatal errors affect the application's stability
+     * to an unrecoverable degree. The application will automatically quit
+     * after one is triggered.
      */
     FATAL("fatal", JOptionPane.ERROR_MESSAGE);
 

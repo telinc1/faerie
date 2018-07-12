@@ -32,16 +32,14 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Emits a CFG configuration file.
+ * The {@code CFGEmitter} emits a GIEPY-compatible CFG file.
  *
  * @author Telinc1
  * @since 1.0.0
  */
 public class CFGEmitter extends Emitter {
     /**
-     * Constructs a CFG emitter for the given sprite.
-     *
-     * @param sprite the sprite to write
+     * Constructs a CFG emitter for a given sprite.
      */
     public CFGEmitter(Sprite sprite){
         super(sprite);

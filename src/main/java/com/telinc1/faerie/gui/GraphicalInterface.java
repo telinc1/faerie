@@ -23,11 +23,11 @@
 package com.telinc1.faerie.gui;
 
 import com.telinc1.faerie.Application;
+import com.telinc1.faerie.Notifier;
 import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.UserInterface;
 import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.main.MainWindow;
-import com.telinc1.faerie.notification.Notifier;
 import com.telinc1.faerie.sprite.Sprite;
 import com.telinc1.faerie.sprite.SpriteBehavior;
 import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
@@ -85,6 +85,8 @@ public class GraphicalInterface extends UserInterface {
 
         this.palette = new Palette();
         this.loadDefaultPalette();
+
+        ROMProvider.populateSpriteList();
 
         this.window = new MainWindow(this);
     }

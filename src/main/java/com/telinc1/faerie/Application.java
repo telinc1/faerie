@@ -23,14 +23,8 @@
 package com.telinc1.faerie;
 
 import com.telinc1.faerie.preferences.PreferenceStore;
-import com.telinc1.faerie.sprite.provider.ROMProvider;
-import com.telinc1.faerie.util.locale.LocalizedException;
 import com.telinc1.faerie.util.locale.Warning;
 import org.apache.commons.cli.ParseException;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * This is the main class of Faerie, responsible for opening the main program
@@ -79,33 +73,22 @@ public class Application {
         this.userInterface = this.getArguments().createUserInterface(this);
 
         this.exceptionHandler = new ExceptionHandler(this);
+        this.getExceptionHandler().setAsDefaultHandler();
 
-        try {
-            Thread.setDefaultUncaughtExceptionHandler(this.exceptionHandler);
-        }catch(SecurityException exception){
-            this.getExceptionHandler().report(exception);
-            this.getUserInterface().getNotifier().warn("core", "launch.handler");
-        }
+        this.loadPreferences();
 
-        Warning preferenceWarning = this.getPreferences().load();
+        this.getInterface().init();
+        this.getInterface().start();
+    }
 
-        if(preferenceWarning != null){
-            this.getUserInterface().getNotifier().notify(preferenceWarning);
-        }
-
-        this.getUserInterface().init();
-
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.getResource("data/sprites/list.txt")))) {
-            String line;
-
-            while((line = reader.readLine()) != null){
-                ROMProvider.NAMES.add(line);
-            }
-        }catch(IOException exception){
-            throw new LocalizedException(exception, "core", "launch.sprites");
-        }
-
-        this.getUserInterface().start();
+    /**
+     * Creates an application, initializes all of its internal components, and
+     * starts the appropriate user interface based on the given command line arguments.
+     *
+     * @param args the command line arguments given to the application
+     */
+    public static void main(String[] args){
+        Application application = new Application(args);
     }
 
     /**
@@ -113,27 +96,6 @@ public class Application {
      */
     public Arguments getArguments(){
         return this.arguments;
-    }
-
-    /**
-     * Cleanly exits out of the application with the a status code.
-     */
-    public void exit(int status){
-        UserInterface ui = this.getUserInterface();
-
-        if(status == 0 && this.getPreferences() != null){
-            Warning warning = this.getPreferences().store();
-
-            if(warning != null && ui != null){
-                ui.getNotifier().notify(warning);
-            }
-        }
-
-        if(ui != null && !ui.stop() && status == 0){
-            return;
-        }
-
-        System.exit(status);
     }
 
     /**
@@ -156,16 +118,40 @@ public class Application {
      * Returns the main program user interface. This can be {@code null} if the
      * application hasn't been fully initialized.
      */
-    public UserInterface getUserInterface(){
+    public UserInterface getInterface(){
         return this.userInterface;
     }
 
     /**
-     * Creates and starts the application by opening the main user interface.
-     *
-     * @param args the command line arguments given to the application
+     * Cleanly exits out of the application with the a status code.
      */
-    public static void main(String[] args){
-        Application application = new Application(args);
+    public void exit(int status){
+        UserInterface ui = this.getInterface();
+
+        if(status == 0 && this.getPreferences() != null){
+            Warning warning = this.getPreferences().store();
+
+            if(warning != null && ui != null){
+                ui.getNotifier().notify(warning);
+            }
+        }
+
+        if(ui != null && !ui.stop() && status == 0){
+            return;
+        }
+
+        System.exit(status);
+    }
+
+    /**
+     * Loads the preferences from the current {@code PreferenceStore} and shows
+     * the warning produced, if any.
+     */
+    private void loadPreferences(){
+        Warning warning = this.getPreferences().load();
+
+        if(warning != null){
+            this.getInterface().getNotifier().notify(warning);
+        }
     }
 }

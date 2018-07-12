@@ -22,8 +22,8 @@
 
 package com.telinc1.faerie.gui;
 
+import com.telinc1.faerie.Notifier;
 import com.telinc1.faerie.Resources;
-import com.telinc1.faerie.notification.Notifier;
 import com.telinc1.faerie.util.locale.ILocalizable;
 
 import javax.swing.JOptionPane;

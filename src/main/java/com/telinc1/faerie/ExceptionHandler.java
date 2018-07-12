@@ -64,6 +64,20 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
+     * Tries to set this {@code ExceptionHandler} as the default handler for
+     * uncaught exceptions for all threads in the current runtime. If this
+     * fails, the exception will be silently reported and shown to the user.
+     */
+    public void setAsDefaultHandler(){
+        try {
+            Thread.setDefaultUncaughtExceptionHandler(this);
+        }catch(SecurityException exception){
+            this.report(exception);
+            this.getApplication().getInterface().getNotifier().warn("core", "launch.handler");
+        }
+    }
+
+    /**
      * Shows a detailed string representation of an exception and reports it.
      * If the {@link Throwable} is {@link ILocalizable}, it will directly be
      * displayed as a notification. If not, it will be shown as a fatal error.
@@ -74,11 +88,11 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         this.report(throwable);
 
         if(throwable instanceof ILocalizable){
-            this.getApplication().getUserInterface().getNotifier().notify((ILocalizable)throwable);
+            this.getApplication().getInterface().getNotifier().notify((ILocalizable)throwable);
             return;
         }
 
-        this.getApplication().getUserInterface().getNotifier().fatal("core", "exception", throwable);
+        this.getApplication().getInterface().getNotifier().fatal("core", "exception", throwable);
     }
 
     /**
@@ -95,11 +109,11 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         this.report(throwable);
 
         if(throwable instanceof ILocalizable){
-            this.getApplication().getUserInterface().getNotifier().notify((ILocalizable)throwable);
+            this.getApplication().getInterface().getNotifier().notify((ILocalizable)throwable);
             return;
         }
 
-        this.getApplication().getUserInterface().getNotifier().fatal("core", "threadedException", new Object[]{"thread", thread.getName(), throwable});
+        this.getApplication().getInterface().getNotifier().fatal("core", "threadedException", new Object[]{"thread", thread.getName(), throwable});
     }
 
     /**

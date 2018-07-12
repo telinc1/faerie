@@ -22,7 +22,7 @@
 
 package com.telinc1.faerie.util.locale;
 
-import com.telinc1.faerie.notification.EnumSeverity;
+import com.telinc1.faerie.util.EnumSeverity;
 
 /**
  * The {@code LocalizedException} is an unchecked wrapper around any other

@@ -30,7 +30,8 @@ import java.text.ParseException;
 import java.util.function.Consumer;
 
 /**
- * Formats hexadecimal numbers into strings.
+ * The {@code HexadecimalFormatter} is an extension of the
+ * {@link DecimalFormatter} which handles hexadecimal integers.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -44,7 +45,7 @@ public class HexadecimalFormatter extends DecimalFormatter {
     }
 
     /**
-     * Creates a hexadecimal formatter with the given bounds.
+     * Creates a hexadecimal formatter with specific bounds.
      *
      * @param bounds the bounds of the integer
      */
@@ -53,7 +54,7 @@ public class HexadecimalFormatter extends DecimalFormatter {
     }
 
     /**
-     * Creates a hexadecimal formatter with the given bounds.
+     * Creates a hexadecimal formatter with specific bounds.
      *
      * @param min the lower bound
      * @param max the upper bound

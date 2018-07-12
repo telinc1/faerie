@@ -25,7 +25,8 @@ package com.telinc1.faerie.sprite.display;
 import java.awt.Point;
 
 /**
- * Defines how a sprite should handle in Lunar Magic.
+ * The {@code DisplayData} storage class defines how a sprite should be
+ * displayed within Lunar Magic.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -44,7 +45,7 @@ public abstract class DisplayData {
     /**
      * The position of the sprite in the sprite window.
      */
-    protected Point position;
+    protected final Point position;
 
     /**
      * Constructs new handle data for a sprite with default settings.
@@ -56,9 +57,7 @@ public abstract class DisplayData {
     }
 
     /**
-     * Returns the name of the sprite.
-     *
-     * @return the name of the sprite in custom sprite list
+     * Returns the name of the sprite in the custom sprite list.
      */
     public String getName(){
         return this.name;
@@ -76,9 +75,7 @@ public abstract class DisplayData {
     }
 
     /**
-     * Returns the description of the sprite.
-     *
-     * @return the description of the sprite as shown in its tooltip
+     * Returns the description of the sprite in its tooltip.
      */
     public String getDescription(){
         return this.description;
@@ -96,10 +93,8 @@ public abstract class DisplayData {
     }
 
     /**
-     * Returns the position of the sprite.
-     *
-     * @return a {@link Point} representing the position of the sprite within
-     * the sprite window
+     * Returns the position of the sprite within the sprite window. This is a
+     * mutable live object.
      */
     public Point getPosition(){
         return this.position;

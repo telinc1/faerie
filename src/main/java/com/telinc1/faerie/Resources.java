@@ -33,7 +33,9 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * Handles loading and formatting string-based resource bundles.
+ * The {@code Resources} class handles locating and reading external data files
+ * for the application, usually stored within the JAR. It also has methods for
+ * handling strings within {@link ResourceBundle}s for easy localization.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -56,9 +58,8 @@ public class Resources {
     private Resources(){}
 
     /**
-     * Retrieves a string from the given bundle.
-     * <p>
-     * If the given key does not exist in the bundle, a blank string is returned.
+     * Retrieves a string from the given bundle. If the given key does not
+     * exist in the bundle, the key itself is returned.
      *
      * @param source the name of the bundle to look in
      * @param key the key to look for
@@ -72,13 +73,37 @@ public class Resources {
         try {
             value = bundle.getString(key);
         }catch(MissingResourceException | ClassCastException exception){
-            value = "";
+            value = key;
         }
 
         if(arguments.length == 0){
             return value;
         }
 
+        return Resources.format(value, arguments);
+    }
+
+    /**
+     * Formats the given string by substituting the items from the arguments.
+     * <p>
+     * Each argument consists of two consecutive values in the array: a
+     * {@code String} representing a key and a value for that key; substrings
+     * in the format {@code {key}} in the input are replaced with the value.
+     * <p>
+     * Alternatively, an unpaired {@link Integer} is implicitly given the key
+     * {@code integer}, while an unpaired {@link Exception}'s entire trace log
+     * is implicitly given the key {@code exception}.
+     * <p>
+     * Additionally, format styles and types can be applied to each parameter;
+     * {@code {foo,date}} would be replaced with the key {@code foo} formatted
+     * as a date.
+     *
+     * @param input the input {@code String} which should be formatted
+     * @param arguments the key-value array of tokens to replace
+     * @return the fully formatted input
+     * @see MessageFormat
+     */
+    public static String format(String input, Object... arguments){
         int order = 0;
         List<Object> strings = new ArrayList<>();
 
@@ -92,7 +117,7 @@ public class Resources {
                     break;
                 }
 
-                variable = (String) element;
+                variable = (String)element;
                 strings.add(arguments[++i]);
             }else if(element instanceof Integer){
                 variable = "integer";
@@ -103,7 +128,7 @@ public class Resources {
             }
 
             if(variable != null){
-                value = value.replace("{" + variable + "}", "{" + order + "}");
+                input = input.replace("{" + variable + "}", "{" + order + "}");
                 order += 1;
             }
 
@@ -112,7 +137,7 @@ public class Resources {
             }
         }
 
-        return MessageFormat.format(value.replace("'", "''"), strings.toArray());
+        return MessageFormat.format(input.replace("'", "''"), strings.toArray());
     }
 
     /**

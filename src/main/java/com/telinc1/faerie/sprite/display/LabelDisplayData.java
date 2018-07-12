@@ -23,7 +23,8 @@
 package com.telinc1.faerie.sprite.display;
 
 /**
- * Defines handle data for a sprite which renders as text in Lunar Magic.
+ * The {@code LabelDisplayData} storage class defines data for a sprite which
+ * renders as a generic text label within Lunar Magic.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -39,14 +40,11 @@ public class LabelDisplayData extends DisplayData {
      */
     public LabelDisplayData(){
         super();
-
         this.text = "Sprite";
     }
 
     /**
      * Returns the text for the label.
-     *
-     * @return the text for the label
      */
     public String getText(){
         return this.text;

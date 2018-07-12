@@ -32,11 +32,52 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/**
+ * {@code JScaledImage} is a Swing component which displays an image scaled to
+ * a given size. It does so without stretching the image. A background color is
+ * applied below the image is the component is opaque.
+ *
+ * @author Telinc1
+ * @since 1.0.0
+ */
 public class JScaledImage extends JComponent {
     /**
      * The image which is currently being displayed.
      */
     private BufferedImage image;
+
+    /**
+     * Returns the currently displayed image.
+     *
+     * @return a {@link BufferedImage} for the current image
+     */
+    public BufferedImage getImage(){
+        return this.image;
+    }
+
+    /**
+     * Sets a new image to handle.
+     *
+     * @param image the new image to set
+     * @return the component, for chaining
+     */
+    public JScaledImage setImage(BufferedImage image){
+        this.image = image;
+        this.repaint();
+
+        return this;
+    }
+
+    /**
+     * Loads a new image into the component.
+     *
+     * @param name the path of the image to load, relative to {@code com.telinc1.faerie.images}
+     * @return the component, for chaining
+     */
+    public JScaledImage loadImage(String name) throws IOException{
+        BufferedImage image = ImageIO.read(Resources.getResource("images/" + name));
+        return this.setImage(image);
+    }
 
     @Override
     public void paintComponent(Graphics destination){
@@ -78,39 +119,5 @@ public class JScaledImage extends JComponent {
             this.getBackground(),
             null
         );
-    }
-
-    /**
-     * Returns the currently displayed image.
-     *
-     * @return a {@link BufferedImage} for the current image
-     */
-    public BufferedImage getImage(){
-        return this.image;
-    }
-
-    /**
-     * Sets a new image to handle.
-     *
-     * @param image the new image to set
-     * @return the component, for chaining
-     */
-    public JScaledImage setImage(BufferedImage image){
-        this.image = image;
-        return this;
-    }
-
-    /**
-     * Loads a new image into the component.
-     *
-     * @param name the path of the image to load, relative to {@code com.telinc1.faerie.images}
-     * @return the component, for chaining
-     */
-    public JScaledImage loadImage(String name) throws IOException{
-        BufferedImage image = ImageIO.read(Resources.getResource("images/" + name));
-
-        this.setImage(image);
-        this.repaint();
-        return this;
     }
 }

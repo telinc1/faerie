@@ -25,24 +25,21 @@ package com.telinc1.faerie.sprite;
 import com.telinc1.faerie.Resources;
 
 /**
- * Contains the different possible types of a sprite.
+ * Contains the different possible types of a sprite as described by GIEPY.
  *
  * @author Telinc1
  * @since 1.0.0
  */
 public enum EnumSpriteType {
     /**
-     * Denotes a tweak sprite.
-     * <p>
-     * A tweak sprite only uses its acts like setting and behavior to tweak a
-     * vanilla sprite.
+     * Denotes a tweak sprite. A tweak sprite only uses its acts like setting
+     * and behavior to tweak a vanilla sprite.
      */
     TWEAK(0),
 
     /**
-     * Denotes a custom sprite.
-     * <p>
-     * A custom sprite uses its subtype to run custom code at a given time.
+     * Denotes a custom sprite. A custom sprite uses its subtype to run custom
+     * code at a given time.
      */
     CUSTOM(1);
 
@@ -52,7 +49,7 @@ public enum EnumSpriteType {
     private final int type;
 
     /**
-     * Internally construct an enum element.
+     * Internally constructs an enum element.
      *
      * @param type the integer representation of the type
      */
@@ -73,17 +70,13 @@ public enum EnumSpriteType {
 
     /**
      * Returns the type of the sprite as an integer.
-     *
-     * @return an integer which represents this sprite.
      */
     public int asInteger(){
         return this.type;
     }
 
     /**
-     * Returns the name of the type as a human-readable string.
-     *
-     * @return the type's lower-case name with only the first letter capitalized
+     * Returns the name of the type as a localized human-readable string.
      */
     public String toLocalizedString(){
         return Resources.getString("main", "sprite.insertion.type." + this.toString().toLowerCase());

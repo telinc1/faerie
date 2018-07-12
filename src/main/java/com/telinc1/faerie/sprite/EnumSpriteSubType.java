@@ -25,56 +25,47 @@ package com.telinc1.faerie.sprite;
 import com.telinc1.faerie.Resources;
 
 /**
- * Contains the different possible subtypes of a sprite.
+ * Contains the different possible subtypes of a sprite as described by GIEPY.
  *
  * @author Telinc1
  * @since 1.0.0
  */
 public enum EnumSpriteSubType {
     /**
-     * Reserved for vanilla sprites.
-     * <p>
-     * Vanilla sprites only have behavior settings.
+     * Reserved for vanilla sprites. Vanilla sprites only have behavior
+     * settings.
      */
     VANILLA(0, true, false, false, 0, false, false),
 
     /**
-     * Denotes a custom regular sprite.
-     * <p>
-     * A regular sprite uses custom ASM and has extra property bytes, a unique
-     * byte, and up to 4 extra bytes.
+     * Denotes a custom regular sprite. A regular sprite uses a single custom
+     * ASM file and has extra property bytes, a unique byte, and up to 4 extra
+     * bytes.
      */
     REGULAR(1, true, true, true, 4, true, false),
 
     /**
-     * Denotes a custom shooter sprite.
-     * <p>
-     * A shooter sprite uses custom ASM and has a unique byte and up to 1
-     * extra byte.
+     * Denotes a custom shooter sprite. A shooter sprite uses a single custom
+     * ASM file and has a unique byte and up to 1 extra byte.
      */
     SHOOTER(2, false, false, true, 1, true, false),
 
     /**
-     * Denotes a custom generator sprite.
-     * <p>
-     * A generator sprite uses custom ASM and has a unique byte and up to 1
-     * extra byte.
+     * Denotes a custom generator sprite. A generator sprite uses a single
+     * custom ASM file and has a unique byte and up to 1 extra byte.
      */
     GENERATOR(3, false, false, true, 1, true, false),
 
     /**
-     * Denotes a custom initializer (run-once) sprite.
-     * <p>
-     * An initializer sprite uses custom ASM and has a unique byte and up to
-     * 251 extra bytes.
+     * Denotes a custom initializer (run-once) sprite. An initializer sprite
+     * uses a single custom ASM file and has a unique byte and up to 251 extra
+     * bytes, however, only 12 are officially supported.
      */
     INITIALIZER(4, false, false, true, 251, true, false),
 
     /**
-     * Denotes a custom scroller sprite.
-     * <p>
-     * A scroller sprite uses both of its custom ASM files and has a unique
-     * byte and up to 1 extra byte.
+     * Denotes a custom scroller sprite. A scroller sprite uses one or two
+     * custom ASM files and has a unique byte and up to 1 extra byte.
      */
     SCROLLER(5, false, false, true, 1, true, true);
 
@@ -114,7 +105,7 @@ public enum EnumSpriteSubType {
     private final boolean usesSecondASM;
 
     /**
-     * Internally construct an enum element.
+     * Internally constructs an enum element.
      *
      * @param subtype the integer representation of the subtype
      * @param hasBehavior whether this subtype has behavior settings
@@ -153,8 +144,6 @@ public enum EnumSpriteSubType {
 
     /**
      * Returns the subtype of the sprite as an integer.
-     *
-     * @return an integer which represents this sprite.
      */
     public int asInteger(){
         return this.subtype;
@@ -162,8 +151,6 @@ public enum EnumSpriteSubType {
 
     /**
      * Returns whether this subtype has behavior settings.
-     *
-     * @return a boolean which represents the property
      */
     public boolean hasBehavior(){
         return this.hasBehavior;
@@ -171,8 +158,6 @@ public enum EnumSpriteSubType {
 
     /**
      * Returns whether this subtype has extra property bytes.
-     *
-     * @return a boolean which represents the property
      */
     public boolean hasPropertyBytes(){
         return this.hasExtraProperties;
@@ -180,8 +165,6 @@ public enum EnumSpriteSubType {
 
     /**
      * Returns whether this subtype has a unique byte.
-     *
-     * @return a boolean which represents the property
      */
     public boolean hasUniqueByte(){
         return this.hasUniqueByte;
@@ -189,8 +172,6 @@ public enum EnumSpriteSubType {
 
     /**
      * Returns the total amount of extra bytes this subtype can have.
-     *
-     * @return an integer which represents the property
      */
     public int getMaxExtraBytes(){
         return this.extraBytes;
@@ -198,8 +179,6 @@ public enum EnumSpriteSubType {
 
     /**
      * Returns whether this subtype uses its first ASM file.
-     *
-     * @return a boolean which represents the property
      */
     public boolean usesFirstASM(){
         return this.usesFirstASM;
@@ -207,17 +186,13 @@ public enum EnumSpriteSubType {
 
     /**
      * Returns whether this subtype uses its second ASM file.
-     *
-     * @return a boolean which represents the property
      */
     public boolean usesSecondASM(){
         return this.usesSecondASM;
     }
 
     /**
-     * Returns the name of the subtype as a human-readable string.
-     *
-     * @return the subtype's lower-case name with only the first letter capitalized
+     * Returns the name of the subtype as a localized human-readable string.
      */
     public String toLocalizedString(){
         return Resources.getString("main", "sprite.insertion.subtype." + this.toString().toLowerCase());

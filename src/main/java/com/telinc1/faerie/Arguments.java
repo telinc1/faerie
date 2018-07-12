@@ -105,18 +105,34 @@ public class Arguments {
     }
 
     /**
-     * Returns the input arguments for the parser.
-     */
-    public String[] getInput(){
-        return this.input;
-    }
-
-    /**
      * Prints the help message for the application.
      */
     public void printFormattedHelp(){
         HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.printHelp("faerie", this.options);
+    }
+
+    /**
+     * Creates an appropriate {@code PreferenceStore} for an
+     * {@code Application} according to the given arguments.
+     */
+    public PreferenceStore createPreferenceStore(Application application){
+        return this.isCold() ? new NullStore(application) : new FlatFileStore(application);
+    }
+
+    /**
+     * Creates an appropriate {@code UserInterface} for an
+     * {@code Application} according to the given arguments.
+     */
+    public UserInterface createUserInterface(Application application){
+        return this.isHeadless() ? new CommandLineInterface(application) : new GraphicalInterface(application);
+    }
+
+    /**
+     * Returns the input arguments for the parser.
+     */
+    public String[] getInput(){
+        return this.input;
     }
 
     /**
@@ -139,21 +155,5 @@ public class Arguments {
      */
     public boolean isCold(){
         return this.cold;
-    }
-
-    /**
-     * Creates an appropriate {@code PreferenceStore} for an
-     * {@code Application} according to the given arguments.
-     */
-    public PreferenceStore createPreferenceStore(Application application){
-        return this.isCold() ? new NullStore(application) : new FlatFileStore(application);
-    }
-
-    /**
-     * Creates an appropriate {@code UserInterface} for an
-     * {@code Application} according to the given arguments.
-     */
-    public UserInterface createUserInterface(Application application){
-        return this.isHeadless() ? new CommandLineInterface(application) : new GraphicalInterface(application);
     }
 }

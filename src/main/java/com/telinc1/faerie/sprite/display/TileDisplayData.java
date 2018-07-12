@@ -26,7 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Defines handle data for a sprite which renders tiles in Lunar Magic.
+ * The {@code TileDisplayData} class defines data for a sprite which renders as
+ * one or more internal sprite tiles within Lunar Magic.
  *
  * @author Telinc1
  * @since 1.0.0
@@ -42,7 +43,6 @@ public class TileDisplayData extends DisplayData {
      */
     public TileDisplayData(){
         super();
-
         this.tiles = new ArrayList<>();
     }
 
