@@ -254,15 +254,7 @@ public class GraphicalInterface extends UserInterface {
         }
 
         if(option == 0){
-            if(provider.getInput() != null){
-                this.getWindow().getConfigurationChooser().setSelectedFile(provider.getInput());
-            }
-
-            File file = this.getWindow().showSaveDialog();
-
-            if(file != null){
-                this.saveProvider(file);
-            }
+            this.saveProvider(provider.getInput());
         }
 
         return true;
