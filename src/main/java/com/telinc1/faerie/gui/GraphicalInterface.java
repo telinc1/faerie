@@ -194,6 +194,10 @@ public class GraphicalInterface extends UserInterface {
     public UserInterface setProvider(Provider provider){
         super.setProvider(provider);
 
+        if(this.getProvider() == null){
+            return this;
+        }
+
         try {
             this.getProvider().loadSprite(0);
         }catch(ProvisionException exception){
@@ -212,7 +216,7 @@ public class GraphicalInterface extends UserInterface {
 
     @Override
     public boolean stop(){
-        return false;
+        return this.unloadProvider();
     }
 
     /**
