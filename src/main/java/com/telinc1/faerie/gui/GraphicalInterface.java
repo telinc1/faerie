@@ -31,12 +31,10 @@ import com.telinc1.faerie.notification.Notifier;
 import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
 import com.telinc1.faerie.sprite.provider.LoadingException;
 import com.telinc1.faerie.sprite.provider.Provider;
-import com.telinc1.faerie.sprite.provider.ProvisionException;
 import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.sprite.provider.SavingException;
 import com.telinc1.faerie.util.TypeUtils;
 import com.telinc1.faerie.util.locale.LocalizedException;
-import com.telinc1.faerie.util.locale.Warning;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -193,28 +191,13 @@ public class GraphicalInterface extends UserInterface {
     }
 
     @Override
-    public UserInterface setProvider(Provider provider){
-        super.setProvider(provider);
-
-        if(this.getProvider() == null){
-            this.getWindow().updateGUI();
-            return this;
+    public boolean setProvider(Provider provider){
+        if(super.setProvider(provider)){
+            this.getWindow().updateInput();
+            return true;
         }
 
-        try {
-            this.getProvider().loadSprite(0);
-        }catch(ProvisionException exception){
-            this.getApplication().getExceptionHandler().handle(this.getWindow(), exception);
-            return this.setProvider(null);
-        }
-
-        this.getWindow().updateInput();
-
-        for(Warning warning : provider.getWarnings()){
-            this.getNotifier().notify(this.getWindow(), warning);
-        }
-
-        return this;
+        return false;
     }
 
     @Override

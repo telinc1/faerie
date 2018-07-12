@@ -605,13 +605,13 @@ public class MainWindow extends JFrame {
      * @return the window, for chaining
      */
     public MainWindow updateInput(){
+        this.updateGUI();
+
         Provider provider = this.getProvider();
 
         if(provider == null){
-            return this.updateGUI();
+            return this;
         }
-
-        this.updateGUI();
 
         Sprite sprite = provider.getCurrentSprite();
         SpriteBehavior behavior = sprite.getBehavior();

@@ -24,6 +24,8 @@ package com.telinc1.faerie;
 
 import com.telinc1.faerie.notification.Notifier;
 import com.telinc1.faerie.sprite.provider.Provider;
+import com.telinc1.faerie.sprite.provider.ProvisionException;
+import com.telinc1.faerie.util.locale.Warning;
 
 import java.io.File;
 
@@ -126,18 +128,34 @@ public abstract class UserInterface {
     }
 
     /**
-     * Replaces the interface's currently loaded provider. Any changes required
-     * should be handled accordingly.
-     * <p>
-     * This method should just change the provider without requiring any user
-     * intervention.
+     * Loads a new provider into the interface. The first sprite of the
+     * provider is automatically loaded and all warnings are shown.
+     *
+     * This method should be overridden by any subclasses which want to update
+     * visually when the provider changes.
      *
      * @param provider the new provider
-     * @return the interface, for chaining
+     * @return whether the provider could be loaded
      */
-    public UserInterface setProvider(Provider provider){
+    public boolean setProvider(Provider provider){
+        if(provider == null){
+            this.provider = null;
+            return true;
+        }
+
+        try {
+            provider.loadSprite(0);
+        }catch(ProvisionException exception){
+            this.getApplication().getExceptionHandler().handle(exception);
+            return false;
+        }
+
+        for(Warning warning : provider.getWarnings()){
+            this.getNotifier().notify(warning);
+        }
+
         this.provider = provider;
-        return this;
+        return true;
     }
 
     /**
