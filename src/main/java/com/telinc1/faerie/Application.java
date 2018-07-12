@@ -31,8 +31,6 @@ import com.telinc1.faerie.util.locale.Warning;
 import com.telinc1.faerie.util.notification.Notifier;
 import org.apache.commons.cli.ParseException;
 
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -110,15 +108,6 @@ public class Application {
 
         if(preferenceWarning != null){
             this.getNotifier().notify(preferenceWarning);
-        }
-
-        if(!this.getArguments().isHeadless()){
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            }catch(ReflectiveOperationException | UnsupportedLookAndFeelException exception){
-                this.getExceptionHandler().report(exception);
-                this.getNotifier().warn("core", "launch.lookAndFeel", exception);
-            }
         }
 
         this.palette = new Palette();

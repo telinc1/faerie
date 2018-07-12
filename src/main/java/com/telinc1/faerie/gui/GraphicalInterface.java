@@ -36,6 +36,8 @@ import com.telinc1.faerie.util.TypeUtils;
 import com.telinc1.faerie.util.locale.Warning;
 
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import java.io.File;
 
 /**
@@ -56,6 +58,14 @@ public class GraphicalInterface extends UserInterface {
      */
     public GraphicalInterface(Application application){
         super(application);
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }catch(ReflectiveOperationException | UnsupportedLookAndFeelException exception){
+            this.getApplication().getExceptionHandler().report(exception);
+            this.getApplication().getNotifier().warn("core", "launch.lookAndFeel", exception);
+        }
+
         this.window = new MainWindow(this);
     }
 
