@@ -22,8 +22,8 @@
 
 package com.telinc1.faerie.gui.main;
 
+import com.telinc1.faerie.notification.EnumSeverity;
 import com.telinc1.faerie.util.locale.LocalizedException;
-import com.telinc1.faerie.util.notification.EnumSeverity;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -92,7 +92,7 @@ public class MainWindowDropListener implements DropTargetListener {
                     return;
                 }
             }catch(IOException | UnsupportedFlavorException exception){
-                this.getWindow().getApplication().getNotifier().notify(
+                this.getWindow().getInterface().getNotifier().notify(
                     this.getWindow(),
                     new LocalizedException(exception, EnumSeverity.ERROR, "main", "dragAndDrop")
                 );

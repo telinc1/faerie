@@ -22,12 +22,12 @@
 
 package com.telinc1.faerie.util.locale;
 
-import com.telinc1.faerie.util.notification.EnumSeverity;
-import com.telinc1.faerie.util.notification.Notifier;
+import com.telinc1.faerie.gui.DialogNotifier;
+import com.telinc1.faerie.notification.EnumSeverity;
 
 /**
  * The {@code ILocalizable} interface can be implemented by a class to allow it
- * to be directly displayed through the application's {@link Notifier}.
+ * to be directly displayed through the application's {@link DialogNotifier}.
  */
 public interface ILocalizable {
     /**

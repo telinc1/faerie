@@ -27,6 +27,7 @@ import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.UserInterface;
 import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.main.MainWindow;
+import com.telinc1.faerie.notification.Notifier;
 import com.telinc1.faerie.sprite.provider.ConfigurationProvider;
 import com.telinc1.faerie.sprite.provider.LoadingException;
 import com.telinc1.faerie.sprite.provider.Provider;
@@ -69,12 +70,17 @@ public class GraphicalInterface extends UserInterface {
     }
 
     @Override
+    protected Notifier createNotifier(){
+        return new DialogNotifier(this);
+    }
+
+    @Override
     public void init(){
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }catch(ReflectiveOperationException | UnsupportedLookAndFeelException exception){
             this.getApplication().getExceptionHandler().report(exception);
-            this.getApplication().getNotifier().warn("core", "launch.lookAndFeel", exception);
+            this.getNotifier().warn("core", "launch.lookAndFeel", exception);
         }
 
         this.palette = new Palette();
@@ -130,7 +136,7 @@ public class GraphicalInterface extends UserInterface {
                 this.getApplication().getExceptionHandler().handle(this.getWindow(), exception);
             }
         }else{
-            this.getApplication().getNotifier().error(this.getWindow(), "file", "load.type");
+            this.getNotifier().error(this.getWindow(), "file", "load.type");
         }
     }
 
@@ -139,7 +145,7 @@ public class GraphicalInterface extends UserInterface {
         Provider provider = this.getProvider();
 
         if(provider == null){
-            this.getApplication().getNotifier().error(this.getWindow(), "chooser", "save.blank");
+            this.getNotifier().error(this.getWindow(), "chooser", "save.blank");
             return;
         }
 
@@ -172,7 +178,7 @@ public class GraphicalInterface extends UserInterface {
                 message += " (" + exception.getCause().getClass().getName() + ")";
             }
 
-            this.getApplication().getNotifier().error(this.getWindow(), "chooser", "save", "message", message);
+            this.getNotifier().error(this.getWindow(), "chooser", "save", "message", message);
         }
 
         if(replacement != null && this.unloadProvider()){
@@ -208,7 +214,7 @@ public class GraphicalInterface extends UserInterface {
         this.getWindow().updateInput();
 
         for(Warning warning : provider.getWarnings()){
-            this.getApplication().getNotifier().notify(this.getWindow(), warning);
+            this.getNotifier().notify(this.getWindow(), warning);
         }
 
         return this;

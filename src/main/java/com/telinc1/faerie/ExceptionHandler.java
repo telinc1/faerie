@@ -91,11 +91,11 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         this.report(throwable);
 
         if(throwable instanceof ILocalizable){
-            this.getApplication().getNotifier().notify(parent, (ILocalizable)throwable);
+            this.getApplication().getUserInterface().getNotifier().notify(parent, (ILocalizable)throwable);
             return;
         }
 
-        this.getApplication().getNotifier().fatal(parent, "core", "exception", throwable);
+        this.getApplication().getUserInterface().getNotifier().fatal(parent, "core", "exception", throwable);
     }
 
     /**
@@ -112,11 +112,11 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         this.report(throwable);
 
         if(throwable instanceof ILocalizable){
-            this.getApplication().getNotifier().notify((ILocalizable)throwable);
+            this.getApplication().getUserInterface().getNotifier().notify((ILocalizable)throwable);
             return;
         }
 
-        this.getApplication().getNotifier().fatal("core", "threadedException", "thread", thread.getName(), throwable);
+        this.getApplication().getUserInterface().getNotifier().fatal("core", "threadedException", new Object[]{"thread", thread.getName(), throwable});
     }
 
     /**

@@ -24,6 +24,7 @@ package com.telinc1.faerie.cli;
 
 import com.telinc1.faerie.Application;
 import com.telinc1.faerie.UserInterface;
+import com.telinc1.faerie.notification.Notifier;
 
 import java.io.File;
 
@@ -38,6 +39,11 @@ import java.io.File;
 public class CommandLineInterface extends UserInterface {
     public CommandLineInterface(Application application){
         super(application);
+    }
+
+    @Override
+    public Notifier createNotifier(){
+        return null;
     }
 
     @Override

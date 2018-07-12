@@ -20,107 +20,98 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.telinc1.faerie.util.notification;
+package com.telinc1.faerie.notification;
 
 import com.telinc1.faerie.Application;
-import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.util.locale.ILocalizable;
 
-import javax.swing.JOptionPane;
-import java.awt.Component;
-
 /**
- * The {@code Notifier} handles the creation and management of message dialogs.
+ * The {@code Notifier} class provides an implementation for handling various
+ * notifications from the application, such as information messages, warnings,
+ * and errors.
+ *
+ * @author Telinc1
+ * @since 1.0.0
  */
-public class Notifier {
+public abstract class Notifier {
     /**
-     * The main window used by the {@code Notifier}.
+     * The application which uses this {@code Notifier}.
      */
     private final Application application;
 
     /**
-     * Creates a {@code Notifier} for the an application.
-     *
-     * @param application the {@code Application} to notify for
+     * Creates a {@code Notifier} for the an {@code Application}.
      */
     public Notifier(Application application){
         this.application = application;
     }
 
     /**
-     * Shows a notification dialog to the user.
-     * <p>
-     * If the severity of the message is {@link EnumSeverity#FATAL}, the
-     * application will quit with exit code 1.
+     * Shows a notification to the user. If the severity of the message is
+     * {@link EnumSeverity#FATAL}, the application should exit with status 1.
      *
      * @param source the source to handle from
      */
     public void notify(ILocalizable source){
-        // this.notify(this.getApplication().getUserInterface(), source);
         this.notify(null, source);
     }
 
     /**
-     * Shows an information dialog.
+     * Shows a notification to the user. If the severity of the message is
+     * {@link EnumSeverity#FATAL}, the application will exit with status 1.
+     * <p>
+     * If the implementation can properly use the provided {@code parent}, the
+     * message will be its child in any appropriate manner.
      *
-     * @param resource the bundle to look in
-     * @param subkey the base key to look for
-     * @param arguments the arguments to format the message with
+     * @param parent the parent of the notification, can be {@code null}
+     * @param source the source to handle from
      */
-    public void info(String resource, String subkey, Object... arguments){
-        // this.info(this.getApplication().getUserInterface(), resource, subkey, arguments);
-        this.info(null, resource, subkey, arguments);
+    public final void notify(Object parent, ILocalizable source){
+        this.showNotification(parent, source);
+
+        if(source.getSeverity() == EnumSeverity.FATAL){
+            this.getApplication().exit(1);
+        }
     }
 
     /**
-     * Shows an information dialog.
+     * Shows a notification to the user. If the implementation can properly use
+     * the provided {@code parent}, the message should be its child in any
+     * appropriate manner.
      *
-     * @param parent the {@code JFrame} which will own the dialog
-     * @param resource the bundle to look in
-     * @param subkey the base key to look for
-     * @param arguments the arguments to format the message with
+     * @param parent the parent of the notification, can be {@code null}
+     * @param source the source to handle from
      */
-    public void info(Component parent, String resource, String subkey, Object... arguments){
-        this.notify(parent, this.createMessage(EnumSeverity.INFO, resource, subkey, arguments));
-    }
+    protected abstract void showNotification(Object parent, ILocalizable source);
 
     /**
-     * Returns the application used by the {@code Notifier}.
-     *
-     * @return the {@link Application} which the {@code Notifier} serves
+     * Returns the {@code Application} used by the {@code Notifier}.
      */
     public Application getApplication(){
         return this.application;
     }
 
     /**
-     * Shows a notification dialog to the user.
-     * <p>
-     * If the severity of the message is {@link EnumSeverity#FATAL}, the
-     * application will quit with exit code 1.
+     * Shows a localized information message to the user.
      *
-     * @param parent the frame which the dialog will belong to
-     * @param source the source to handle from
+     * @param resource the bundle to look in
+     * @param subkey the base key to look for
+     * @param arguments the arguments to format the message with
      */
-    @SuppressWarnings("MagicConstant")
-    public void notify(Component parent, ILocalizable source){
-        String title = Resources.getString(
-            source.getResource(),
-            source.getSeverity().getKey() + "." + source.getSubkey() + ".title",
-            source.getArguments()
-        );
+    public void info(String resource, String subkey, Object... arguments){
+        this.info(null, resource, subkey, arguments);
+    }
 
-        String content = Resources.getString(
-            source.getResource(),
-            source.getSeverity().getKey() + "." + source.getSubkey() + ".content",
-            source.getArguments()
-        );
-
-        JOptionPane.showMessageDialog(parent, content, title, source.getSeverity().getMessageType());
-
-        if(source.getSeverity() == EnumSeverity.FATAL){
-            this.getApplication().exit(1);
-        }
+    /**
+     * Shows a localized information message to the user.
+     *
+     * @param parent the parent of the notification, can be {@code null}
+     * @param resource the bundle to look in
+     * @param subkey the base key to look for
+     * @param arguments the arguments to format the message with
+     */
+    public void info(Object parent, String resource, String subkey, Object... arguments){
+        this.notify(parent, this.createMessage(EnumSeverity.INFO, resource, subkey, arguments));
     }
 
     /**
@@ -157,74 +148,71 @@ public class Notifier {
     }
 
     /**
-     * Shows a warning information dialog.
+     * Shows a localized warning to the user.
      *
      * @param resource the bundle to look in
      * @param subkey the base key to look for
      * @param arguments the arguments to format the message with
      */
     public void warn(String resource, String subkey, Object... arguments){
-        // this.warn(this.getApplication().getUserInterface(), resource, subkey, arguments);
         this.warn(null, resource, subkey, arguments);
     }
 
     /**
-     * Shows a warning information dialog.
+     * Shows a localized warning to the user.
      *
-     * @param parent the {@code JFrame} which will own the dialog
+     * @param parent the parent of the notification, can be {@code null}
      * @param resource the bundle to look in
      * @param subkey the base key to look for
      * @param arguments the arguments to format the message with
      */
-    public void warn(Component parent, String resource, String subkey, Object... arguments){
+    public void warn(Object parent, String resource, String subkey, Object... arguments){
         this.notify(parent, this.createMessage(EnumSeverity.WARNING, resource, subkey, arguments));
     }
 
     /**
-     * Shows an error information dialog.
+     * Shows a localized error message to the user.
      *
      * @param resource the bundle to look in
      * @param subkey the base key to look for
      * @param arguments the arguments to format the message with
      */
     public void error(String resource, String subkey, Object... arguments){
-        // this.error(this.getApplication().getUserInterface(), resource, subkey, arguments);
         this.error(null, resource, subkey, arguments);
     }
 
     /**
-     * Shows an error information dialog.
+     * Shows a localized error message to the user.
      *
-     * @param parent the {@code JFrame} which will own the dialog
+     * @param parent the parent of the notification, can be {@code null}
      * @param resource the bundle to look in
      * @param subkey the base key to look for
      * @param arguments the arguments to format the message with
      */
-    public void error(Component parent, String resource, String subkey, Object... arguments){
+    public void error(Object parent, String resource, String subkey, Object... arguments){
         this.notify(parent, this.createMessage(EnumSeverity.ERROR, resource, subkey, arguments));
     }
 
     /**
-     * Shows a fatal information dialog.
+     * Shows a localized fatal error message to the user.
      *
      * @param resource the bundle to look in
      * @param subkey the base key to look for
      * @param arguments the arguments to format the message with
      */
     public void fatal(String resource, String subkey, Object... arguments){
-        // this.fatal(this.getApplication().getUserInterface(), resource, subkey, arguments);
         this.fatal(null, resource, subkey, arguments);
     }
 
     /**
-     * Shows a fatal information dialog.
+     * Shows a localized fatal error message to the user.
      *
-     * @param parent the {@code JFrame} which will own the dialog
+     * @param parent the parent of the notification, can be {@code null}
      * @param resource the bundle to look in
      * @param subkey the base key to look for
      * @param arguments the arguments to format the message with
      */
-    public void fatal(Component parent, String resource, String subkey, Object... arguments){
+    public void fatal(Object parent, String resource, String subkey, Object... arguments){
         this.notify(parent, this.createMessage(EnumSeverity.FATAL, resource, subkey, arguments));
     }
 }

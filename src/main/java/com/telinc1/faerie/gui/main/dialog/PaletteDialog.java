@@ -29,8 +29,8 @@ import com.telinc1.faerie.display.Palette;
 import com.telinc1.faerie.gui.JPaletteView;
 import com.telinc1.faerie.gui.chooser.PaletteChooser;
 import com.telinc1.faerie.gui.main.MainWindow;
+import com.telinc1.faerie.notification.EnumSeverity;
 import com.telinc1.faerie.util.locale.LocalizedException;
-import com.telinc1.faerie.util.notification.EnumSeverity;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -175,7 +175,7 @@ public class PaletteDialog extends JDialog {
                 try {
                     this.getWindow().getInterface().getPalette().loadFile(file);
                 }catch(IOException exception){
-                    this.getWindow().getApplication().getNotifier().notify(this, new LocalizedException(
+                    this.getWindow().getInterface().getNotifier().notify(this, new LocalizedException(
                         exception,
                         EnumSeverity.ERROR,
                         "palette", "palette",

@@ -26,7 +26,6 @@ import com.telinc1.faerie.preferences.PreferenceStore;
 import com.telinc1.faerie.sprite.provider.ROMProvider;
 import com.telinc1.faerie.util.locale.LocalizedException;
 import com.telinc1.faerie.util.locale.Warning;
-import com.telinc1.faerie.util.notification.Notifier;
 import org.apache.commons.cli.ParseException;
 
 import java.io.BufferedReader;
@@ -50,11 +49,6 @@ public class Application {
      * The preference store for the application.
      */
     private final PreferenceStore preferences;
-
-    /**
-     * The application's {@link Notifier}.
-     */
-    private final Notifier notifier;
 
     /**
      * The handler for unhandled exceptions.
@@ -82,21 +76,21 @@ public class Application {
         }
 
         this.preferences = this.getArguments().createPreferenceStore(this);
-        this.notifier = new Notifier(this);
-        this.exceptionHandler = new ExceptionHandler(this);
         this.userInterface = this.getArguments().createUserInterface(this);
+
+        this.exceptionHandler = new ExceptionHandler(this);
 
         try {
             Thread.setDefaultUncaughtExceptionHandler(this.exceptionHandler);
         }catch(SecurityException exception){
             this.getExceptionHandler().report(exception);
-            this.getNotifier().warn("core", "launch.handler");
+            this.getUserInterface().getNotifier().warn("core", "launch.handler");
         }
 
         Warning preferenceWarning = this.getPreferences().load();
 
         if(preferenceWarning != null){
-            this.getNotifier().notify(preferenceWarning);
+            this.getUserInterface().getNotifier().notify(preferenceWarning);
         }
 
         this.getUserInterface().init();
@@ -115,13 +109,6 @@ public class Application {
     }
 
     /**
-     * Returns the {@link Notifier} for the application.
-     */
-    public Notifier getNotifier(){
-        return this.notifier;
-    }
-
-    /**
      * Return the command line {@code Arguments} store.
      */
     public Arguments getArguments(){
@@ -132,15 +119,17 @@ public class Application {
      * Cleanly exits out of the application with the a status code.
      */
     public void exit(int status){
+        UserInterface ui = this.getUserInterface();
+
         if(status == 0 && this.getPreferences() != null){
             Warning warning = this.getPreferences().store();
 
-            if(warning != null){
-                this.getNotifier().notify(warning);
+            if(warning != null && ui != null){
+                ui.getNotifier().notify(warning);
             }
         }
 
-        if(this.getUserInterface() != null && !this.getUserInterface().stop() && status == 0){
+        if(ui != null && !ui.stop() && status == 0){
             return;
         }
 

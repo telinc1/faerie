@@ -22,8 +22,8 @@
 
 package com.telinc1.faerie.sprite.provider;
 
+import com.telinc1.faerie.notification.EnumSeverity;
 import com.telinc1.faerie.util.locale.ILocalizable;
-import com.telinc1.faerie.util.notification.EnumSeverity;
 
 /**
  * A {@code SavingException} is thrown by a {@link Provider} when it cannot

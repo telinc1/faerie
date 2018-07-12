@@ -22,6 +22,7 @@
 
 package com.telinc1.faerie;
 
+import com.telinc1.faerie.notification.Notifier;
 import com.telinc1.faerie.sprite.provider.Provider;
 
 import java.io.File;
@@ -39,6 +40,11 @@ public abstract class UserInterface {
     private final Application application;
 
     /**
+     * The user interface's {@code Notifier}.
+     */
+    private final Notifier notifier;
+
+    /**
      * The currently loaded sprite provider.
      */
     private Provider provider;
@@ -48,7 +54,14 @@ public abstract class UserInterface {
      */
     public UserInterface(Application application){
         this.application = application;
+        this.notifier = this.createNotifier();
     }
+
+    /**
+     * Creates and returns a usable fresh instance of this user interface's
+     * respective notifier.
+     */
+    protected abstract Notifier createNotifier();
 
     /**
      * Initializes all of the user interface's specific components. At this
@@ -94,6 +107,13 @@ public abstract class UserInterface {
      */
     public Application getApplication(){
         return this.application;
+    }
+
+    /**
+     * Returns the {@code Notifier} for the user interface.
+     */
+    public Notifier getNotifier(){
+        return this.notifier;
     }
 
     /**
