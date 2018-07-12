@@ -76,8 +76,8 @@ public final class TypeUtils {
     public static boolean isConfiguration(File file){
         String extension = TypeUtils.getExtension(file);
 
-        return TypeUtils.TYPE_CFG.equals(extension)
-            || TypeUtils.TYPE_JSON.equals(extension);
+        return TypeUtils.TYPE_CFG.equalsIgnoreCase(extension)
+            || TypeUtils.TYPE_JSON.equalsIgnoreCase(extension);
     }
 
     /**
@@ -102,8 +102,8 @@ public final class TypeUtils {
     public static boolean isROM(File file){
         String extension = TypeUtils.getExtension(file);
 
-        return TypeUtils.TYPE_SMC_ROM.equals(extension)
-            || TypeUtils.TYPE_SFC_ROM.equals(extension);
+        return TypeUtils.TYPE_SMC_ROM.equalsIgnoreCase(extension)
+            || TypeUtils.TYPE_SFC_ROM.equalsIgnoreCase(extension);
     }
 
     /**
@@ -115,8 +115,8 @@ public final class TypeUtils {
     public static boolean isPalette(File file){
         String extension = TypeUtils.getExtension(file);
 
-        return TypeUtils.TYPE_RGB_PALETTE.equals(extension)
-            || TypeUtils.TYPE_TPL_PALETTE.equals(extension)
-            || TypeUtils.TYPE_SNES_PALETTE.equals(extension);
+        return TypeUtils.TYPE_RGB_PALETTE.equalsIgnoreCase(extension)
+            || TypeUtils.TYPE_TPL_PALETTE.equalsIgnoreCase(extension)
+            || TypeUtils.TYPE_SNES_PALETTE.equalsIgnoreCase(extension);
     }
 }

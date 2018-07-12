@@ -41,7 +41,7 @@ public class CFGFilter extends FileFilter implements IApplicationFilter {
             return true;
         }
 
-        return TypeUtils.getExtension(file).equals(TypeUtils.TYPE_CFG);
+        return TypeUtils.getExtension(file).equalsIgnoreCase(TypeUtils.TYPE_CFG);
     }
 
     @Override

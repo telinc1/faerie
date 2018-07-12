@@ -41,7 +41,7 @@ public class JSONFilter extends FileFilter implements IApplicationFilter {
             return true;
         }
 
-        return TypeUtils.getExtension(file).equals(TypeUtils.TYPE_JSON);
+        return TypeUtils.getExtension(file).equalsIgnoreCase(TypeUtils.TYPE_JSON);
     }
 
     @Override
