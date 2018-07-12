@@ -428,6 +428,14 @@ public class MainWindow extends JFrame {
                 return;
             }
 
+            if(value > 12){
+                Sprite sprite = this.getProvider().getCurrentSprite();
+
+                if(sprite.getExtraBytes() <= 12 && value <= sprite.getMaxExtraBytes()){
+                    this.getInterface().getNotifier().warn("main", "extraByteCount");
+                }
+            }
+
             this.getInterface().startModification().setExtraBytes(value);
         });
     }
