@@ -296,7 +296,10 @@ public class JPaletteView extends JComponent {
         }
 
         this.palette = palette;
-        this.palette.addUpdateListener(this.updateListener);
+
+        if(this.getPalette() != null){
+            this.getPalette().addUpdateListener(this.updateListener);
+        }
 
         this.repaint();
         return this;
