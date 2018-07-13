@@ -23,13 +23,15 @@
 package com.telinc1.faerie.sprite.provider;
 
 import com.telinc1.faerie.util.EnumSeverity;
+import com.telinc1.faerie.util.IMinorException;
 import com.telinc1.faerie.util.locale.ILocalizable;
 
 /**
  * A {@code LoadingException} is thrown by a {@link Provider}'s constructor if
  * it can't load or parse the given input {@code File}.
+ * {@code LoadingException}s are inherently minor and will not be reported.
  */
-public class LoadingException extends Exception implements ILocalizable {
+public class LoadingException extends Exception implements ILocalizable, IMinorException {
     /**
      * The exception's subkey from the "file" resource bundle.
      */
@@ -41,12 +43,18 @@ public class LoadingException extends Exception implements ILocalizable {
     private final Object[] arguments;
 
     /**
+     * Whether the exception is minor.
+     */
+    private final boolean minor;
+
+    /**
      * Create a {@code LoadingException} with no defined message.
      */
     public LoadingException(){
         super();
         this.subkey = null;
         this.arguments = new Object[0];
+        this.minor = true;
     }
 
     /**
@@ -59,6 +67,7 @@ public class LoadingException extends Exception implements ILocalizable {
         super(cause);
         this.subkey = null;
         this.arguments = new Object[0];
+        this.minor = true;
     }
 
     /**
@@ -73,6 +82,7 @@ public class LoadingException extends Exception implements ILocalizable {
         super(message);
         this.subkey = subkey;
         this.arguments = arguments;
+        this.minor = true;
     }
 
     /**
@@ -87,6 +97,24 @@ public class LoadingException extends Exception implements ILocalizable {
     public LoadingException(String message, String subkey, Throwable cause, Object... arguments){
         super(message, cause);
         this.subkey = subkey;
+        this.arguments = arguments;
+        this.minor = true;
+    }
+
+    /**
+     * Create a {@code LoadingException} with a defined message, localizable
+     * subkey, and cause.
+     *
+     * @param message the error message of the exception
+     * @param subkey the subkey used when showing the exception to the user
+     * @param cause the cause of the exception
+     * @param minor whether the exception is minor
+     * @param arguments the arguments to pass to the exception's message
+     */
+    public LoadingException(String message, String subkey, Throwable cause, boolean minor, Object... arguments){
+        super(message, cause);
+        this.subkey = subkey;
+        this.minor = minor;
         this.arguments = arguments;
     }
 
@@ -108,5 +136,10 @@ public class LoadingException extends Exception implements ILocalizable {
     @Override
     public Object[] getArguments(){
         return this.arguments;
+    }
+
+    @Override
+    public boolean isMinor(){
+        return this.minor;
     }
 }

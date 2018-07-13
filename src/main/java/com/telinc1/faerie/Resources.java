@@ -22,8 +22,10 @@
 
 package com.telinc1.faerie;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -191,5 +193,28 @@ public class Resources {
         }
 
         return stream;
+    }
+
+    /**
+     * Attempts to create a {@code File} which references a file in the same
+     * directory as the application's JAR or main class file.
+     *
+     * @param name the name of the file to get
+     * @return the {@code File}, or {@code null} if its location can't be
+     * determined
+     */
+    public static File getFile(String name){
+        try {
+            String path = Application.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            File file = new File(path);
+
+            if(!file.isDirectory()){
+                path = file.getParent();
+            }
+
+            return new File(path + "/" + name);
+        }catch(NullPointerException | URISyntaxException | SecurityException exception){
+            return null;
+        }
     }
 }

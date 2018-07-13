@@ -103,6 +103,7 @@ public class ConfigurationProvider extends Provider {
     }
 
     @Override
+    @SuppressWarnings("RedundantArrayCreation")
     public void loadSprite(int index) throws ProvisionException{
         if(index != 0){
             throw new ProvisionException("Index out of bounds: " + index + ".", "index");
@@ -129,7 +130,7 @@ public class ConfigurationProvider extends Provider {
 
             this.sprite = this.getParser().parse();
         }catch(IOException exception){
-            throw new ProvisionException("Can't read file.", "configuration.io", exception);
+            throw new ProvisionException("Can't read file.", "configuration.io", exception, false, new Object[]{});
         }catch(ParseException exception){
             throw new ProvisionException("Malformed file.", "configuration.malformed", exception, "message", exception.getLocalizedMessage());
         }
@@ -147,6 +148,7 @@ public class ConfigurationProvider extends Provider {
     }
 
     @Override
+    @SuppressWarnings("RedundantArrayCreation")
     public Provider save(File file) throws SavingException{
         String extension = TypeUtils.getExtension(file);
         Emitter emitter = null;
@@ -158,7 +160,7 @@ public class ConfigurationProvider extends Provider {
         }
 
         if(emitter == null){
-            throw new SavingException("Unsupported file type.", "configuration.type");
+            throw new SavingException("Unsupported file type.", "configuration.type", null, false, new Object[]{});
         }
 
         try {

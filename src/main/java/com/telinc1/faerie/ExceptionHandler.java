@@ -22,19 +22,36 @@
 
 package com.telinc1.faerie;
 
+import com.telinc1.faerie.util.IMinorException;
 import com.telinc1.faerie.util.locale.ILocalizable;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
- * The unhandled exception handler which cleanly exits when an exception
- * is thrown.
+ * The {@code ExceptionHandler} class handles and reports exceptions. It also
+ * serves as the default unhandled exception handler and makes sure to exit
+ * cleanly if an unhandled exception is thrown.
  *
  * @author Telinc1
  * @since 1.0.0
  */
 public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+    /**
+     * The {@link SimpleDateFormat} used to create the file names of error logs
+     * and crash reports.
+     */
+    private static final String FILE_NAME = "'faerie'-yyyy-MM-dd-HH-mm.'log'";
+
     /**
      * The application which this exception handler manages.
      */
@@ -78,6 +95,67 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
+     * Reports a {@link Throwable} to the application log and saves a detailed
+     * crash report. If the given {@code throwable} is
+     * {@link IMinorException minor} or the {@code minor} argument is
+     * {@code true}, a crash report will only be saved if the application is
+     * running in verbose mode.
+     *
+     * @param throwable the {@code Throwable} to report
+     * @param minor whether to treat the exception as minor
+     */
+    public void report(Throwable throwable, boolean minor){
+        throwable.printStackTrace();
+
+        if(minor || (throwable instanceof IMinorException && ((IMinorException)throwable).isMinor())){
+            // TODO: log in verbose mode
+            return;
+        }
+
+        String name = new SimpleDateFormat(ExceptionHandler.FILE_NAME).format(new Date());
+        File file = Resources.getFile(name);
+
+        if(file == null){
+            this.getApplication().getInterface().getNotifier().error("core", "report");
+            return;
+        }
+
+        boolean exists = file.exists();
+
+        // oh holy java gods, why art thee so shitty
+        try(PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
+            if(!exists){
+                writer.println(Resources.getString("core", "report"));
+                writer.println();
+                writer.println("--------------------------------------------------------------------------------");
+                writer.println();
+
+                this.writeSystemDetails(writer);
+            }
+
+            writer.println("--------------------------------------------------------------------------------");
+            writer.println();
+            throwable.printStackTrace(writer);
+            writer.println();
+            writer.flush();
+        }catch(IOException exception){
+            exception.printStackTrace();
+            this.getApplication().getInterface().getNotifier().error("core", "report");
+        }
+    }
+
+    /**
+     * Reports a {@link Throwable} to the application log and saves a detailed
+     * crash report.
+     *
+     * @param throwable the {@code Throwable} to report
+     * @see #report(Throwable, boolean)
+     */
+    public void report(Throwable throwable){
+        this.report(throwable, false);
+    }
+
+    /**
      * Shows a detailed string representation of an exception and reports it.
      * If the {@link Throwable} is {@link ILocalizable}, it will directly be
      * displayed as a notification. If not, it will be shown as a fatal error.
@@ -104,6 +182,78 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         return this.application;
     }
 
+    /**
+     * Writes information about the user's system to a {@code PrintWriter}.
+     */
+    private void writeSystemDetails(PrintWriter writer){
+        Runtime runtime = Runtime.getRuntime();
+        String jvmFlags;
+
+        try {
+            RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+            List<String> jvm = runtimeMXBean.getInputArguments();
+
+            StringBuilder builder = new StringBuilder();
+
+            for(String argument : jvm){
+                builder.append(argument);
+                builder.append(" ");
+            }
+
+            jvmFlags = builder.toString();
+        }catch(Exception exception){
+            jvmFlags = exception.getClass().getName() + ": " + exception.getMessage();
+        }
+
+        writer.println(String.format(
+            "Application: %s with %s",
+            Resources.getString("core", "report.version"),
+            String.join(" ", this.getApplication().getArguments().getInput())
+        ));
+        writer.println(String.format(
+            "Operating System: %s v%s (%s)",
+            this.getSystemProperty("os.name"),
+            this.getSystemProperty("os.version"),
+            this.getSystemProperty("os.arch")
+        ));
+        writer.println(String.format(
+            "Java: %s from %s (%s) at %s",
+            this.getSystemProperty("java.version"),
+            this.getSystemProperty("java.vendor"),
+            this.getSystemProperty("java.vendor.url"),
+            this.getSystemProperty("java.home")
+        ));
+        writer.println(String.format(
+            "Java VM: %s v%s from %s with %s",
+            this.getSystemProperty("java.vm.name"),
+            this.getSystemProperty("java.vm.version"),
+            this.getSystemProperty("java.vm.vendor"),
+            jvmFlags
+        ));
+        writer.println(String.format(
+            "Memory: %d total, %d maximum, %d free",
+            runtime.totalMemory(),
+            runtime.maxMemory(),
+            runtime.freeMemory()
+        ));
+
+        writer.println();
+    }
+
+    /**
+     * Retrieve a system property without throwing exceptions.
+     *
+     * @return the system property's value or the name of a caught exception
+     * @see System#getProperty(String)
+     */
+    private String getSystemProperty(String key){
+        try {
+            return System.getProperty(key);
+        }catch(Exception exception){
+            return exception.getClass().getName() + ": " + exception.getMessage();
+        }
+    }
+
     @Override
     public void uncaughtException(Thread thread, Throwable throwable){
         this.report(throwable);
@@ -114,16 +264,5 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         }
 
         this.getApplication().getInterface().getNotifier().fatal("core", "threadedException", new Object[]{"thread", thread.getName(), throwable});
-    }
-
-    /**
-     * Reports a {@link Throwable} to the application log and saves a detailed
-     * crash report.
-     *
-     * @param throwable the {@code Throwable} to report
-     */
-    public void report(Throwable throwable){
-        // TODO: actually report and save the exception correctly
-        throwable.printStackTrace();
     }
 }

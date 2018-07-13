@@ -23,13 +23,15 @@
 package com.telinc1.faerie.sprite.provider;
 
 import com.telinc1.faerie.util.EnumSeverity;
+import com.telinc1.faerie.util.IMinorException;
 import com.telinc1.faerie.util.locale.ILocalizable;
 
 /**
  * A {@code SavingException} is thrown by a {@link Provider} when it cannot
- * properly or completely save a file for any reason.
+ * properly or completely save a file for any reason. {@code SavingException}s
+ * are inherently major and will be reported.
  */
-public class SavingException extends Exception implements ILocalizable {
+public class SavingException extends Exception implements ILocalizable, IMinorException {
     /**
      * The exception's subkey from the "file" resource bundle.
      */
@@ -41,12 +43,18 @@ public class SavingException extends Exception implements ILocalizable {
     private final Object[] arguments;
 
     /**
+     * Whether the exception is minor.
+     */
+    private final boolean minor;
+
+    /**
      * Create a {@code SavingException} with no defined message.
      */
     public SavingException(){
         super();
         this.subkey = null;
         this.arguments = new Object[0];
+        this.minor = false;
     }
 
     /**
@@ -59,6 +67,7 @@ public class SavingException extends Exception implements ILocalizable {
         super(cause);
         this.subkey = null;
         this.arguments = new Object[0];
+        this.minor = false;
     }
 
     /**
@@ -73,6 +82,7 @@ public class SavingException extends Exception implements ILocalizable {
         super(message);
         this.subkey = subkey;
         this.arguments = arguments;
+        this.minor = false;
     }
 
     /**
@@ -87,6 +97,24 @@ public class SavingException extends Exception implements ILocalizable {
     public SavingException(String message, String subkey, Throwable cause, Object... arguments){
         super(message, cause);
         this.subkey = subkey;
+        this.arguments = arguments;
+        this.minor = false;
+    }
+
+    /**
+     * Create a {@code SavingException} with a defined message, localizable
+     * subkey, cause, and significance.
+     *
+     * @param message the error message of the exception
+     * @param subkey the subkey used when showing the exception to the user
+     * @param cause the cause of the exception
+     * @param minor whether the exception is minor
+     * @param arguments the arguments to pass to the exception's message
+     */
+    public SavingException(String message, String subkey, Throwable cause, boolean minor, Object... arguments){
+        super(message, cause);
+        this.subkey = subkey;
+        this.minor = minor;
         this.arguments = arguments;
     }
 
@@ -108,5 +136,10 @@ public class SavingException extends Exception implements ILocalizable {
     @Override
     public Object[] getArguments(){
         return this.arguments;
+    }
+
+    @Override
+    public boolean isMinor(){
+        return this.minor;
     }
 }

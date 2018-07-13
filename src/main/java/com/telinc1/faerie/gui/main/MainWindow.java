@@ -376,12 +376,12 @@ public class MainWindow extends JFrame {
                         }
 
                         bit.setBoolean(this.getInterface().modifyBehavior(), checkBox.isSelected());
-                    }catch(IllegalAccessException e){
-                        e.printStackTrace();
+                    }catch(IllegalAccessException exception){
+                        this.getApplication().getExceptionHandler().report(exception);
                     }
                 });
             }catch(ReflectiveOperationException exception){
-                exception.printStackTrace();
+                this.getApplication().getExceptionHandler().report(exception);
             }
         }
 
@@ -599,8 +599,8 @@ public class MainWindow extends JFrame {
                 try {
                     JComponent component = (JComponent)field.get(this);
                     component.setEnabled(enabled);
-                }catch(IllegalAccessException e){
-                    e.printStackTrace();
+                }catch(IllegalAccessException exception){
+                    this.getApplication().getExceptionHandler().report(exception);
                 }
             }
         }
@@ -652,7 +652,7 @@ public class MainWindow extends JFrame {
                 Field bit = SpriteBehavior.class.getDeclaredField(annotation.value());
                 checkBox.setSelected(bit.getBoolean(behavior));
             }catch(ReflectiveOperationException exception){
-                exception.printStackTrace();
+                this.getApplication().getExceptionHandler().report(exception);
             }
         }
 
@@ -681,7 +681,7 @@ public class MainWindow extends JFrame {
         try {
             this.objectClippingImage.loadImage(String.format("object/%02X.png", index));
         }catch(IOException exception){
-            exception.printStackTrace();
+            this.getApplication().getExceptionHandler().report(exception);
         }
     }
 

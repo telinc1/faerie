@@ -175,6 +175,7 @@ public class PaletteDialog extends JDialog {
                 try {
                     this.getWindow().getInterface().getPalette().loadFile(file);
                 }catch(IOException exception){
+                    this.getWindow().getApplication().getExceptionHandler().report(exception, true);
                     this.getWindow().getInterface().getNotifier().notify(this, new LocalizedException(
                         exception,
                         EnumSeverity.ERROR,

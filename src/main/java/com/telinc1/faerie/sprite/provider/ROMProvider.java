@@ -87,6 +87,7 @@ public class ROMProvider extends Provider {
      * @throws LoadingException if the file is unreadable or malformed
      * @throws NullPointerException if the file is {@code null}
      */
+    @SuppressWarnings("RedundantArrayCreation")
     public ROMProvider(File input) throws LoadingException{
         super();
         this.input = input;
@@ -111,7 +112,7 @@ public class ROMProvider extends Provider {
                 throw new LoadingException("Wrong ROM title.", "rom.title", "found", new String(title, StandardCharsets.US_ASCII));
             }
         }catch(IOException exception){
-            throw new LoadingException("Error reading the ROM file.", "rom.read", exception);
+            throw new LoadingException("Error reading the ROM file.", "rom.read", exception, true, new Object[]{});
         }
     }
 
@@ -139,6 +140,7 @@ public class ROMProvider extends Provider {
     }
 
     @Override
+    @SuppressWarnings("RedundantArrayCreation")
     public Provider save(File file) throws SavingException{
         if(TypeUtils.isConfiguration(file)){
             ConfigurationProvider provider = new ConfigurationProvider(file);
@@ -149,11 +151,11 @@ public class ROMProvider extends Provider {
         }
 
         if(this.getInput() != file){
-            throw new SavingException("Different target file.", "rom.different");
+            throw new SavingException("The original ROM file must be used.", "rom.different");
         }
 
         if(!file.exists()){
-            throw new SavingException("The file doesn't exist.", "rom.write");
+            throw new SavingException("The original ROM file doesn't exist.", "rom.write");
         }
 
         try(RandomAccessFile rom = new RandomAccessFile(file, "rw")) {
@@ -163,7 +165,7 @@ public class ROMProvider extends Provider {
             rom.read(title);
 
             if(!Arrays.equals(ROMProvider.ROM_TITLE, title)){
-                throw new SavingException("Wrong ROM title.", "rom.title", "found", new String(title, StandardCharsets.US_ASCII));
+                throw new SavingException("Wrong ROM title.", "rom.title", null, false, new Object[]{"found", new String(title, StandardCharsets.US_ASCII)});
             }
 
             for(Sprite sprite : this.modified){
@@ -196,6 +198,7 @@ public class ROMProvider extends Provider {
     }
 
     @Override
+    @SuppressWarnings("RedundantArrayCreation")
     public void loadSprite(int index) throws ProvisionException{
         if(index < 0 || index > this.sprites.length){
             throw new ProvisionException("Index out of bounds: " + index + ".", "index");
@@ -223,7 +226,7 @@ public class ROMProvider extends Provider {
                     this.readByte(rom, 0x3F659 + index)
                 });
             }catch(IOException exception){
-                throw new ProvisionException("Error reading the file.", "rom.io", exception);
+                throw new ProvisionException("Error reading the file.", "rom.io", exception, true, new Object[]{});
             }
         }else if(index == 0xC9 || index == 0xCA){
             sprite.setSubtype(EnumSpriteSubType.SHOOTER);

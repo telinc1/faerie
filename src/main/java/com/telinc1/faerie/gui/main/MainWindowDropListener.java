@@ -94,6 +94,7 @@ public class MainWindowDropListener implements DropTargetListener {
                     return;
                 }
             }catch(IOException | UnsupportedFlavorException exception){
+                this.getWindow().getApplication().getExceptionHandler().report(exception, true);
                 this.getWindow().getInterface().getNotifier().notify(
                     this.getWindow(),
                     new LocalizedException(exception, EnumSeverity.ERROR, "main", "dragAndDrop")

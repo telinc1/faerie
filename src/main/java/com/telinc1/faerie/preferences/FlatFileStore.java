@@ -23,13 +23,13 @@
 package com.telinc1.faerie.preferences;
 
 import com.telinc1.faerie.Application;
+import com.telinc1.faerie.Resources;
 import com.telinc1.faerie.util.locale.Warning;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -68,6 +68,18 @@ public class FlatFileStore extends PreferenceStore {
     public FlatFileStore(Application application){
         super(application);
         this.preferences = new HashMap<>();
+    }
+
+    /**
+     * Returns the {@link File} which stores preferences, or {@code null} if
+     * it isn't accessible.
+     */
+    private File getFile(){
+        if(this.file == null){
+            this.file = Resources.getFile(FlatFileStore.FILE_NAME);
+        }
+
+        return this.file;
     }
 
     @Override
@@ -123,29 +135,6 @@ public class FlatFileStore extends PreferenceStore {
         }
 
         return null;
-    }
-
-    /**
-     * Returns the {@link File} which stores preferences, or {@code null} if
-     * it isn't accessible.
-     */
-    private File getFile(){
-        if(this.file == null){
-            try {
-                String path = Application.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-                File file = new File(path);
-
-                if(!file.isDirectory()){
-                    path = file.getParent();
-                }
-
-                this.file = new File(path + "/" + FlatFileStore.FILE_NAME);
-            }catch(NullPointerException | URISyntaxException | SecurityException exception){
-                return null;
-            }
-        }
-
-        return this.file;
     }
 
     @Override

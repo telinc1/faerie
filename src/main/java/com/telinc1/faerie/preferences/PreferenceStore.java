@@ -131,7 +131,7 @@ public abstract class PreferenceStore {
             try {
                 return Integer.valueOf(value);
             }catch(NumberFormatException exception){
-                // ignore and drop down to the fallback
+                this.getApplication().getExceptionHandler().report(exception);
             }
         }
 

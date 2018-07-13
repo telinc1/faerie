@@ -23,6 +23,7 @@
 package com.telinc1.faerie.sprite.parser;
 
 import com.telinc1.faerie.Resources;
+import com.telinc1.faerie.util.IMinorException;
 
 /**
  * A {@code ParseException} is thrown when a configuration file for a sprite is
@@ -31,7 +32,7 @@ import com.telinc1.faerie.Resources;
  * @author Telinc1
  * @since 1.0.0
  */
-public class ParseException extends Exception {
+public class ParseException extends Exception implements IMinorException {
     /**
      * The subkey from the {@code parse} bundle to use for the message.
      */
@@ -61,5 +62,10 @@ public class ParseException extends Exception {
     @Override
     public String getLocalizedMessage(){
         return Resources.getString("parse", this.subkey, this.arguments);
+    }
+
+    @Override
+    public boolean isMinor(){
+        return true;
     }
 }
