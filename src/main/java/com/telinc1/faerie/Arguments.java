@@ -53,19 +53,24 @@ public class Arguments {
     private final Options options;
 
     /**
-     * Stores the value of the "help" command line option.
+     * Stores the value of the {@code help} command line option.
      */
     private boolean printHelp;
 
     /**
-     * Stores the value of the "headless" command line option.
+     * Stores the value of the {@code headless} command line option.
      */
     private boolean headless;
 
     /**
-     * Stores the value of the "cold" command line option.
+     * Stores the value of the {@code cold} command line option.
      */
     private boolean cold;
+
+    /**
+     * Stores the value of the {@code verbose} command line option.
+     */
+    private boolean verbose;
 
     /**
      * Constructs an {@code Arguments} store and creates the default options.
@@ -79,6 +84,7 @@ public class Arguments {
         this.options.addOption("h", "help", false, "display this message");
         this.options.addOption("H", "headless", false, "disable the graphical interface and operate on a single file");
         this.options.addOption("c", "cold", false, "disable preference storage");
+        this.options.addOption("v", "verbose", false, "report all exceptions");
     }
 
     /**
@@ -102,6 +108,7 @@ public class Arguments {
         this.printHelp = line.hasOption("help");
         this.headless = line.hasOption("headless") || this.printHelp;
         this.cold = line.hasOption("cold");
+        this.verbose = line.hasOption("verbose");
     }
 
     /**
@@ -155,5 +162,13 @@ public class Arguments {
      */
     public boolean isCold(){
         return this.cold;
+    }
+
+    /**
+     * Returns whether the application should save full error reports for all
+     * exceptions.
+     */
+    public boolean isVerbose(){
+        return this.verbose;
     }
 }

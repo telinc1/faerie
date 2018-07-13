@@ -107,8 +107,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
     public void report(Throwable throwable, boolean minor){
         throwable.printStackTrace();
 
-        if(minor || (throwable instanceof IMinorException && ((IMinorException)throwable).isMinor())){
-            // TODO: log in verbose mode
+        if((minor || (throwable instanceof IMinorException && ((IMinorException)throwable).isMinor())) && !this.getApplication().getArguments().isVerbose()){
             return;
         }
 
