@@ -23,6 +23,8 @@
 package com.telinc1.faerie;
 
 import com.telinc1.faerie.preferences.PreferenceStore;
+import com.telinc1.faerie.sprite.provider.ProviderBuilder;
+import com.telinc1.faerie.util.locale.ILocalizable;
 import com.telinc1.faerie.util.locale.Warning;
 import org.apache.commons.cli.ParseException;
 
@@ -78,6 +80,15 @@ public class Application {
         this.loadPreferences();
 
         this.getInterface().init();
+
+        ProviderBuilder providerBuilder = new ProviderBuilder();
+        providerBuilder.fromArguments(this.getArguments());
+
+        for(ILocalizable localizable : providerBuilder.getErrors()){
+            this.getInterface().getNotifier().notify(localizable);
+        }
+
+        this.getInterface().setProvider(providerBuilder.getProvider());
         this.getInterface().start();
     }
 

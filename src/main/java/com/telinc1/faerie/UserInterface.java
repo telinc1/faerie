@@ -78,7 +78,7 @@ public abstract class UserInterface {
         }
 
         try {
-            provider.loadSprite(0);
+            provider.loadSprite(provider.getLoadedIndex());
         }catch(ProvisionException exception){
             this.getApplication().getExceptionHandler().handle(exception);
             return false;

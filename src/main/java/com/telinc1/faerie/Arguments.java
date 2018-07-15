@@ -73,6 +73,16 @@ public class Arguments {
     private boolean verbose;
 
     /**
+     * Store the integer argument of the {@code sprite} command line option.
+     */
+    private int sprite;
+
+    /**
+     * Stores all of the trailing arguments from the command line options.
+     */
+    private String[] trailing;
+
+    /**
      * Constructs an {@code Arguments} store and creates the default options.
      *
      * @param input the input to the {@code Arguments} parser
@@ -85,6 +95,7 @@ public class Arguments {
         this.options.addOption("H", "headless", false, "disable the graphical interface and operate on a single file");
         this.options.addOption("c", "cold", false, "disable preference storage");
         this.options.addOption("v", "verbose", false, "report all exceptions");
+        this.options.addOption("s", "sprite", true, "load the sprite at an index");
     }
 
     /**
@@ -109,6 +120,9 @@ public class Arguments {
         this.headless = line.hasOption("headless") || this.printHelp;
         this.cold = line.hasOption("cold");
         this.verbose = line.hasOption("verbose");
+        this.sprite = this.getArgument(line, "sprite", 0);
+
+        this.trailing = line.getArgs();
     }
 
     /**
@@ -170,5 +184,39 @@ public class Arguments {
      */
     public boolean isVerbose(){
         return this.verbose;
+    }
+
+    /**
+     * Returns the index of the sprite which should be loaded after the user
+     * interface is initialized.
+     */
+    public int getSprite(){
+        return this.sprite;
+    }
+
+    /**
+     * Returns an array of all unrecognized trailing arguments.
+     */
+    public String[] getTrailing(){
+        return this.trailing;
+    }
+
+    /**
+     * Extracts an integer argument from a parsed set of {@code CommandLine}
+     * arguments and returns a fallback if the argument doesn't exist or isn't
+     * a valid integer.
+     */
+    private int getArgument(CommandLine line, String option, int fallback){
+        String argument = line.getOptionValue(option);
+
+        if(argument == null){
+            return fallback;
+        }
+
+        try {
+            return Integer.valueOf(argument);
+        }catch(NumberFormatException exception){
+            return fallback;
+        }
     }
 }

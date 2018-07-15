@@ -734,7 +734,7 @@ public class MainWindow extends JFrame {
         String[] availableSprites = provider.getAvailableSprites();
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(availableSprites);
         this.spriteSelectionComboBox.setModel(model);
-        this.spriteSelectionComboBox.setSelectedIndex(0);
+        this.spriteSelectionComboBox.setSelectedIndex(provider.getLoadedIndex());
         this.spriteSelectionComboBox.setEnabled(availableSprites.length > 1);
 
         Sprite sprite = provider.getCurrentSprite();
